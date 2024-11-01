@@ -1,6 +1,5 @@
-export function Hello () {
-  return (
-    <h1> Hello </h1>
-  )
-}
-export { Hello2 } from './hello2'
+
+export { useConnect } from './useConnect'
+export { default as ButtonRegister } from 'lib/Components/ButtonRegister'
+export { default as PasskeyProvider } from 'lib/Components/PasskeyProvider'
+export { default as ButtonConnect } from 'lib/Components/ButtonConnect'
