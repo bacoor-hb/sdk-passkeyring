@@ -24,7 +24,7 @@ export function useConnect () {
     if (isConnected && address) {
       url = `https://pass.w3w.app/${GROUP_SLUG}/mypage/${address}`
     } else {
-      url = `http://localhost:3000/activate-by-passkey/${GROUP_SLUG}`
+      url = `https://pass.w3w.app/activate-by-passkey/${GROUP_SLUG}`
     }
 
     const width = 450
