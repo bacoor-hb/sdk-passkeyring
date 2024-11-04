@@ -1,7 +1,7 @@
 {
   "name": "sdk-passkeyring",
-  "version": "1.0.10",
-  "description": "sdk passkeyring to create library with Vite, Typescript and React.js",
+  "version": "1.0.11",
+  "description": "sdk passkeyring to connect smart account",
   "license": "MIT",
   "main": "./dist/main.umd.js",
   "module": "./dist/main.es.js",
@@ -27,14 +27,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/panhavsilva/boilerplate-lib-vite-react.git"
+    "url": "git+https://github.com/Hungduc123/sdk-passkeyring.git"
   },
   "keywords": [],
-  "author": "Pâmela Vieira da Silva - @panhavsilva",
+  "author": "Bacoor",
   "bugs": {
-    "url": "https://github.com/panhavsilva/boilerplate-lib-vite-react/issues"
+    "url": "https://github.com/Hungduc123/sdk-passkeyring.git/issues"
   },
-  "homepage": "https://github.com/panhavsilva/boilerplate-lib-vite-react#readme",
+  "homepage": "https://github.com/Hungduc123/sdk-passkeyring.git#readme",
   "peerDependencies": {
     "react": ">=17.x"
   },
