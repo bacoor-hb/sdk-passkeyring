@@ -1,6 +1,6 @@
 
 import { AccountContext } from 'lib/Components/AccountProvider'
-import { GROUP_SLUG, STORAGE_KEY } from 'lib/constants'
+import { GROUP_SLUG, STORAGE_KEY, URL_PASSKEY } from 'lib/constants'
 import { Account } from 'lib/types'
 import { useContext, useEffect, useState } from 'react'
 
@@ -22,9 +22,9 @@ export function useConnect () {
     }
     let url = ''
     if (isConnected && address) {
-      url = `https://pass.w3w.app/${GROUP_SLUG}/mypage/${address}`
+      url = `${URL_PASSKEY}/${GROUP_SLUG}/mypage/${address}`
     } else {
-      url = `https://pass.w3w.app/activate-by-passkey/${GROUP_SLUG}`
+      url = `${URL_PASSKEY}/activate-by-passkey/${GROUP_SLUG}`
     }
 
     const width = 450
