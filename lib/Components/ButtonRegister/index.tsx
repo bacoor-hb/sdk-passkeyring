@@ -1,5 +1,5 @@
 
-import { useConnect } from 'lib/useConnect'
+import { useConnect } from 'lib/hook/useConnect'
 import React from 'react'
 
 const ButtonRegister = () => {

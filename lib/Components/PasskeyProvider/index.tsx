@@ -9,17 +9,20 @@ import '../../styles/index.css'
 import FloatingActionButton from 'lib/Components/FloatingActionButton'
 import PopupProvider from 'lib/Components/PopupProvider'
 import { OverlayProvider } from 'lib/Components/MyOverlay/OverlayContext'
+import AccountProvider from 'lib/Components/AccountProvider'
 
 const queryClient = new QueryClient()
 
 const PasskeyProvider = ({ children }: { children: ReactNode }) => {
   return (
     <QueryClientProvider client={queryClient}>
-      <OverlayProvider>
-        <FloatingActionButton />
-        {children}
-        <PopupProvider />
-      </OverlayProvider>
+      <AccountProvider>
+        <OverlayProvider>
+          <FloatingActionButton />
+          {children}
+          <PopupProvider />
+        </OverlayProvider>
+      </AccountProvider>
 
     </QueryClientProvider>
 

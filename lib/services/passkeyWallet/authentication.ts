@@ -3,7 +3,7 @@ import { base64URLStringToBuffer, bufferToBase64URLString, startAuthentication, 
 // import { toHex } from 'viem'
 import { parseSignature } from './utils'
 import { BaseAPI } from 'lib/services/api/BaseAPI'
-
+const baseUrl = 'https://api-airdropband.w3w.app'
 type GroupSlug = string
 
 interface RegisterParams {
@@ -13,21 +13,33 @@ interface RegisterParams {
 export default class PasskeyWalletAuthentication {
   static async register ({ username, groupSlug }: RegisterParams) {
     try {
-      const resOptions = await BaseAPI.put('/passkey/register', { username, groupSlug })
-      if (!resOptions?.data?.data) {
-        throw new Error('Cannot get registration options')
-      }
-      console.log('🚀 ~ PasskeyWalletAuthentication ~ register ~ resOptions:', resOptions)
-      const options = resOptions?.data?.data?.options
-      console.log('🚀 ~ PasskeyWalletAuthentication ~ register ~ options:', options)
+      // const resOptions = await BaseAPI.put('/passkey/register', { username, groupSlug })
+      // if (!resOptions?.data?.data) {
+      //   throw new Error('Cannot get registration options')
+      // }
+      // console.log('🚀 ~ PasskeyWalletAuthentication ~ register ~ resOptions:', resOptions)
+      // const options = resOptions?.data?.data?.options
+      // console.log('🚀 ~ PasskeyWalletAuthentication ~ register ~ options:', options)
 
-      if (!options || !options.challenge) {
-        throw new Error('Invalid registration options: missing challenge')
-      }
+      // if (!options || !options.challenge) {
+      //   throw new Error('Invalid registration options: missing challenge')
+      // }
+      const resOptions = await fetch(`${baseUrl}/passkey/register`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Origin: 'https://pass.w3w.app',
+          Referrer: 'https://pass.w3w.app',
+
+        },
+        body: JSON.stringify({ username: username, groupSlug }),
+      })
+      const optionsResData = await resOptions.json()
+      const options = optionsResData.data.options
 
       const cred = await startRegistration(options)
       const resRegister = await BaseAPI.post('/passkey/register', {
-        userId: resOptions?.data?.data?.userId,
+        userId: optionsResData.data?.userId,
         username,
         cred,
       })

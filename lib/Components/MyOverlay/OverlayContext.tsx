@@ -6,8 +6,8 @@ const defaultValue = {
   open: false,
   content: <></>,
   afterClose: () => {},
-  height: 'calc(100% - 64px) ',
-  width: '100%',
+  height: '',
+  width: '',
 }
 interface OverlayContextType {
   config: typeof defaultValue;

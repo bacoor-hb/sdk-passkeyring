@@ -1,9 +1,10 @@
+import HomeContainer from 'lib/Components/HomeContainer'
 import useOverlay from 'lib/hook/useOverlay'
 import usePopupController from 'lib/hook/usePopupController'
 import React from 'react'
 
 const FloatingActionButton = () => {
-  const { openOverlay } = useOverlay()
+  const { openOverlay, closeOverlay } = useOverlay()
 
   return (
     <div
@@ -27,17 +28,17 @@ const FloatingActionButton = () => {
           alignItems: 'center',
           justifyContent: 'center',
           display: 'flex',
-
         }}
         onClick={() => {
           openOverlay({
-            content: <div>Content popup</div>,
+            content: (
+              <HomeContainer />
+            ),
           })
         }}
       >
         open
       </div>
-
     </div>
   )
 }
