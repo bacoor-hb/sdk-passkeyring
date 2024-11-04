@@ -25,9 +25,9 @@ export function useConnect () {
     }
     let url = ''
     if (isConnected && address) {
-      url = `https://pass.w3w.app/keyringpasskeywallet/mypage/${address}`
+      url = `https://pass.w3w.app/${GROUP_SLUG}/mypage/${address}`
     } else {
-      url = 'http://localhost:3000/activate-by-passkey/keyringpasskeywallet'
+      url = `http://localhost:3000/activate-by-passkey/${GROUP_SLUG}`
     }
 
     const newWindow = window.open(
