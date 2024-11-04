@@ -5,5 +5,8 @@ import React, { useContext } from 'react'
 export const useAccount = () => {
   const account = useContext(AccountContext) as Account
 
-  return account
+  return {
+    address: account.address,
+    status: account.status,
+  }
 }

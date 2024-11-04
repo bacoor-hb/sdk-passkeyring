@@ -1,7 +1,7 @@
 
+import { STORAGE_KEY } from 'lib/constants'
 import { Account } from 'lib/types'
 import React, { createContext, ReactNode, useEffect, useState } from 'react'
-import { useConnect } from 'lib/hook/useConnect'
 
 interface AccountProviderProps {
   children: ReactNode
@@ -23,14 +23,14 @@ const accountDefault:Account = {
 
 const AccountProvider: React.FC<AccountProviderProps> = ({ children }) => {
   const [account, setAccount] = useState(() => {
-    const savedAccount = localStorage.getItem('ACCOUNT_PASSKEY')
+    const savedAccount = localStorage.getItem(STORAGE_KEY.ACCOUNT_PASSKEY)
     return savedAccount ? JSON.parse(savedAccount) : accountDefault
   })
 
   const setChangeAccount = (account?: Account) => {
     const newAccount = account || accountDefault
     setAccount(newAccount)
-    localStorage.setItem('ACCOUNT_PASSKEY', JSON.stringify(newAccount))
+    localStorage.setItem(STORAGE_KEY.ACCOUNT_PASSKEY, JSON.stringify(newAccount))
   }
 
   useEffect(() => {

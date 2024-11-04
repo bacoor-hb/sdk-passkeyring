@@ -1,4 +1,4 @@
 export const GROUP_SLUG = 'keyringpasskeywallet'
-export const OBSERVER_KEY = {
-  HIDDEN_OVERLAY: 'HIDDEN_OVERLAY',
+export const STORAGE_KEY = {
+  ACCOUNT_PASSKEY: 'ACCOUNT_PASSKEY',
 }

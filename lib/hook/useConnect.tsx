@@ -1,14 +1,11 @@
 
 import { AccountContext } from 'lib/Components/AccountProvider'
-import { GROUP_SLUG } from 'lib/constants'
-import useOverlay from 'lib/hook/useOverlay'
-import PasskeyWalletAuthentication from 'lib/services/passkeyWallet/authentication'
+import { GROUP_SLUG, STORAGE_KEY } from 'lib/constants'
 import { Account } from 'lib/types'
 import { useContext, useEffect, useState } from 'react'
 
 export function useConnect () {
   const [isConnected, setIsConnected] = useState<any>(false)
-  const { openOverlay, closeOverlay } = useOverlay()
   const accountContext = useContext(AccountContext)
   const { address, setAccount } = accountContext || {}
 
@@ -56,17 +53,10 @@ export function useConnect () {
       address: '',
       status: false,
     } as Account)
-    localStorage.removeItem('ACCOUNT_PASSKEY')
-    // closeWindow(connectWindow)
+    localStorage.removeItem(STORAGE_KEY.ACCOUNT_PASSKEY)
     connectWindow?.close()
     setConnectWindow(null)
   }
 
-  const closeWindowConnected = () => {
-    if (connectWindow) {
-      connectWindow.close()
-    }
-  }
-
-  return { onConnect, isConnected, onDisconnect, closeWindowConnected }
+  return { onConnect, isConnected, onDisconnect }
 }
