@@ -23,14 +23,14 @@ const accountDefault:Account = {
 
 const AccountProvider: React.FC<AccountProviderProps> = ({ children }) => {
   const [account, setAccount] = useState(() => {
-    const savedAccount = localStorage.getItem('account')
+    const savedAccount = localStorage.getItem('ACCOUNT_PASSKEY')
     return savedAccount ? JSON.parse(savedAccount) : accountDefault
   })
 
   const setChangeAccount = (account?: Account) => {
     const newAccount = account || accountDefault
     setAccount(newAccount)
-    localStorage.setItem('account', JSON.stringify(newAccount))
+    localStorage.setItem('ACCOUNT_PASSKEY', JSON.stringify(newAccount))
   }
 
   useEffect(() => {

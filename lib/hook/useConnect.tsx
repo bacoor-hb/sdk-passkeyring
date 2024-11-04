@@ -56,7 +56,7 @@ export function useConnect () {
       address: '',
       status: false,
     } as Account)
-    localStorage.removeItem('account')
+    localStorage.removeItem('ACCOUNT_PASSKEY')
     // closeWindow(connectWindow)
     connectWindow?.close()
     setConnectWindow(null)
