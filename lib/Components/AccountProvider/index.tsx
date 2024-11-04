@@ -35,8 +35,6 @@ const AccountProvider: React.FC<AccountProviderProps> = ({ children }) => {
 
   useEffect(() => {
     const receiveMessage = (event: MessageEvent) => {
-      console.log('🚀 ~ receiveMessage ~ event:', event)
-
       if (event?.data?.addressPasskey) {
         setChangeAccount({
           address: event.data.addressPasskey,

@@ -27,10 +27,15 @@ export function useConnect () {
       url = `http://localhost:3000/activate-by-passkey/${GROUP_SLUG}`
     }
 
+    const width = 450
+    const height = 800
+    const left = (window.innerWidth / 2) - (width / 2) + window.screenX
+    const top = (window.innerHeight / 2) - (height / 2) + window.screenY
+
     const newWindow = window.open(
       url,
       '_blank',
-      'toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=500,height=800,top=200,left=200',
+       `toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=no,width=${width},height=${height},top=${top},left=${left}`,
     )
 
     if (newWindow) {

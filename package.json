@@ -1,6 +1,6 @@
 {
   "name": "sdk-passkeyring",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "sdk passkeyring to create library with Vite, Typescript and React.js",
   "license": "MIT",
   "main": "./dist/main.umd.js",
