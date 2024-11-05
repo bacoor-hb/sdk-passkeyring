@@ -1,6 +1,6 @@
 {
   "name": "sdk-passkeyring",
-  "version": "1.0.19",
+  "version": "1.0.20",
   "description": "sdk passkeyring to connect smart account",
   "license": "MIT",
   "main": "./dist/main.umd.js",
@@ -63,6 +63,7 @@
   "dependencies": {
     "autoprefixer": "^10.4.20",
     "postcss": "^8.4.47",
+    "react-device-detect": "^2.2.3",
     "tailwindcss": "^3.4.14"
   }
 }
