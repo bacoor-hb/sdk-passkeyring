@@ -22,13 +22,14 @@ const accountDefault:Account = {
 }
 
 const AccountProvider: React.FC<AccountProviderProps> = ({ children }) => {
-  const [account, setAccount] = useState(() => {
+  const [account, setAccount] = useState(accountDefault)
+
+  useEffect(() => {
     if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
       const savedAccount = localStorage.getItem(STORAGE_KEY.ACCOUNT_PASSKEY)
-      return savedAccount ? JSON.parse(savedAccount) : accountDefault
+      setAccount(savedAccount ? JSON.parse(savedAccount) : accountDefault)
     }
-    return accountDefault
-  })
+  }, [])
 
   const setChangeAccount = (account?: Account) => {
     const newAccount = account || accountDefault

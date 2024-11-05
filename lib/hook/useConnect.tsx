@@ -1,4 +1,3 @@
-
 import { AccountContext } from 'lib/Components/AccountProvider'
 import { GROUP_SLUG, STORAGE_KEY, URL_PASSKEY } from 'lib/constants'
 import { Account } from 'lib/types'
@@ -29,13 +28,13 @@ export function useConnect () {
 
     const width = 450
     const height = 800
-    const left = (window.innerWidth / 2) - (width / 2) + window.screenX
-    const top = (window.innerHeight / 2) - (height / 2) + window.screenY
+    const left = window.innerWidth / 2 - width / 2 + window.screenX
+    const top = window.innerHeight / 2 - height / 2 + window.screenY
 
     const newWindow = window.open(
       url,
       '_blank',
-       `toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=no,width=${width},height=${height},top=${top},left=${left}`,
+      `toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=no,width=${width},height=${height},top=${top},left=${left}`,
     )
 
     if (newWindow) {
@@ -67,5 +66,36 @@ export function useConnect () {
     setConnectWindow(null)
   }
 
-  return { onConnect, isConnected, onDisconnect }
+  const onOpenWallet = (type?:string|undefined) => {
+    if (connectWindow && !connectWindow.closed) {
+      connectWindow.focus()
+      return
+    }
+    let url = ''
+
+    if (isConnected && address) {
+      const query = type === 'NFT' ? '/list-nfts' : ''
+
+      url = `${URL_PASSKEY}/${GROUP_SLUG}/mypage/${address}${query}`
+    } else {
+      url = `${URL_PASSKEY}/activate-by-passkey/${GROUP_SLUG}`
+    }
+
+    const width = 450
+    const height = 800
+    const left = window.innerWidth / 2 - width / 2 + window.screenX
+    const top = window.innerHeight / 2 - height / 2 + window.screenY
+
+    const newWindow = window.open(
+      url,
+      '_blank',
+      `toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=no,width=${width},height=${height},top=${top},left=${left}`,
+    )
+
+    if (newWindow) {
+      setConnectWindow(newWindow)
+    }
+  }
+
+  return { onConnect, isConnected, onDisconnect, onOpenWallet }
 }
