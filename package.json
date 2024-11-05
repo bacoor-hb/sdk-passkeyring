@@ -1,6 +1,6 @@
 {
   "name": "sdk-passkeyring",
-  "version": "1.0.14",
+  "version": "1.0.18",
   "description": "sdk passkeyring to connect smart account",
   "license": "MIT",
   "main": "./dist/main.umd.js",
@@ -61,15 +61,8 @@
     "vite-tsconfig-paths": "3.4.1"
   },
   "dependencies": {
-    "@peculiar/asn1-ecc": "^2.3.14",
-    "@peculiar/asn1-schema": "^2.3.13",
-    "@simplewebauthn/browser": "10.0.0",
-    "@tanstack/react-query": "4",
     "autoprefixer": "^10.4.20",
-    "axios": "^1.7.7",
     "postcss": "^8.4.47",
-    "react-new-window": "^1.0.1",
-    "tailwindcss": "^3.4.14",
-    "viem": "^2.21.16"
+    "tailwindcss": "^3.4.14"
   }
 }
