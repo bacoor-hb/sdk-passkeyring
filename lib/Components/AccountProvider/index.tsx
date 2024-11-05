@@ -47,7 +47,7 @@ const AccountProvider: React.FC<AccountProviderProps> = ({ children }) => {
           status: true,
         })
         // close window after connect
-        window.close()
+        // window.close()
       }
     }
 
