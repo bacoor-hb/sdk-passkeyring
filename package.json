@@ -1,6 +1,6 @@
 {
   "name": "sdk-passkeyring",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "sdk passkeyring to connect smart account",
   "license": "MIT",
   "main": "./dist/main.umd.js",
