@@ -72,8 +72,12 @@ export function useConnect () {
 
   const onOpenWallet = (type?:string|undefined) => {
     if (connectWindow.current && !connectWindow.current.closed) {
-      connectWindow.current.focus()
-      return
+      if (isMobile) {
+        connectWindow.current.close()
+      } else {
+        connectWindow.current.focus()
+        return
+      }
     }
     let url = ''
 
