@@ -1,7 +1,8 @@
 import { AccountContext } from 'lib/Components/AccountProvider'
 import { GROUP_SLUG, STORAGE_KEY, URL_PASSKEY } from 'lib/constants'
 import { Account } from 'lib/types'
-import { useContext, useEffect, useState } from 'react'
+import { useContext, useEffect, useRef, useState } from 'react'
+import { isMobile } from 'react-device-detect'
 
 export function useConnect () {
   const [isConnected, setIsConnected] = useState<any>(false)
@@ -12,12 +13,16 @@ export function useConnect () {
     setIsConnected(!!address)
   }, [address])
 
-  const [connectWindow, setConnectWindow] = useState<Window | null>(null)
+  const connectWindow = useRef<Window | null>(null)
 
   const onConnect = async () => {
-    if (connectWindow && !connectWindow.closed) {
-      connectWindow.focus()
-      return
+    if (connectWindow.current && !connectWindow.current.closed) {
+      if (isMobile) {
+        connectWindow.current.close()
+      } else {
+        connectWindow.current.focus()
+        return
+      }
     }
     let url = ''
     if (isConnected && address) {
@@ -38,19 +43,19 @@ export function useConnect () {
     )
 
     if (newWindow) {
-      setConnectWindow(newWindow)
+      connectWindow.current = newWindow
     }
   }
 
   useEffect(() => {
     const interval = setInterval(() => {
-      if (connectWindow && connectWindow.closed) {
-        setConnectWindow(null)
+      if (connectWindow.current && connectWindow.current.closed) {
+        connectWindow.current = null
       }
     }, 1000)
 
     return () => clearInterval(interval)
-  }, [connectWindow])
+  }, [])
 
   const onDisconnect = () => {
     setAccount({
@@ -62,13 +67,12 @@ export function useConnect () {
       localStorage.removeItem(STORAGE_KEY.ACCOUNT_PASSKEY)
     }
 
-    connectWindow?.close()
-    setConnectWindow(null)
+    connectWindow.current?.close()
   }
 
   const onOpenWallet = (type?:string|undefined) => {
-    if (connectWindow && !connectWindow.closed) {
-      connectWindow.focus()
+    if (connectWindow.current && !connectWindow.current.closed) {
+      connectWindow.current.focus()
       return
     }
     let url = ''
@@ -89,13 +93,31 @@ export function useConnect () {
     const newWindow = window.open(
       url,
       '_blank',
-      `toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=no,width=${width},height=${height},top=${top},left=${left}`,
+     `toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=no,width=${width},height=${height},top=${top},left=${left}`,
     )
 
     if (newWindow) {
-      setConnectWindow(newWindow)
+      connectWindow.current = newWindow
     }
   }
+
+  useEffect(() => {
+    const receiveMessage = (event: MessageEvent) => {
+      if (event?.data?.addressPasskey) {
+        setAccount({
+          address: event.data.addressPasskey,
+          status: true,
+        })
+        // connectWindow.current?.close()
+      }
+    }
+
+    window.addEventListener('message', receiveMessage)
+
+    return () => {
+      window.removeEventListener('message', receiveMessage)
+    }
+  }, [])
 
   return { onConnect, isConnected, onDisconnect, onOpenWallet }
 }
