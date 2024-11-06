@@ -1,5 +1,6 @@
 
 import { STORAGE_KEY } from 'lib/constants'
+import { ConnectWindowProvider } from 'lib/context/ConnectWindowContext'
 import { Account } from 'lib/types'
 import React, { createContext, ReactNode, useEffect, useState } from 'react'
 
@@ -41,7 +42,9 @@ const AccountProvider: React.FC<AccountProviderProps> = ({ children }) => {
 
   return (
     <AccountContext.Provider value={{ ...account, setAccount: setChangeAccount }}>
-      {children}
+      <ConnectWindowProvider>
+        {children}
+      </ConnectWindowProvider>
     </AccountContext.Provider>
   )
 }

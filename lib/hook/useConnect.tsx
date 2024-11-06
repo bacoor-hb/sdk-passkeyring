@@ -3,17 +3,17 @@ import { GROUP_SLUG, STORAGE_KEY, URL_PASSKEY } from 'lib/constants'
 import { Account } from 'lib/types'
 import { useContext, useEffect, useRef, useState } from 'react'
 import { isMobile } from 'react-device-detect'
+import { useConnectWindow } from 'lib/context/ConnectWindowContext'
 
 export function useConnect () {
   const [isConnected, setIsConnected] = useState<any>(false)
   const accountContext = useContext(AccountContext)
   const { address, setAccount } = accountContext || {}
+  const { connectWindow, setConnectWindow } = useConnectWindow()
 
   useEffect(() => {
     setIsConnected(!!address)
   }, [address])
-
-  const connectWindow = useRef<Window | null>(null)
 
   const onConnect = async () => {
     if (connectWindow.current && !connectWindow.current.closed) {
@@ -41,9 +41,8 @@ export function useConnect () {
       '_blank',
       `toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=no,width=${width},height=${height},top=${top},left=${left}`,
     )
-
     if (newWindow) {
-      connectWindow.current = newWindow
+      setConnectWindow(newWindow)
     }
   }
 
@@ -68,6 +67,7 @@ export function useConnect () {
     }
 
     connectWindow.current?.close()
+    setConnectWindow(null)
   }
 
   const onOpenWallet = (type?:string|undefined) => {
@@ -101,7 +101,7 @@ export function useConnect () {
     )
 
     if (newWindow) {
-      connectWindow.current = newWindow
+      setConnectWindow(newWindow)
     }
   }
 
