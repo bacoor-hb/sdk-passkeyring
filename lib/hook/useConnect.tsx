@@ -5,6 +5,8 @@ import { useContext, useEffect, useRef, useState } from 'react'
 import { isMobile } from 'react-device-detect'
 import { useConnectWindow } from 'lib/context/ConnectWindowContext'
 
+type TypeConnect = string | undefined
+
 export function useConnect () {
   const [isConnected, setIsConnected] = useState<any>(false)
   const accountContext = useContext(AccountContext)
@@ -15,6 +17,34 @@ export function useConnect () {
     setIsConnected(!!address)
   }, [address])
 
+  const getUrl = (type:TypeConnect) => {
+    let url = ''
+    if (isConnected && address) {
+      const query = type === 'NFT' ? '/list-nfts' : ''
+      url = `${URL_PASSKEY}/${GROUP_SLUG}/mypage/${address}${query}`
+    } else {
+      url = `${URL_PASSKEY}/activate-by-passkey/${GROUP_SLUG}`
+    }
+    return url
+  }
+
+  const openPopup = (url:string) => {
+    const width = 450
+    const height = 800
+    const left = window.innerWidth / 2 - width / 2 + window.screenX
+    const top = window.innerHeight / 2 - height / 2 + window.screenY
+
+    const newWindow = window.open(
+      url,
+      '_blank',
+     `toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=no,width=${width},height=${height},top=${top},left=${left}`,
+    )
+
+    if (newWindow) {
+      setConnectWindow(newWindow)
+    }
+  }
+
   const onConnect = async () => {
     if (connectWindow.current && !connectWindow.current.closed) {
       if (isMobile) {
@@ -24,26 +54,9 @@ export function useConnect () {
         return
       }
     }
-    let url = ''
-    if (isConnected && address) {
-      url = `${URL_PASSKEY}/${GROUP_SLUG}/mypage/${address}`
-    } else {
-      url = `${URL_PASSKEY}/activate-by-passkey/${GROUP_SLUG}`
-    }
+    const url = getUrl('')
 
-    const width = 450
-    const height = 800
-    const left = window.innerWidth / 2 - width / 2 + window.screenX
-    const top = window.innerHeight / 2 - height / 2 + window.screenY
-
-    const newWindow = window.open(
-      url,
-      '_blank',
-      `toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=no,width=${width},height=${height},top=${top},left=${left}`,
-    )
-    if (newWindow) {
-      setConnectWindow(newWindow)
-    }
+    openPopup(url)
   }
 
   useEffect(() => {
@@ -71,38 +84,17 @@ export function useConnect () {
   }
 
   const onOpenWallet = (type?:string|undefined) => {
+    const url = getUrl(type)
     if (connectWindow.current && !connectWindow.current.closed) {
       if (isMobile) {
         connectWindow.current.close()
       } else {
         connectWindow.current.focus()
+        connectWindow.current.location.replace(url)
         return
       }
     }
-    let url = ''
-
-    if (isConnected && address) {
-      const query = type === 'NFT' ? '/list-nfts' : ''
-
-      url = `${URL_PASSKEY}/${GROUP_SLUG}/mypage/${address}${query}`
-    } else {
-      url = `${URL_PASSKEY}/activate-by-passkey/${GROUP_SLUG}`
-    }
-
-    const width = 450
-    const height = 800
-    const left = window.innerWidth / 2 - width / 2 + window.screenX
-    const top = window.innerHeight / 2 - height / 2 + window.screenY
-
-    const newWindow = window.open(
-      url,
-      '_blank',
-     `toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=no,width=${width},height=${height},top=${top},left=${left}`,
-    )
-
-    if (newWindow) {
-      setConnectWindow(newWindow)
-    }
+    openPopup(url)
   }
 
   useEffect(() => {
