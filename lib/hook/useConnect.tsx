@@ -36,7 +36,7 @@ export function useConnect () {
 
     const newWindow = window.open(
       url,
-      '_blank',
+      `${GROUP_SLUG}${address}`,
      `toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=no,width=${width},height=${height},top=${top},left=${left}`,
     )
 
