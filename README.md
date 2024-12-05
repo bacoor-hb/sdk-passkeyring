@@ -39,7 +39,7 @@ import React from "react";
 import { useConnect, useAccount, PasskeyProvider } from "sdk-passkeyring";
 
 const Home = () => {
-  const { onConnect, isConnected, onDisconnect } = useConnect();
+  const { onConnect, isConnected, onDisconnect , onOpenWallet} = useConnect();
   const account = useAccount() ;
   const { address } = account;
 
@@ -63,6 +63,24 @@ const Home = () => {
           >
             disConnect
           </button>
+          <br />
+          <button
+            onClick={() => {
+            //open wallet when connected
+              onOpenWallet();
+            }}
+          >
+            Open wallet
+          </button>
+          <br />
+          <button
+            onClick={() => {
+            //open wallet with tab NFT
+              onOpenWallet('NFT');
+            }}
+          >
+             Open NFT
+          </button>
         </div>
       ) : (
         <button onClick={onConnect}>Connect</button>
@@ -75,7 +93,3 @@ export default Home;
 
 ```
 
-
-<!-- ## License -->
-
-<!-- MIT © [HoDienCong12c5](https://github.com/CongSofwareEngineer) -->
