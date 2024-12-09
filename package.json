@@ -1,6 +1,6 @@
 {
-  "name": "sdk-egglepasskeywallet",
-  "version": "1.1.7",
+  "name": "sdk_passkeywallet",
+  "version": "1.2.1",
   "description": "sdk passkeyring to connect smart account",
   "license": "MIT",
   "main": "./dist/main.umd.js",
@@ -8,7 +8,7 @@
   "types": "./dist/lib/main.d.ts",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build --watch",
+    "build": "tsc && vite build",
     "preview": "vite preview",
     "lint": "eslint src --ext ts,tsx",
     "lint:fix": "yarn lint --fix",
@@ -17,7 +17,8 @@
     "prepare": "husky install"
   },
   "files": [
-    "dist"
+    "dist",
+    "README.md"
   ],
   "exports": {
     ".": {

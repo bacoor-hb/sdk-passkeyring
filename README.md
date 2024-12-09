@@ -6,18 +6,20 @@
 ## Install (for single position)
 
 ```bash
-npm install --save sdk-passkeyring
+npm install --save sdk_passkeywallet
+
+
 ```
 
 ```bash
-yarn add sdk-passkeyring
+yarn add sdk_passkeywallet
 ```
 
 ## Usage
 ```jsx
 //Used for the first file to run (index.js)
 import React from "react";
-import { PasskeyProvider } from "sdk-passkeyring";
+import { PasskeyProvider } from "sdk_passkeywallet";
 
 const App = ({children}) => {
 
@@ -36,7 +38,7 @@ export default App;
 ```jsx
 //example 
 import React from "react";
-import { useConnect, useAccount, PasskeyProvider } from "sdk-passkeyring";
+import { useConnect, useAccount, PasskeyProvider } from "sdk_passkeywallet";
 
 const Home = () => {
   const { onConnect, isConnected, onDisconnect , onOpenWallet} = useConnect();
