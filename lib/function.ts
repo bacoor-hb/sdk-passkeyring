@@ -19,6 +19,10 @@ interface ProviderMessage {
 }
 
 export function onPageLoad () {
+  if (!window.ethereum) {
+    console.log('🚀 ~ onPageLoad ~ window.ethereum:', window.ethereum)
+    return
+  }
   console.log('🚀 ~ onPageLoad ~ onPageLoad:')
   const provider = new MyCustomWalletProvider()
 
@@ -39,19 +43,13 @@ export function onPageLoad () {
       announceProvider()
     },
   )
-  const providers : any[] = []
 
-  window.addEventListener(
-    'eip6963:announceProvider',
-    (event: any) => {
-      providers.push(event.detail)
-      window.ethereum = providers
-    },
-  )
-
-  window.dispatchEvent(new Event('eip6963:requestProvider'))
+  // window.dispatchEvent(new Event('eip6963:requestProvider'))
 
   announceProvider()
+  setTimeout(() => {
+    window.dispatchEvent(new Event('eip6963:requestProvider'))
+  }, 500)
 }
 
 const BASE64_CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/='
