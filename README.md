@@ -6,20 +6,20 @@
 ## Install (for single position)
 
 ```bash
-npm install --save sdk_passkeywallet
+npm install --save sdk-v2-egglegamewallet
 
 
 ```
 
 ```bash
-yarn add sdk_passkeywallet
+yarn add sdk-v2-egglegamewallet
 ```
 
 ## Usage
 ```jsx
 //Used for the first file to run (index.js)
 import React from "react";
-import { PasskeyProvider } from "sdk_passkeywallet";
+import { PasskeyProvider } from "sdk-v2-egglegamewallet";
 
 const App = ({children}) => {
 
@@ -33,65 +33,3 @@ const App = ({children}) => {
 export default App;
 
 ```
-
-
-```jsx
-//example 
-import React from "react";
-import { useConnect, useAccount, PasskeyProvider } from "sdk_passkeywallet";
-
-const Home = () => {
-  const { onConnect, isConnected, onDisconnect , onOpenWallet} = useConnect();
-  const account = useAccount() ;
-  const { address } = account;
-
-  return (
-    <div>
-      {isConnected ? (
-        <div>
-          <h1>Connected</h1>
-          <button
-            onClick={() => {
-              onConnect();
-            }}
-          >
-            Address: {address}
-          </button>
-          <br />
-          <button
-            onClick={() => {
-              onDisconnect();
-            }}
-          >
-            disConnect
-          </button>
-          <br />
-          <button
-            onClick={() => {
-            //open wallet when connected
-              onOpenWallet();
-            }}
-          >
-            Open wallet
-          </button>
-          <br />
-          <button
-            onClick={() => {
-            //open wallet with tab NFT
-              onOpenWallet('NFT');
-            }}
-          >
-             Open NFT
-          </button>
-        </div>
-      ) : (
-        <button onClick={onConnect}>Connect</button>
-      )}
-    </div>
-  );
-};
-
-export default Home;
-
-```
-

@@ -1,8 +1,10 @@
 import { GROUP_SLUG, infoGroup } from 'lib/constants'
 import { MyCustomWalletProvider } from 'lib/web3'
 
-interface Window {
-  ethereum?: any;
+declare global {
+  interface Window {
+    ethereum?: any;
+  }
 }
 
 interface EIP6963ProviderInfo {
@@ -16,16 +18,9 @@ interface ProviderMessage {
   readonly data: unknown;
 }
 
-// interface EIP6963ProviderDetail {
-//   info: EIP6963ProviderInfo;
-//   provider: EIP1193Provider;
-// }
-
 export function onPageLoad () {
   console.log('🚀 ~ onPageLoad ~ onPageLoad:')
   const provider = new MyCustomWalletProvider()
-
-  // window.ethereum =
 
   function announceProvider () {
     console.log('🚀 ~ announceProvider ~ announceProvider:')
@@ -44,6 +39,17 @@ export function onPageLoad () {
       announceProvider()
     },
   )
+  const providers : any[] = []
+
+  window.addEventListener(
+    'eip6963:announceProvider',
+    (event: any) => {
+      providers.push(event.detail)
+      window.ethereum = providers
+    },
+  )
+
+  window.dispatchEvent(new Event('eip6963:requestProvider'))
 
   announceProvider()
 }
