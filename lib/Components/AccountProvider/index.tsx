@@ -32,11 +32,6 @@ const AccountProvider: React.FC<AccountProviderProps> = ({ children }) => {
       setAccount(savedAccount ? JSON.parse(savedAccount) : accountDefault)
     }
   }, [])
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      onPageLoad()
-    }
-  }, [])
 
   const setChangeAccount = (account?: Account) => {
     const newAccount = account || accountDefault

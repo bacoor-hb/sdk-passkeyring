@@ -1,4 +1,4 @@
-import { GROUP_SLUG, URL_PASSKEY } from 'lib/constants'
+import { GROUP_SLUG, STORAGE_KEY, URL_PASSKEY } from 'lib/constants'
 import { decodeBase64, encodeBase64 } from 'lib/function'
 import { I_TYPE_URL, WalletProvider } from 'lib/web3/type'
 
@@ -57,6 +57,7 @@ class MyCustomWalletProvider implements WalletProvider {
       case 'eth_getTransactionReceipt':
         return this.getTransactionReceipt(params)
       case 'disconnect':
+      case 'wallet_revokePermissions':
         return this.disconnect()
       default:
         throw new Error(`Unsupported method: ${method}`)
@@ -82,7 +83,16 @@ class MyCustomWalletProvider implements WalletProvider {
     const url = this.getUrl(type)
 
     const encodedQuery = encodeBase64(query)
-    const urlWithQuery = `${url}?raw-transaction=${encodedQuery}`
+    let urlWithQuery = ''
+    switch (type) {
+      case 'SEND_TRANSACTION':
+        urlWithQuery = `${url}?raw-transaction=${encodedQuery}`
+        break
+      default:
+        urlWithQuery = ''
+        break
+    }
+
     const urlFinal = encodedQuery ? urlWithQuery : url
     const width = 450
     const height = 800
@@ -91,7 +101,7 @@ class MyCustomWalletProvider implements WalletProvider {
 
     const popup = window.open(
       urlFinal,
-      `${GROUP_SLUG}`,
+      `${GROUP_SLUG}${this.accounts[0]}`,
       `toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=no,width=${width},height=${height},top=${top},left=${left}`,
     )
 
@@ -138,7 +148,9 @@ class MyCustomWalletProvider implements WalletProvider {
   }
 
   private async disconnect (): Promise<void> {
+    console.log('🚀 ~ disconnect ~ disconnect:')
     this.accounts = []
+    localStorage.removeItem(STORAGE_KEY.ACCOUNT_PASSKEY)
     this.triggerEvent('accountsChanged', [])
     console.log('Wallet disconnected.')
   }

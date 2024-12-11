@@ -99,6 +99,9 @@ export function useConnect () {
 
   useEffect(() => {
     const receiveMessage = (event: MessageEvent) => {
+      if (event.origin !== new URL(URL_PASSKEY).origin) {
+        return
+      }
       if (event?.data?.addressPasskey) {
         setAccount({
           address: event.data.addressPasskey,
