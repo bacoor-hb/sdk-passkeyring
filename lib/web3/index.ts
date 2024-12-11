@@ -17,8 +17,9 @@ class MyCustomWalletProvider implements WalletProvider {
   }
 
   async request ({ method, params = [] }: { method: string; params?: any[] }): Promise<any> {
-    console.log('🚀 ~ request ~ params:', params)
     console.log('🚀 ~ MyCustomWalletProvider ~ request ~ method:', method)
+    console.log('🚀 ~ request ~ params:', params)
+
     switch (method) {
       case 'eth_requestAccounts':
         return this.enable()
@@ -79,6 +80,11 @@ class MyCustomWalletProvider implements WalletProvider {
     }
   }
 
+  getFavicon () {
+    const link = document.querySelector("link[rel~='icon']")
+    return link ? (link as HTMLLinkElement).href : '/favicon.ico' // Trả về favicon mặc định nếu không tìm thấy
+  };
+
   openPopup (type?:I_TYPE_URL, query?:{[key:string]:any}): Promise<any> {
     const url = this.getUrl(type)
 
@@ -101,7 +107,7 @@ class MyCustomWalletProvider implements WalletProvider {
 
     const popup = window.open(
       urlFinal,
-      `${GROUP_SLUG}${this.accounts[0]}`,
+      `${GROUP_SLUG}`,
       `toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=no,width=${width},height=${height},top=${top},left=${left}`,
     )
 
@@ -171,8 +177,13 @@ class MyCustomWalletProvider implements WalletProvider {
     if (!tx.chainId) {
       tx.chainId = this.chainId
     }
+    const infoPageConnected = {
+      site: window.location.origin,
+      icon: this.getFavicon(),
+      timeStamp: Date.now(),
+    }
 
-    const { data } = await this.openPopup('SEND_TRANSACTION', { ...tx })
+    const { data } = await this.openPopup('SEND_TRANSACTION', { transaction: tx, infoPageConnected })
 
     if (data.type === 'ERROR_TRANSACTION') {
       throw new Error(data.payload)
