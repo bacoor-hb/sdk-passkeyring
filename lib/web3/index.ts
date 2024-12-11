@@ -117,7 +117,7 @@ class MyCustomWalletProvider implements WalletProvider {
           clearInterval(interval)
           window.removeEventListener('message', onMessage)
           resolve({ data: event.data }) // Payload chứa dữ liệu từ popup
-          popup.close()
+          // popup.close()
         }
       })
     })
@@ -156,9 +156,18 @@ class MyCustomWalletProvider implements WalletProvider {
     const tx = params[0]
     console.log('Sending transaction:', tx)
 
+    if (!tx.chainId) {
+      tx.chainId = this.chainId
+    }
+
     const { data } = await this.openPopup('SEND_TRANSACTION', { ...tx })
-    console.log('🚀 ~ sendTransaction ~ result:', data)
-    return data?.transactionHash
+
+    if (data.type === 'ERROR_TRANSACTION') {
+      throw new Error(data.payload)
+    } else {
+      console.log('🚀 ~ sendTransaction ~ result:', data)
+      return data?.hash
+    }
   }
 
   private async signMessage (params: any[]): Promise<string> {
