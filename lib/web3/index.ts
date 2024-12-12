@@ -106,11 +106,18 @@ class MyCustomWalletProvider implements WalletProvider {
   openPopup (type?:I_TYPE_URL, query?:{[key:string]:any}): Promise<any> {
     const url = this.getUrl(type)
 
+    const width = 450
+    const height = 800
+    let left = window.innerWidth / 2 - width / 2 + window.screenX
+    let top = window.innerHeight / 2 - height / 2 + window.screenY
+
     const encodedQuery = encodeBase64(query)
     let urlWithQuery = ''
     switch (type) {
       case 'SEND_TRANSACTION':
         urlWithQuery = `${url}?raw-transaction=${encodedQuery}`
+        left = 0
+        top = 0
         break
       default:
         urlWithQuery = ''
@@ -118,10 +125,6 @@ class MyCustomWalletProvider implements WalletProvider {
     }
 
     const urlFinal = encodedQuery ? urlWithQuery : url
-    const width = 450
-    const height = 800
-    const left = window.innerWidth / 2 - width / 2 + window.screenX
-    const top = window.innerHeight / 2 - height / 2 + window.screenY
 
     const popup = window.open(
       urlFinal,
