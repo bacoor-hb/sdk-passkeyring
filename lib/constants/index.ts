@@ -21,5 +21,5 @@ export const GROUP_SLUG = 'egglegamewallet'
 export const STORAGE_KEY = {
   ACCOUNT_PASSKEY: 'ACCOUNT_PASSKEY_' + GROUP_SLUG,
 }
-export const URL_PASSKEY = 'https://pass.keyring.app'
+export const URL_PASSKEY = 'https://pass.w3w.app'
 // export const URL_PASSKEY = 'http://localhost:3000'
