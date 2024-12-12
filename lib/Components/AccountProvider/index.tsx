@@ -36,9 +36,9 @@ const AccountProvider: React.FC<AccountProviderProps> = ({ children }) => {
   const setChangeAccount = (account?: Account) => {
     const newAccount = account || accountDefault
     setAccount(newAccount)
-    if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
-      localStorage.setItem(STORAGE_KEY.ACCOUNT_PASSKEY, JSON.stringify(newAccount))
-    }
+    // if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
+    //   localStorage.setItem(STORAGE_KEY.ACCOUNT_PASSKEY, JSON.stringify(newAccount))
+    // }
   }
 
   return (

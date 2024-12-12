@@ -167,6 +167,9 @@ class MyCustomWalletProvider implements WalletProvider {
 
       // Xử lý kết quả trả về từ popup
       this.accounts = [data.addressPasskey] // Giả sử popup trả về thông tin account
+
+      localStorage.setItem(STORAGE_KEY.ACCOUNT_PASSKEY, JSON.stringify({ address: this.accounts[0], chainId: this.chainId }))
+
       this.triggerEvent('accountsChanged', this.accounts)
       return this.accounts
     } catch (error) {
