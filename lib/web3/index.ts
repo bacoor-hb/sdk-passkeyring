@@ -23,11 +23,8 @@ class MyCustomWalletProvider implements WalletProvider {
         const accountPasskey = localStorage.getItem(STORAGE_KEY.ACCOUNT_PASSKEY)
         if (accountPasskey) {
           const accountPasskeyParse = JSON.parse(accountPasskey)
-          console.log('🚀 ~ init ~ accountPasskeyParse:', accountPasskeyParse)
           this.accounts = [accountPasskeyParse.address]
-          console.log('🚀 ~ init ~ this.accounts:', this.accounts)
           this.chainId = accountPasskeyParse.chainId || this.chainId
-          console.log('🚀 ~ init ~ this.chainId:', this.chainId)
           this.triggerEvent('accountsChanged', this.accounts)
           this.triggerEvent('chainChanged', this.chainId)
         }
