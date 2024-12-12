@@ -14,6 +14,27 @@ class MyCustomWalletProvider implements WalletProvider {
     this.icon = 'https://example.com/my-wallet-icon.png'
     this.uuid = '123e4567-e89b-12d3-a456-426614174000' // UUID duy nhất
     this.version = '1.0.0'
+    this.init()
+  }
+
+  private async init () {
+    try {
+      if (this.accounts.length === 0) {
+        const accountPasskey = localStorage.getItem(STORAGE_KEY.ACCOUNT_PASSKEY)
+        if (accountPasskey) {
+          const accountPasskeyParse = JSON.parse(accountPasskey)
+          console.log('🚀 ~ init ~ accountPasskeyParse:', accountPasskeyParse)
+          this.accounts = [accountPasskeyParse.address]
+          console.log('🚀 ~ init ~ this.accounts:', this.accounts)
+          this.chainId = accountPasskeyParse.chainId || this.chainId
+          console.log('🚀 ~ init ~ this.chainId:', this.chainId)
+          this.triggerEvent('accountsChanged', this.accounts)
+          this.triggerEvent('chainChanged', this.chainId)
+        }
+      }
+    } catch (error) {
+      console.log('🚀 ~ init ~ error:', error)
+    }
   }
 
   async request ({ method, params = [] }: { method: string; params?: any[] }): Promise<any> {
@@ -69,7 +90,7 @@ class MyCustomWalletProvider implements WalletProvider {
     switch (type) {
       case 'SEND_TRANSACTION':
         // return `${URL_PASSKEY}/wallet/send-transaction`
-        return `${URL_PASSKEY}/mypage/${this.accounts[0]}`
+        return `${URL_PASSKEY}/${GROUP_SLUG}/mypage/${this.accounts[0]}`
       default:
 
         // if (isConnected && address) {
@@ -125,6 +146,10 @@ class MyCustomWalletProvider implements WalletProvider {
 
       window.addEventListener('message', function onMessage (event) {
         // Kiểm tra nguồn dữ liệu nếu cần
+        console.log('🚀 ~ onMessage ~ event.origin:', event.origin)
+
+        console.log('🚀 ~ onMessage ~ new URL(URL_PASSKEY).origin:', new URL(URL_PASSKEY).origin)
+
         if (event.origin !== new URL(URL_PASSKEY).origin) {
           return
         }
@@ -194,26 +219,32 @@ class MyCustomWalletProvider implements WalletProvider {
   }
 
   private async signMessage (params: any[]): Promise<string> {
-    const [address, message] = params
-    return '0xSignedMessage'
+    // const [address, message] = params
+    // return '0xSignedMessage'
+
+    throw new Error('Unsupported method signMessage')
   }
 
   private async personalSign (params: any[]): Promise<string> {
-    const [message, address] = params
-    return '0xPersonalSignedMessage'
+    // const [message, address] = params
+    // return '0xPersonalSignedMessage'
+    throw new Error('Unsupported method personalSign')
   }
 
   private async signTypedData (params: any[]): Promise<string> {
-    const [address, typedData] = params
-    return '0xTypedDataSignature'
+    // const [address, typedData] = params
+    // return '0xTypedDataSignature'
+    throw new Error('Unsupported method signTypedData')
   }
 
   private async subscribe (params: any[]): Promise<string> {
-    return 'subscriptionId'
+    // return 'subscriptionId'
+    throw new Error('Unsupported method subscribe')
   }
 
   private async unsubscribe (params: any[]): Promise<boolean> {
-    return true
+    // return true
+    throw new Error('Unsupported method unsubscribe')
   }
 
   private async switchEthereumChain (params: any[]): Promise<void> {
@@ -224,41 +255,50 @@ class MyCustomWalletProvider implements WalletProvider {
     // throw new Error(`Unsupported chainId: ${chainId}`)
 
     this.chainId = chainId
+    localStorage.setItem(STORAGE_KEY.ACCOUNT_PASSKEY, JSON.stringify({ address: this.accounts[0], chainId }))
 
     // Kích hoạt sự kiện chainChanged
     this.triggerEvent('chainChanged', chainId)
   }
 
   private async addEthereumChain (params: any[]): Promise<void> {
-    console.log('Adding Ethereum chain:', params)
+    // console.log('Adding Ethereum chain:', params)
+    throw new Error('Unsupported method addEthereumChain')
   }
 
   private async estimateGas (params: any[]): Promise<string> {
-    console.log('Estimating gas for:', params)
-    return '0x5208' // 21000 Gwei
+    // console.log('Estimating gas for:', params)
+    // return '0x5208' // 21000 Gwei
+    throw new Error('Unsupported method getBlockNumber')
   }
 
   private async getGasPrice (): Promise<string> {
-    return '0x3B9ACA00' // 1 Gwei
+    // return '0x3B9ACA00' // 1 Gwei
+    throw new Error('Unsupported method getBlockNumber')
   }
 
   private async getBlockNumber (): Promise<string> {
-    return '0x10d4f' // Block number dưới dạng hex
+    // return '0x10d4f' // Block number dưới dạng hex
+    throw new Error('Unsupported method getBlockNumber')
   }
 
   private async getBalance (params: any[]): Promise<string> {
     const [address] = params
-    return '0xDE0B6B3A7640000' // 1 ETH
+    // return '0xDE0B6B3A7640000' // 1 ETH
+    throw new Error('Unsupported method getBalance')
   }
 
   private async getTransactionByHash (params: any[]): Promise<any> {
-    const [txHash] = params
-    return { hash: txHash, status: 'pending' } // Mô phỏng
+    // const [txHash] = params
+    // return { hash: txHash, status: 'pending' } // Mô phỏng
+    throw new Error('Unsupported method getTransactionByHash')
   }
 
   private async getTransactionReceipt (params: any[]): Promise<any> {
-    const [txHash] = params
-    return { hash: txHash, status: 'success' } // Mô phỏng
+    // const [txHash] = params
+    // return { hash: txHash, status: 'success' } // Mô phỏng
+
+    throw new Error('Unsupported method getTransactionReceipt')
   }
 
   // Quản lý sự kiện
