@@ -209,6 +209,8 @@ class MyCustomWalletProvider implements WalletProvider {
       site: window.location.origin,
       icon: this.getFavicon(),
       timeStamp: Date.now(),
+      expiry: Date.now() + 1000 * 60 * 5, // 5 minutes
+
     }
 
     const { data } = await this.openPopup('SEND_TRANSACTION', { transaction: tx, infoPageConnected })
