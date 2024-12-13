@@ -19,8 +19,7 @@ interface ProviderMessage {
 }
 
 export function onPageLoad () {
-  if (typeof window !== 'undefined' && !window?.ethereum) {
-    console.log('🚀 ~ onPageLoad ~ window.ethereum:', window.ethereum)
+  if (typeof window === 'undefined') {
     return
   }
   console.log('🚀 ~ onPageLoad ~ onPageLoad:')
