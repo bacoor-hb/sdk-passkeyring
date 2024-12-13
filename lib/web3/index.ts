@@ -106,7 +106,7 @@ class MyCustomWalletProvider implements WalletProvider {
   openPopup (type?:I_TYPE_URL, query?:{[key:string]:any}): Promise<any> {
     const url = this.getUrl(type)
 
-    const width = 450
+    const width = 470
     const height = 800
     let left = window.innerWidth / 2 - width / 2 + window.screenX
     let top = window.innerHeight / 2 - height / 2 + window.screenY
