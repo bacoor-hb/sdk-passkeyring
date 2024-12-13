@@ -6,20 +6,20 @@
 ## Install (for single position)
 
 ```bash
-npm install --save sdk-v2-passkeywallet
+npm install --save sdk-v2-egglegamewallet
 
 
 ```
 
 ```bash
-yarn add sdk-v2-passkeywallet
+yarn add sdk-v2-egglegamewallet
 ```
 
 ## Usage
 ```jsx
 //Used for the first file to run (index.js)
 import React from "react";
-import { PasskeyProvider } from "sdk-v2-passkeywallet";
+import { PasskeyProvider } from "sdk-v2-egglegamewallet";
 
 const App = ({children}) => {
 

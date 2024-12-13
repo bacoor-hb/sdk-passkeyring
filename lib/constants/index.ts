@@ -20,8 +20,8 @@ export const infoGroup = {
 
 }
 
-// export const GROUP_SLUG = 'egglegamewallet'
-export const GROUP_SLUG = 'passkeywallet'
+export const GROUP_SLUG = 'egglegamewallet'
+// export const GROUP_SLUG = 'passkeywallet'
 // export const GROUP_SLUG = 'bacoorpasskeywallet'
 // export const GROUP_SLUG = 'keyringpasskeywallet'
 
