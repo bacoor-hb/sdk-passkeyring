@@ -1,21 +1,24 @@
+const uuidSdk = '23e4567-e89b-12d3-a456-426614174000'
+const rdnsSdk = 'co.bacoor.keyring'
+
 export const infoGroup = {
   egglegamewallet: {
-    uuid: '123e4567-e89b-12d3-a456-426614174000',
+    uuid: uuidSdk,
     name: 'Eggle Gamewallet',
     icon: 'https://ipfs.pantograph.app/ipfs/QmUn7MnyA9HWfHNRG7oLTweNG93ztaErFdcg36Y2uxENUu?filename=noti.png',
-    rdns: 'co.bacoor.keyring',
+    rdns: rdnsSdk,
   },
   bacoorpasskeywallet: {
-    uuid: '123e4567-e89b-12d3-a456-426614174000',
+    uuid: uuidSdk,
     name: 'Eggle Gamewallet',
     icon: 'https://ipfs.pantograph.app/ipfs/QmUn7MnyA9HWfHNRG7oLTweNG93ztaErFdcg36Y2uxENUu?filename=noti.png',
-    rdns: 'co.bacoor.keyring',
+    rdns: rdnsSdk,
   },
   passkeywallet: {
-    uuid: '123e4567-e89b-12d3-a456-426614174000',
+    uuid: uuidSdk,
     name: 'KEYRING SMART',
     icon: 'https://ipfs.pantograph.app/ipfs/QmWdV4p9FvAUKEnGHefwsYxUrtY8qyEX61xbHdGXworS8k?filename=icon%20NOTI.png',
-    rdns: 'co.bacoor.keyring',
+    rdns: rdnsSdk,
   },
 
 }
@@ -29,4 +32,5 @@ export const STORAGE_KEY = {
   ACCOUNT_PASSKEY: 'ACCOUNT_PASSKEY_' + GROUP_SLUG,
 }
 export const URL_PASSKEY = 'https://smart.keyring.app'
+// export const URL_PASSKEY = 'https://pass.w3w.app'
 // export const URL_PASSKEY = 'http://localhost:3000'

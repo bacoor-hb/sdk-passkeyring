@@ -1,6 +1,7 @@
 import { GROUP_SLUG, STORAGE_KEY, URL_PASSKEY } from 'lib/constants'
 import { decodeBase64, encodeBase64 } from 'lib/function'
 import { I_TYPE_URL, WalletProvider } from 'lib/web3/type'
+import { isMobile } from 'react-device-detect'
 
 class MyCustomWalletProvider implements WalletProvider {
   name: string
@@ -86,14 +87,9 @@ class MyCustomWalletProvider implements WalletProvider {
   getUrl (type?:I_TYPE_URL): string {
     switch (type) {
       case 'SEND_TRANSACTION':
-        // return `${URL_PASSKEY}/wallet/send-transaction`
+      case 'PERSONAL_SIGN':
         return `${URL_PASSKEY}/${GROUP_SLUG}/mypage/${this.accounts[0]}`
       default:
-
-        // if (isConnected && address) {
-        //   const query = type === 'NFT' ? '/list-nfts' : ''
-        //   url = `${URL_PASSKEY}/${GROUP_SLUG}/mypage/${address}${query}`
-        // } else {
         return `${URL_PASSKEY}/activate-by-passkey/${GROUP_SLUG}`
     }
   }
@@ -116,6 +112,11 @@ class MyCustomWalletProvider implements WalletProvider {
     switch (type) {
       case 'SEND_TRANSACTION':
         urlWithQuery = `${url}?raw-transaction=${encodedQuery}`
+        left = 0
+        top = 0
+        break
+      case 'PERSONAL_SIGN':
+        urlWithQuery = `${url}?sign-message=${encodedQuery}`
         left = 0
         top = 0
         break
@@ -146,9 +147,6 @@ class MyCustomWalletProvider implements WalletProvider {
 
       window.addEventListener('message', function onMessage (event) {
         // Kiểm tra nguồn dữ liệu nếu cần
-        console.log('🚀 ~ onMessage ~ event.origin:', event.origin)
-
-        console.log('🚀 ~ onMessage ~ new URL(URL_PASSKEY).origin:', new URL(URL_PASSKEY).origin)
 
         if (event.origin !== new URL(URL_PASSKEY).origin) {
           return
@@ -158,6 +156,10 @@ class MyCustomWalletProvider implements WalletProvider {
           clearInterval(interval)
           window.removeEventListener('message', onMessage)
           resolve({ data: event.data }) // Payload chứa dữ liệu từ popup
+
+          if (isMobile) {
+            popup.close()
+          }
           // popup.close()
         }
       })
@@ -197,10 +199,8 @@ class MyCustomWalletProvider implements WalletProvider {
     return this.chainId
   }
 
-  private async sendTransaction (params: any[]): Promise<string> {
-    console.log('🚀 ~ MyCustomWalletProvider ~ sendTransaction ~ params:', params)
+  private async sendTransaction (params: any[]): Promise<string|undefined> {
     const tx = params[0]
-    console.log('Sending transaction:', tx)
 
     if (!tx.chainId) {
       tx.chainId = this.chainId
@@ -217,23 +217,40 @@ class MyCustomWalletProvider implements WalletProvider {
 
     if (data.type === 'ERROR_TRANSACTION') {
       throw new Error(data.payload)
-    } else {
-      console.log('🚀 ~ sendTransaction ~ result:', data)
-      return data?.hash
+    }
+    if (data.type === 'SEND_TRANSACTION') {
+      return data?.payload?.hash
     }
   }
 
   private async signMessage (params: any[]): Promise<string> {
-    // const [address, message] = params
+  // const [address, message] = params
     // return '0xSignedMessage'
 
     throw new Error('Unsupported method signMessage')
   }
 
-  private async personalSign (params: any[]): Promise<string> {
-    // const [message, address] = params
-    // return '0xPersonalSignedMessage'
-    throw new Error('Unsupported method personalSign')
+  private async personalSign (params: any[]): Promise<string|undefined> {
+    const infoPageConnected = {
+      site: window.location.origin,
+      icon: this.getFavicon(),
+      timeStamp: Date.now(),
+      expiry: Date.now() + 1000 * 60 * 5, // 5 minutes
+
+    }
+    const { data } = await this.openPopup('PERSONAL_SIGN', {
+      expiry: Date.now() + 1000 * 60 * 5,
+      chainId: this.chainId,
+      message: params[0],
+      account: params[1],
+      infoPageConnected,
+    })
+    if (data.type === 'ERROR_TRANSACTION') {
+      throw new Error(data.payload)
+    }
+    if (data.type === 'PERSONAL_SIGN') {
+      return data?.payload?.signature
+    }
   }
 
   private async signTypedData (params: any[]): Promise<string> {

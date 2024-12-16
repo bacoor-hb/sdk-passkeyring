@@ -15,4 +15,12 @@ interface EthereumWindow extends Window {
   };
 }
 
-export type I_TYPE_URL = 'SEND_TRANSACTION' | 'ACCOUNT' | 'NFT' | 'SWAP' | 'SWAP_NFT' | 'APPROVE' | undefined
+export type I_TYPE_URL =
+  | 'SEND_TRANSACTION'
+  | 'ACCOUNT'
+  | 'NFT'
+  | 'SWAP'
+  | 'SWAP_NFT'
+  | 'APPROVE'
+  | 'PERSONAL_SIGN'
+  | undefined;
