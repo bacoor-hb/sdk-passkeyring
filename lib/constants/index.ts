@@ -31,6 +31,11 @@ export const GROUP_SLUG = 'egglegamewallet'
 export const STORAGE_KEY = {
   ACCOUNT_PASSKEY: 'ACCOUNT_PASSKEY_' + GROUP_SLUG,
 }
+
+export const chainsSupported = [
+  '0x1', '0xa', '0x38', '0x89', '0xa4b1',
+]
+
 // export const URL_PASSKEY = 'https://smart.keyring.app'
 export const URL_PASSKEY = 'https://pass.w3w.app'
 // export const URL_PASSKEY = 'http://localhost:3000'

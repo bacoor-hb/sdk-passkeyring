@@ -1,4 +1,4 @@
-import { GROUP_SLUG, STORAGE_KEY, URL_PASSKEY } from 'lib/constants'
+import { chainsSupported, GROUP_SLUG, STORAGE_KEY, URL_PASSKEY } from 'lib/constants'
 import { decodeBase64, encodeBase64 } from 'lib/function'
 import { I_TYPE_URL, WalletProvider } from 'lib/web3/type'
 import { isMobile } from 'react-device-detect'
@@ -280,10 +280,10 @@ class MyCustomWalletProvider implements WalletProvider {
 
   private async switchEthereumChain (params: any[]): Promise<void> {
     const chainId = params[0].chainId
-    // if (chainId === this.chainId) {
-    //   return
-    // }
-    // throw new Error(`Unsupported chainId: ${chainId}`)
+
+    if (!chainsSupported.includes(chainId)) {
+      throw new Error(`Unsupported chainId: ${chainId}`)
+    }
 
     this.chainId = chainId
     localStorage.setItem(STORAGE_KEY.ACCOUNT_PASSKEY, JSON.stringify({ address: this.accounts[0], chainId }))
