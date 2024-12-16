@@ -349,6 +349,6 @@ class MyCustomWalletProvider implements WalletProvider {
   }
 }
 
-const isWeb3Injected = typeof window?.ethereum !== 'undefined'
+const isWeb3Injected = typeof window !== 'undefined' && typeof window?.ethereum !== 'undefined'
 
 export { MyCustomWalletProvider, isWeb3Injected }
