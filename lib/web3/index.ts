@@ -165,8 +165,8 @@ class MyCustomWalletProvider implements WalletProvider {
           clearInterval(interval)
           window.removeEventListener('message', onMessage)
           resolve({ data: event.data }) // Payload chứa dữ liệu từ popup
-
-          if (isMobile) {
+          const closePopupAfterDone = event?.data?.closePopupAfterDone
+          if (isMobile || closePopupAfterDone) {
             popup.close()
           }
           // popup.close()
