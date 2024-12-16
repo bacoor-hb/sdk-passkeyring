@@ -1,5 +1,5 @@
 const uuidSdk = '23e4567-e89b-12d3-a456-426614174000'
-export const rdnsSdk = 'co.bacoor.keyring'
+const rdnsSdk = 'co.bacoor.keyring'
 
 export const infoGroup = {
   egglegamewallet: {
@@ -39,3 +39,5 @@ export const chainsSupported = [
 // export const URL_PASSKEY = 'https://smart.keyring.app'
 export const URL_PASSKEY = 'https://pass.w3w.app'
 // export const URL_PASSKEY = 'http://localhost:3000'
+
+export const infoWallet = { slug: GROUP_SLUG, url: URL_PASSKEY, ...infoGroup[GROUP_SLUG] }
