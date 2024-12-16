@@ -348,4 +348,7 @@ class MyCustomWalletProvider implements WalletProvider {
     window.dispatchEvent(customEvent)
   }
 }
-export { MyCustomWalletProvider }
+
+const isWeb3Injected = typeof window.ethereum !== 'undefined'
+
+export { MyCustomWalletProvider, isWeb3Injected }
