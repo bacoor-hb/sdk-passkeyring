@@ -10,6 +10,7 @@ class MyCustomWalletProvider implements WalletProvider {
   version: string
   private accounts: string[] = []
   private chainId: string = '0x1' // Ethereum Mainnet
+  private currentPopup: Window | null = null // Track the currently opened popup
   constructor () {
     this.name = 'MyCustomWallet'
     this.icon = 'https://example.com/my-wallet-icon.png'
@@ -127,6 +128,10 @@ class MyCustomWalletProvider implements WalletProvider {
 
     const urlFinal = encodedQuery ? urlWithQuery : url
 
+    if (this.currentPopup && !this.currentPopup.closed && isMobile) {
+      this.currentPopup.close()
+    }
+
     const popup = window.open(
       urlFinal,
       `${GROUP_SLUG}`,
@@ -135,6 +140,10 @@ class MyCustomWalletProvider implements WalletProvider {
 
     if (!popup) {
       return Promise.reject(new Error('Popup could not be opened'))
+    }
+
+    if (isMobile) {
+      this.currentPopup = popup
     }
 
     return new Promise((resolve, reject) => {
