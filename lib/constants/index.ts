@@ -33,7 +33,7 @@ export const STORAGE_KEY = {
 }
 
 export const chainsSupported = [
-  '0x1', '0xa', '0x38', '0x89', '0xa4b1',
+  '0x1', '0xa', '0x38', '0x89', '0xa4b1', '0x2105',
 ]
 
 // export const URL_PASSKEY = 'https://smart.keyring.app'
