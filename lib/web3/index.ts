@@ -274,12 +274,14 @@ class MyCustomWalletProvider implements WalletProvider {
   private async estimateGas (params: any[]): Promise<string> {
     // console.log('Estimating gas for:', params)
     // return '0x5208' // 21000 Gwei
-    throw new Error('Unsupported method getBlockNumber')
+    // throw new Error('Unsupported method getBlockNumber')
+    return '0x0'
   }
 
   private async getGasPrice (): Promise<string> {
     // return '0x3B9ACA00' // 1 Gwei
-    throw new Error('Unsupported method getBlockNumber')
+    // throw new Error('Unsupported method getBlockNumber')
+    return '0x0'
   }
 
   private async getBlockNumber (): Promise<string> {
