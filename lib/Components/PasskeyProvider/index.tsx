@@ -4,8 +4,16 @@ import React, { useState, ReactNode, useEffect } from 'react'
 import '../../styles/index.css'
 import AccountProvider from 'lib/Components/AccountProvider'
 import { onPageLoad } from 'lib/function'
+import { MODE_DEV } from 'lib/constants'
 
-const PasskeyProvider = ({ children }: { children: ReactNode }) => {
+interface PasskeyProviderProps {
+  children: ReactNode;
+  mode?: string;
+}
+
+const PasskeyProvider = ({ children, ...props }: PasskeyProviderProps) => {
+  const mode = props?.mode || 'production'
+
   useEffect(() => {
     onPageLoad()
   }, [])
