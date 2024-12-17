@@ -5,11 +5,11 @@
 ## Install (for single position)
 
 ```bash
-npm install --save sdk-v2-egglegamewallet
+npm install --save sdk-v2-egglepasskeywallet
 ```
 
 ```bash
-yarn add sdk-v2-egglegamewallet
+yarn add sdk-v2-egglepasskeywallet
 ```
 
 ## Usage
@@ -18,7 +18,7 @@ yarn add sdk-v2-egglegamewallet
 //MUST HAVE - Used for the first file to run (index.js)
 
 import React from "react";
-import { PasskeyProvider } from "sdk-v2-egglegamewallet";
+import { PasskeyProvider } from "sdk-v2-egglepasskeywallet";
 
 const App = ({ children }) => {
   return <PasskeyProvider>{children}</PasskeyProvider>;
@@ -35,7 +35,7 @@ export default App;
 
 //step 1 : create button to connect
 import React from "react";
-import { infoWallet } from "sdk-v2-egglegamewallet";
+import { infoWallet } from "sdk-v2-egglepasskeywallet";
 import { useConnect, useConnectors, useSwitchChain } from "wagmi";
 
 const ButtonConnectWallet = () => {
@@ -87,7 +87,7 @@ export default ButtonConnectWallet;
 //step 2:
 
 import React from "react";
-import { isWeb3Injected } from "sdk-v2-egglegamewallet";
+import { isWeb3Injected } from "sdk-v2-egglepasskeywallet";
 import ButtonConnectWallet from "./ButtonConnectWallet";// step above
 import { useWeb3Modal } from "@web3modal/wagmi/react";
 

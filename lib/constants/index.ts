@@ -8,6 +8,12 @@ export const infoGroup = {
     icon: 'https://ipfs.pantograph.app/ipfs/QmUn7MnyA9HWfHNRG7oLTweNG93ztaErFdcg36Y2uxENUu?filename=noti.png',
     rdns: rdnsSdk,
   },
+  egglepasskeywallet: {
+    uuid: uuidSdk,
+    name: 'EGGLE GAME WALLET',
+    icon: 'https://ipfs.pantograph.app/ipfs/QmUn7MnyA9HWfHNRG7oLTweNG93ztaErFdcg36Y2uxENUu?filename=noti.png',
+    rdns: rdnsSdk,
+  },
   bacoorpasskeywallet: {
     uuid: uuidSdk,
     name: 'Eggle Gamewallet',
@@ -23,7 +29,8 @@ export const infoGroup = {
 
 }
 
-export const GROUP_SLUG = 'egglegamewallet'
+// export const GROUP_SLUG = 'egglegamewallet'
+export const GROUP_SLUG = 'egglepasskeywallet'
 // export const GROUP_SLUG = 'passkeywallet'
 // export const GROUP_SLUG = 'bacoorpasskeywallet'
 // export const GROUP_SLUG = 'keyringpasskeywallet'
