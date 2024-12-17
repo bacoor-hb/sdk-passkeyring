@@ -16,8 +16,8 @@ export const infoGroup = {
   },
   bacoorpasskeywallet: {
     uuid: uuidSdk,
-    name: 'Eggle Gamewallet',
-    icon: 'https://ipfs.pantograph.app/ipfs/QmUn7MnyA9HWfHNRG7oLTweNG93ztaErFdcg36Y2uxENUu?filename=noti.png',
+    name: 'Bacoor Passkey Wallet',
+    icon: 'https://ipfs.pantograph.app/ipfs/QmUN2o25Bhf7nLdHRU6wivFLN7dTZCjuuMGszSdSy7TRHh?filename=bacoorem-fix-noti.png',
     rdns: rdnsSdk,
   },
   passkeywallet: {
