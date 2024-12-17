@@ -5,7 +5,7 @@
   "license": "MIT",
   "main": "./dist/main.umd.js",
   "module": "./dist/main.es.js",
-  "types": "./dist/lib/main.d.ts",
+  "types": "./dist/main.d.ts",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build --watch",
