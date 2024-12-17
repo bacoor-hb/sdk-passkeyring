@@ -37,14 +37,29 @@ export const GROUP_SLUG = 'egglepasskeywallet'
 
 export const STORAGE_KEY = {
   ACCOUNT_PASSKEY: 'ACCOUNT_PASSKEY_' + GROUP_SLUG,
+  MODE_ENV_PASSKEY: 'MODE_ENV_PASSKEY_' + GROUP_SLUG,
 }
 
 export const chainsSupported = [
   '0x1', '0xa', '0x38', '0x89', '0xa4b1', '0x2105',
 ]
 
-export const URL_PASSKEY = 'https://smart.keyring.app'
+// export const URL_PASSKEY = 'https://smart.keyring.app'
 // export const URL_PASSKEY = 'https://pass.w3w.app'
-// export const URL_PASSKEY = 'http://localhost:3000'
+
+const getURLPasskey = () => {
+  try {
+    const modeEnv = localStorage.getItem(STORAGE_KEY.MODE_ENV_PASSKEY)
+    if (modeEnv && modeEnv === 'development') {
+      return 'https://pass.w3w.app'
+    } else {
+      return 'https://smart.keyring.app'
+    }
+  } catch (error) {
+    return 'https://smart.keyring.app'
+  }
+}
+
+export const URL_PASSKEY = getURLPasskey()
 
 export const infoWallet = { slug: GROUP_SLUG, url: URL_PASSKEY, ...infoGroup[GROUP_SLUG] }

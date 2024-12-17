@@ -1,7 +1,6 @@
 
 import { STORAGE_KEY } from 'lib/constants'
 import { ConnectWindowProvider } from 'lib/context/ConnectWindowContext'
-import { onPageLoad } from 'lib/function'
 import { Account } from 'lib/types'
 import React, { createContext, ReactNode, useEffect, useState } from 'react'
 
