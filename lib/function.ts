@@ -22,11 +22,9 @@ export function onPageLoad () {
   if (typeof window === 'undefined') {
     return
   }
-  console.log('🚀 ~ onPageLoad ~ onPageLoad:')
   const provider = new MyCustomWalletProvider()
-
+  window.ethereum = provider
   function announceProvider () {
-    console.log('🚀 ~ announceProvider ~ announceProvider:')
     const info: EIP6963ProviderInfo = infoGroup[GROUP_SLUG]
     window.dispatchEvent(
       new CustomEvent('eip6963:announceProvider', {
