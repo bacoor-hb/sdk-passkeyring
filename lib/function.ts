@@ -36,20 +36,15 @@ export function onPageLoad () {
   window.addEventListener(
     'eip6963:requestProvider',
     (event: any) => {
-      console.log('🚀 ~ onPageLoad ~ event:', event)
       announceProvider()
     },
   )
-
-  // window.dispatchEvent(new Event('eip6963:requestProvider'))
 
   announceProvider()
   setTimeout(() => {
     window.dispatchEvent(new Event('eip6963:requestProvider'))
   }, 500)
 }
-
-const BASE64_CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/='
 
 export function encodeBase64<T> (data: T): T|string {
   try {
