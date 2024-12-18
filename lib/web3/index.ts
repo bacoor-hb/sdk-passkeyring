@@ -1,5 +1,5 @@
 import { chainsSupported, GROUP_SLUG, STORAGE_KEY, URL_PASSKEY } from 'lib/constants'
-import { decodeBase64, encodeBase64 } from 'lib/function'
+import { decodeBase64, encodeBase64, isObject } from 'lib/function'
 import { I_TYPE_URL, WalletProvider } from 'lib/web3/type'
 import { isMobile } from 'react-device-detect'
 
@@ -101,12 +101,23 @@ class MyCustomWalletProvider implements WalletProvider {
   };
 
   openPopup (type?:I_TYPE_URL, query?:{[key:string]:any}): Promise<any> {
+    const infoPageConnected = {
+      site: window.location.origin,
+      icon: this.getFavicon(),
+      timeStamp: Date.now(),
+      expiry: Date.now() + 1000 * 60 * 5, // 5 minutes
+
+    }
     const url = this.getUrl(type)
 
     const width = 470
     const height = 800
     let left = window.innerWidth / 2 - width / 2 + window.screenX
     let top = window.innerHeight / 2 - height / 2 + window.screenY
+
+    if (isObject(query, true)) {
+      query = { ...query, infoPageConnected }
+    }
 
     const encodedQuery = encodeBase64(query)
     let urlWithQuery = ''
@@ -169,7 +180,6 @@ class MyCustomWalletProvider implements WalletProvider {
           if (isMobile || closePopupAfterDone) {
             popup.close()
           }
-          // popup.close()
         }
       })
     })
@@ -214,18 +224,11 @@ class MyCustomWalletProvider implements WalletProvider {
     if (!tx.chainId) {
       tx.chainId = this.chainId
     }
-    const infoPageConnected = {
-      site: window.location.origin,
-      icon: this.getFavicon(),
-      timeStamp: Date.now(),
-      expiry: Date.now() + 1000 * 60 * 5, // 5 minutes
 
-    }
-
-    const { data } = await this.openPopup('SEND_TRANSACTION', { transaction: tx, infoPageConnected })
+    const { data } = await this.openPopup('SEND_TRANSACTION', { transaction: tx })
 
     if (data.type === 'ERROR_TRANSACTION') {
-      throw new Error(data.payload)
+      throw new Error(data.payload?.message || 'Error send transaction')
     }
     if (data.type === 'SEND_TRANSACTION') {
       return data?.payload?.hash
@@ -240,22 +243,13 @@ class MyCustomWalletProvider implements WalletProvider {
   }
 
   private async personalSign (params: any[]): Promise<string|undefined> {
-    const infoPageConnected = {
-      site: window.location.origin,
-      icon: this.getFavicon(),
-      timeStamp: Date.now(),
-      expiry: Date.now() + 1000 * 60 * 5, // 5 minutes
-
-    }
     const { data } = await this.openPopup('PERSONAL_SIGN', {
-      expiry: Date.now() + 1000 * 60 * 5,
       chainId: this.chainId,
       message: params[0],
       account: params[1],
-      infoPageConnected,
     })
     if (data.type === 'ERROR_TRANSACTION') {
-      throw new Error(data.payload)
+      throw new Error(data?.payload?.message || 'Error sign message')
     }
     if (data.type === 'PERSONAL_SIGN') {
       return data?.payload?.signature

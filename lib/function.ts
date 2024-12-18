@@ -67,3 +67,10 @@ export function decodeBase64 (encodedData?: any): string|undefined {
     return encodedData
   }
 }
+
+export const isObject = (data:any, checkEmpty = false) => {
+  const isObj = data && typeof data === 'object'
+  return checkEmpty
+    ? isObj && Object.keys(data).length > 0
+    : isObj
+}
