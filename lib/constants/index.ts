@@ -38,6 +38,8 @@ export const GROUP_SLUG = 'egglepasskeywallet'
 export const STORAGE_KEY = {
   ACCOUNT_PASSKEY: 'ACCOUNT_PASSKEY_' + GROUP_SLUG,
   MODE_ENV_PASSKEY: 'MODE_ENV_PASSKEY_' + GROUP_SLUG,
+  PERMISSIONS_PASSKEY: 'PERMISSIONS_PASSKEY_' + GROUP_SLUG,
+
 }
 
 export const chainsSupported = [
