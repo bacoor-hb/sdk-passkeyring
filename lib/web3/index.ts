@@ -8,6 +8,7 @@ class MyCustomWalletProvider implements WalletProvider {
   icon: string
   uuid: string
   version: string
+  private permissions: Record<string, boolean> = {}
   private accounts: string[] = []
   private chainId: string = '0x1' // Ethereum Mainnet
   private currentPopup: Window | null = null // Track the currently opened popup
@@ -41,6 +42,8 @@ class MyCustomWalletProvider implements WalletProvider {
     console.log('🚀 ~ request ~ params:', params)
 
     switch (method) {
+      case 'wallet_requestPermissions':
+        return this.requestPermissions(params)
       case 'eth_requestAccounts':
         return this.enable()
       case 'eth_accounts':
@@ -83,6 +86,48 @@ class MyCustomWalletProvider implements WalletProvider {
       default:
         throw new Error(`Unsupported method: ${method}`)
     }
+  }
+
+  private async requestPermissions (params: any[]): Promise<any> {
+    // Define supported permissions
+    const supportedPermissions = ['eth_accounts', 'eth_chainId']
+
+    // Validate requested permissions
+    const requestedPermissions = params[0]?.permissions || (params?.length > 0 && params?.map(obj => Object.keys(obj)[0])) || []
+    const invalidPermissions = requestedPermissions.filter(
+      (perm: string) => !supportedPermissions.includes(perm),
+    )
+
+    if (invalidPermissions.length > 0) {
+      throw new Error(
+        `Unsupported permissions requested: ${invalidPermissions.join(', ')}`,
+      )
+    }
+
+    // Simulate user approval (replace with actual UI prompt for production)
+    const grantedPermissions = requestedPermissions.reduce(
+      (acc: Record<string, boolean>, perm: string) => {
+        acc[perm] = true
+        return acc
+      },
+      {},
+    )
+
+    // Persist granted permissions
+    this.permissions = { ...this.permissions, ...grantedPermissions }
+    localStorage.setItem(
+      STORAGE_KEY.PERMISSIONS_PASSKEY,
+      JSON.stringify(this.permissions),
+    )
+
+    return {
+      permissions: this.permissions,
+    }
+  }
+
+  // Add a method to retrieve current permissions
+  getPermissions (): Record<string, boolean> {
+    return this.permissions
   }
 
   getUrl (type?:I_TYPE_URL): string {
@@ -206,6 +251,7 @@ class MyCustomWalletProvider implements WalletProvider {
     console.log('🚀 ~ disconnect ~ disconnect:')
     this.accounts = []
     localStorage.removeItem(STORAGE_KEY.ACCOUNT_PASSKEY)
+    localStorage.removeItem(STORAGE_KEY.PERMISSIONS_PASSKEY)
     this.triggerEvent('accountsChanged', [])
     console.log('Wallet disconnected.')
   }
@@ -292,9 +338,6 @@ class MyCustomWalletProvider implements WalletProvider {
   }
 
   private async estimateGas (params: any[]): Promise<string> {
-    // console.log('Estimating gas for:', params)
-    // return '0x5208' // 21000 Gwei
-    // throw new Error('Unsupported method getBlockNumber')
     return '0x0'
   }
 
