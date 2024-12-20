@@ -1,4 +1,5 @@
-import { chainsSupported, GROUP_SLUG, STORAGE_KEY, URL_PASSKEY } from 'lib/constants'
+import { ethers } from 'ethers'
+import { chainsSupported, GROUP_SLUG, RPC_DEFAULT, STORAGE_KEY, URL_PASSKEY } from 'lib/constants'
 import { decodeBase64, encodeBase64, isObject } from 'lib/function'
 import { I_TYPE_URL, WalletProvider } from 'lib/web3/type'
 import { isMobile } from 'react-device-detect'
@@ -38,9 +39,6 @@ class MyCustomWalletProvider implements WalletProvider {
   }
 
   async request ({ method, params = [] }: { method: string; params?: any[] }): Promise<any> {
-    console.log('🚀 ~ MyCustomWalletProvider ~ request ~ method:', method)
-    console.log('🚀 ~ request ~ params:', params)
-
     switch (method) {
       case 'wallet_requestPermissions':
         return this.requestPermissions(params)
@@ -52,6 +50,8 @@ class MyCustomWalletProvider implements WalletProvider {
         return this.getChainId()
       case 'net_version':
         return Number(this.chainId.toString())
+      case 'wallet_getNetwork':
+        return this.getNetwork()
       case 'eth_sendTransaction':
         return this.sendTransaction(params)
       case 'eth_sign':
@@ -82,6 +82,10 @@ class MyCustomWalletProvider implements WalletProvider {
         return this.getTransactionByHash(params)
       case 'eth_getTransactionReceipt':
         return this.getTransactionReceipt(params)
+      case 'eth_getCode':
+        return this.getCode(params[0])
+      case 'eth_getTransactionCount':
+        return this.getTransactionCount(params[0], params[1] || 'latest')
       case 'disconnect':
       case 'wallet_revokePermissions':
         return this.disconnect()
@@ -250,12 +254,11 @@ class MyCustomWalletProvider implements WalletProvider {
   }
 
   private async disconnect (): Promise<void> {
-    console.log('🚀 ~ disconnect ~ disconnect:')
     this.accounts = []
     localStorage.removeItem(STORAGE_KEY.ACCOUNT_PASSKEY)
     localStorage.removeItem(STORAGE_KEY.PERMISSIONS_PASSKEY)
     this.triggerEvent('accountsChanged', [])
-    console.log('Wallet disconnected.')
+    console.log('🚀 ~  Wallet disconnected.')
   }
 
   private async getAccounts (): Promise<string[]> {
@@ -344,33 +347,120 @@ class MyCustomWalletProvider implements WalletProvider {
   }
 
   private async getGasPrice (): Promise<string> {
-    // return '0x3B9ACA00' // 1 Gwei
-    // throw new Error('Unsupported method getBlockNumber')
-    return '0x0'
+    const provider = await this.createProviderWeb3()
+    const gasPrice = await provider.getGasPrice()
+    return gasPrice
+  }
+
+  private async createProviderWeb3 (url?:string|undefined): Promise<any> {
+    const rpc = url || RPC_DEFAULT[Number(this.chainId) as keyof typeof RPC_DEFAULT]
+    const provider = new ethers.providers.JsonRpcProvider(rpc)
+    return provider
   }
 
   private async getBlockNumber (): Promise<string> {
-    // return '0x10d4f' // Block number dưới dạng hex
-    throw new Error('Unsupported method getBlockNumber')
+    const provider = await this.createProviderWeb3()
+    const blockNumber = await provider.getBlockNumber()
+    return blockNumber
   }
 
   private async getBalance (params: any[]): Promise<string> {
-    const [address] = params
-    // return '0xDE0B6B3A7640000' // 1 ETH
-    throw new Error('Unsupported method getBalance')
+    const [address, blockNumber] = params
+    const provider = await this.createProviderWeb3()
+    const balance = await provider.getBalance(address, blockNumber)
+    return balance
   }
 
   private async getTransactionByHash (params: any[]): Promise<any> {
-    // const [txHash] = params
-    // return { hash: txHash, status: 'pending' } // Mô phỏng
-    throw new Error('Unsupported method getTransactionByHash')
+    try {
+      const [transactionHash] = params
+      if (!transactionHash) {
+        throw new Error('Transaction hash is required.')
+      }
+
+      const provider = await this.createProviderWeb3()
+      const transaction = await provider.getTransaction(transactionHash)
+
+      if (!transaction) {
+        throw new Error(`Transaction not found for hash: ${transactionHash}`)
+      }
+
+      return transaction
+    } catch (error) {
+      console.error('Error in getTransactionByHash:', error)
+      throw error
+    }
   }
 
   private async getTransactionReceipt (params: any[]): Promise<any> {
-    // const [txHash] = params
-    // return { hash: txHash, status: 'success' } // Mô phỏng
+    try {
+      const [transactionHash] = params
+      if (!transactionHash) {
+        throw new Error('Transaction hash is required.')
+      }
 
-    throw new Error('Unsupported method getTransactionReceipt')
+      const provider = await this.createProviderWeb3()
+      const receipt = await provider.getTransactionReceipt(transactionHash)
+
+      if (!receipt) {
+        throw new Error(`Transaction receipt not found for hash: ${transactionHash}`)
+      }
+
+      return receipt
+    } catch (error) {
+      console.error('Error in getTransactionReceipt:', error)
+      throw error
+    }
+  }
+
+  private async getCode (address: string): Promise<string> {
+    try {
+      // Kiểm tra đầu vào hợp lệ
+      if (!address || typeof address !== 'string') {
+        throw new Error('A valid address is required to get the code.')
+      }
+
+      const provider = await this.createProviderWeb3()
+
+      // Lấy bytecode của địa chỉ
+      const code = await provider.getCode(address)
+
+      // Trả về bytecode (hex string)
+      return code
+    } catch (error) {
+      console.error('Error in getCode:', error)
+      throw error
+    }
+  }
+
+  private async getTransactionCount (address: string, blockTag: string = 'latest'): Promise<number> {
+    try {
+      if (!address || typeof address !== 'string') {
+        throw new Error('A valid address is required to get the transaction count.')
+      }
+
+      const provider = await this.createProviderWeb3()
+
+      const transactionCount = await provider.getTransactionCount(address, blockTag)
+
+      return transactionCount
+    } catch (error) {
+      console.error('Error in getTransactionCount:', error)
+      throw error
+    }
+  }
+
+  private async getNetwork (): Promise<any> {
+    try {
+      const provider = await this.createProviderWeb3()
+
+      const network = await provider.getNetwork()
+
+      return network
+    } catch (error) {
+      console.error('Error in getNetwork:', error)
+      throw error
+    }
   }
 
   // Quản lý sự kiện

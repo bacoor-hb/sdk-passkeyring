@@ -63,6 +63,8 @@
     "vite-tsconfig-paths": "3.4.1"
   },
   "dependencies": {
+    "bignumber.js": "^9.1.2",
+    "ethers": "5.7.2",
     "autoprefixer": "^10.4.20",
     "postcss": "^8.4.47",
     "react-device-detect": "^2.2.3",
