@@ -88,9 +88,9 @@ class MyCustomWalletProvider implements WalletProvider {
       case 'eth_getTransactionReceipt':
         return this.getTransactionReceipt(params)
       case 'eth_getCode':
-        return this.getCode(params[0])
+        return this.getCode(params?.[0])
       case 'eth_getTransactionCount':
-        return this.getTransactionCount(params[0], params[1] || 'latest')
+        return this.getTransactionCount(params?.[0], params?.[1] || 'latest')
       case 'disconnect':
       case 'wallet_revokePermissions':
         return this.disconnect()
