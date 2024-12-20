@@ -209,9 +209,7 @@ class MyCustomWalletProvider implements WalletProvider {
       return Promise.reject(new Error('Popup could not be opened'))
     }
 
-    if (isMobile) {
-      this.currentPopup = popup
-    }
+    this.currentPopup = popup
 
     return new Promise((resolve, reject) => {
       const interval = setInterval(() => {
@@ -264,6 +262,10 @@ class MyCustomWalletProvider implements WalletProvider {
     localStorage.removeItem(STORAGE_KEY.PERMISSIONS_PASSKEY)
     this.triggerEvent('accountsChanged', [])
     console.log('🚀 ~  Wallet disconnected.')
+    // close popup
+    if (this.currentPopup && !this.currentPopup.closed) {
+      this.currentPopup.close()
+    }
   }
 
   private async getAccounts (): Promise<string[]> {
