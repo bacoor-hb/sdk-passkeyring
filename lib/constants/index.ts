@@ -4,6 +4,9 @@ import { EIP6963ProviderInfo } from 'lib/function'
 const uuidSdk = '23e4567-e89b-12d3-a456-426614174000'
 const rdnsSdk = 'co.bacoor.keyring'
 
+const uuidSdkDeCard = '13e4568-e89b-12d3-a456-426614174000'
+const rdnsSdkDeCard = 'app.decard.wallet'
+
 export const GROUP_SLUG: SlugGroup = 'egglepasskeywallet-decard'
 // export const GROUP_SLUG: SlugGroup = 'egglepasskeywallet'
 
@@ -39,10 +42,10 @@ export const infoGroup: { [key in SlugGroup]: EIP6963ProviderInfo } = {
     rdns: rdnsSdk,
   },
   'egglepasskeywallet-decard': {
-    uuid: uuidSdk,
+    uuid: uuidSdkDeCard,
     name: 'DECARD EGGLE GAME WALLET',
     icon: 'https://ipfs.pantograph.app/ipfs/QmUn7MnyA9HWfHNRG7oLTweNG93ztaErFdcg36Y2uxENUu?filename=noti.png',
-    rdns: rdnsSdk,
+    rdns: rdnsSdkDeCard,
   },
 }
 
