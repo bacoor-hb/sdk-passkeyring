@@ -4,11 +4,8 @@ import { EIP6963ProviderInfo } from 'lib/function'
 const uuidSdk = '23e4567-e89b-12d3-a456-426614174000'
 const rdnsSdk = 'co.bacoor.keyring'
 
-export const GROUP_SLUG: SlugGroup = 'egglepasskeywallet'
-// export const GROUP_SLUG = 'passkeywallet'
-// export const GROUP_SLUG = 'bacoorpasskeywallet'
-// export const GROUP_SLUG = 'keyringpasskeywallet'
-// export const GROUP_SLUG = 'egglegamewallet'
+export const GROUP_SLUG: SlugGroup = 'egglepasskeywallet-decard'
+// export const GROUP_SLUG: SlugGroup = 'egglepasskeywallet'
 
 export const infoGroup: { [key in SlugGroup]: EIP6963ProviderInfo } = {
   egglegamewallet: {
@@ -39,6 +36,12 @@ export const infoGroup: { [key in SlugGroup]: EIP6963ProviderInfo } = {
     uuid: uuidSdk,
     name: 'KEYRING SMART',
     icon: 'https://ipfs.pantograph.app/ipfs/QmWdV4p9FvAUKEnGHefwsYxUrtY8qyEX61xbHdGXworS8k?filename=icon%20NOTI.png',
+    rdns: rdnsSdk,
+  },
+  'egglepasskeywallet-decard': {
+    uuid: uuidSdk,
+    name: 'EGGLE GAME WALLET',
+    icon: 'https://ipfs.pantograph.app/ipfs/QmUn7MnyA9HWfHNRG7oLTweNG93ztaErFdcg36Y2uxENUu?filename=noti.png',
     rdns: rdnsSdk,
   },
 }

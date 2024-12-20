@@ -3,4 +3,5 @@ export type SlugGroup =
   | 'egglepasskeywallet'
   | 'bacoorpasskeywallet'
   | 'passkeywallet'
-  | 'keyringpasskeywallet';
+  | 'keyringpasskeywallet'
+  | 'egglepasskeywallet-decard';
