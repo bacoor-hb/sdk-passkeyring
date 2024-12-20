@@ -1,7 +1,16 @@
+import { SlugGroup } from 'lib/constants/type'
+import { EIP6963ProviderInfo } from 'lib/function'
+
 const uuidSdk = '23e4567-e89b-12d3-a456-426614174000'
 const rdnsSdk = 'co.bacoor.keyring'
 
-export const infoGroup = {
+export const GROUP_SLUG: SlugGroup = 'egglepasskeywallet'
+// export const GROUP_SLUG = 'passkeywallet'
+// export const GROUP_SLUG = 'bacoorpasskeywallet'
+// export const GROUP_SLUG = 'keyringpasskeywallet'
+// export const GROUP_SLUG = 'egglegamewallet'
+
+export const infoGroup: { [key in SlugGroup]: EIP6963ProviderInfo } = {
   egglegamewallet: {
     uuid: uuidSdk,
     name: 'Eggle Gamewallet',
@@ -26,24 +35,27 @@ export const infoGroup = {
     icon: 'https://ipfs.pantograph.app/ipfs/QmWdV4p9FvAUKEnGHefwsYxUrtY8qyEX61xbHdGXworS8k?filename=icon%20NOTI.png',
     rdns: rdnsSdk,
   },
-
+  keyringpasskeywallet: {
+    uuid: uuidSdk,
+    name: 'KEYRING SMART',
+    icon: 'https://ipfs.pantograph.app/ipfs/QmWdV4p9FvAUKEnGHefwsYxUrtY8qyEX61xbHdGXworS8k?filename=icon%20NOTI.png',
+    rdns: rdnsSdk,
+  },
 }
-
-// export const GROUP_SLUG = 'egglegamewallet'
-export const GROUP_SLUG = 'egglepasskeywallet'
-// export const GROUP_SLUG = 'passkeywallet'
-// export const GROUP_SLUG = 'bacoorpasskeywallet'
-// export const GROUP_SLUG = 'keyringpasskeywallet'
 
 export const STORAGE_KEY = {
   ACCOUNT_PASSKEY: 'ACCOUNT_PASSKEY_' + GROUP_SLUG,
   MODE_ENV_PASSKEY: 'MODE_ENV_PASSKEY_' + GROUP_SLUG,
   PERMISSIONS_PASSKEY: 'PERMISSIONS_PASSKEY_' + GROUP_SLUG,
-
 }
 
 export const chainsSupported = [
-  '0x1', '0xa', '0x38', '0x89', '0xa4b1', '0x2105',
+  '0x1',
+  '0xa',
+  '0x38',
+  '0x89',
+  '0xa4b1',
+  '0x2105',
 ]
 
 // export const URL_PASSKEY = 'https://smart.keyring.app'
@@ -74,4 +86,8 @@ export const RPC_DEFAULT = {
   10: 'https://mainnet.optimism.io',
 }
 
-export const infoWallet = { slug: GROUP_SLUG, url: URL_PASSKEY, ...infoGroup[GROUP_SLUG] }
+export const infoWallet = {
+  slug: GROUP_SLUG,
+  url: URL_PASSKEY,
+  ...infoGroup[GROUP_SLUG],
+}
