@@ -343,7 +343,6 @@ class MyCustomWalletProvider implements WalletProvider {
   }
 
   private async addEthereumChain (params: any[]): Promise<void> {
-    // console.log('Adding Ethereum chain:', params)
     throw new Error('Unsupported method addEthereumChain')
   }
 
