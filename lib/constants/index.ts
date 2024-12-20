@@ -63,6 +63,7 @@ const getURLPasskey = () => {
 }
 
 export const URL_PASSKEY = getURLPasskey()
+// export const URL_PASSKEY = 'https://pass.w3w.app'
 
 export const RPC_DEFAULT = {
   1: 'https://cloudflare-eth.com',
