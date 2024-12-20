@@ -172,7 +172,7 @@ class MyCustomWalletProvider implements WalletProvider {
     let top = window.innerHeight / 2 - height / 2 + window.screenY
 
     if (isObject(query, true)) {
-      query = { ...query, infoPageConnected, id: crypto.randomUUID() }
+      query = { ...query, infoPageConnected, id: Date.now() }
     }
 
     const encodedQuery = encodeBase64(query)
