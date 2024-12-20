@@ -40,7 +40,7 @@ export const infoGroup: { [key in SlugGroup]: EIP6963ProviderInfo } = {
   },
   'egglepasskeywallet-decard': {
     uuid: uuidSdk,
-    name: 'EGGLE GAME WALLET',
+    name: 'DECARD EGGLE GAME WALLET',
     icon: 'https://ipfs.pantograph.app/ipfs/QmUn7MnyA9HWfHNRG7oLTweNG93ztaErFdcg36Y2uxENUu?filename=noti.png',
     rdns: rdnsSdk,
   },
