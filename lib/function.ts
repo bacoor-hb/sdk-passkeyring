@@ -18,11 +18,11 @@ interface ProviderMessage {
   readonly data: unknown;
 }
 
-export function onPageLoad () {
+export function onPageLoad (config:any) {
   if (typeof window === 'undefined') {
     return
   }
-  const provider = new MyCustomWalletProvider()
+  const provider = new MyCustomWalletProvider({ config })
   window.ethereum = provider
   function announceProvider () {
     const info: EIP6963ProviderInfo = infoGroup[GROUP_SLUG]

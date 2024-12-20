@@ -1,22 +1,27 @@
 import { ethers } from 'ethers'
-import { chainsSupported, GROUP_SLUG, RPC_DEFAULT, STORAGE_KEY, URL_PASSKEY } from 'lib/constants'
+import { chainsSupported, GROUP_SLUG, infoGroup, RPC_DEFAULT, STORAGE_KEY, URL_PASSKEY } from 'lib/constants'
 import { decodeBase64, encodeBase64, isObject } from 'lib/function'
 import { I_TYPE_URL, WalletProvider } from 'lib/web3/type'
 import { isMobile } from 'react-device-detect'
-
+  interface MyCustomWalletProviderProps {
+    config?: any;
+  }
 class MyCustomWalletProvider implements WalletProvider {
   name: string
   icon: string
   uuid: string
   version: string
+  rpcUrl: { [key: number]: string }
   private permissions: Record<string, boolean> = {}
   private accounts: string[] = []
   private chainId: string = '0x1' // Ethereum Mainnet
   private currentPopup: Window | null = null // Track the currently opened popup
-  constructor () {
-    this.name = 'MyCustomWallet'
-    this.icon = 'https://example.com/my-wallet-icon.png'
-    this.uuid = '123e4567-e89b-12d3-a456-426614174000' // UUID duy nhất
+
+  constructor (props: MyCustomWalletProviderProps) {
+    this.rpcUrl = isObject(props?.config?.rpcUrl, true) ? { ...RPC_DEFAULT, ...props?.config?.rpcUrl } : RPC_DEFAULT
+    this.name = infoGroup[GROUP_SLUG].name
+    this.icon = infoGroup[GROUP_SLUG].icon
+    this.uuid = infoGroup[GROUP_SLUG].uuid
     this.version = '1.0.0'
     this.init()
   }
@@ -353,7 +358,7 @@ class MyCustomWalletProvider implements WalletProvider {
   }
 
   private async createProviderWeb3 (url?:string|undefined): Promise<any> {
-    const rpc = url || RPC_DEFAULT[Number(this.chainId) as keyof typeof RPC_DEFAULT]
+    const rpc = url || this.rpcUrl?.[Number(this.chainId)] || RPC_DEFAULT[Number(this.chainId) as keyof typeof RPC_DEFAULT]
     const provider = new ethers.providers.JsonRpcProvider(rpc)
     return provider
   }

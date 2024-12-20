@@ -5,10 +5,16 @@ import '../../styles/index.css'
 import AccountProvider from 'lib/Components/AccountProvider'
 import { onPageLoad } from 'lib/function'
 
-const PasskeyProvider = ({ children }: { children: ReactNode }) => {
+interface PasskeyProviderProps {
+  children: ReactNode;
+  config?: any;
+}
+
+const PasskeyProvider = ({ children, config = {} }: PasskeyProviderProps) => {
   useEffect(() => {
-    onPageLoad()
-  }, [])
+    onPageLoad(config)
+  }, [config])
+
   return (
     <AccountProvider>
       {children}
