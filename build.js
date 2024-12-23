@@ -3,7 +3,7 @@ const path = require('path')
 
 // Bước 1: Thay thế groupSlug trong file constants/index.ts
 const constantsFilePath = path.join(__dirname, 'lib/constants/index.ts')
-const newGroupSlug = 'egglepasskeywallet2'
+const newGroupSlug = 'egglepasskeywallet'
 
 fs.readFile(constantsFilePath, 'utf8', (err, data) => {
   if (err) {
