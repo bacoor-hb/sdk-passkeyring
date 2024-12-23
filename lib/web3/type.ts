@@ -24,3 +24,19 @@ export type I_TYPE_URL =
   | 'APPROVE'
   | 'PERSONAL_SIGN'
   | undefined;
+
+export const TYPE_REQUEST: Record<Exclude<I_TYPE_URL, undefined>, I_TYPE_URL> = {
+  SEND_TRANSACTION: 'SEND_TRANSACTION',
+  ACCOUNT: 'ACCOUNT',
+  NFT: 'NFT',
+  SWAP: 'SWAP',
+  SWAP_NFT: 'SWAP_NFT',
+  APPROVE: 'APPROVE',
+  PERSONAL_SIGN: 'PERSONAL_SIGN',
+}
+
+export type I_TYPE_ERROR='ERROR_TRANSACTION'|undefined;
+
+export const TYPE_ERROR: Record<Exclude<I_TYPE_ERROR, undefined>, I_TYPE_ERROR> = {
+  ERROR_TRANSACTION: 'ERROR_TRANSACTION',
+}

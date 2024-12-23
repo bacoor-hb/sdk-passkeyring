@@ -1,7 +1,7 @@
 import { ethers } from 'ethers'
 import { chainsSupported, GROUP_SLUG, infoGroup, RPC_DEFAULT, STORAGE_KEY, URL_PASSKEY } from 'lib/constants'
 import { decodeBase64, encodeBase64, isObject } from 'lib/function'
-import { I_TYPE_URL, WalletProvider } from 'lib/web3/type'
+import { I_TYPE_URL, TYPE_ERROR, TYPE_REQUEST, WalletProvider } from 'lib/web3/type'
 import { isMobile } from 'react-device-detect'
   interface MyCustomWalletProviderProps {
     config?: any;
@@ -145,8 +145,8 @@ class MyCustomWalletProvider implements WalletProvider {
 
   getUrl (type?:I_TYPE_URL): string {
     switch (type) {
-      case 'SEND_TRANSACTION':
-      case 'PERSONAL_SIGN':
+      case TYPE_REQUEST.SEND_TRANSACTION:
+      case TYPE_REQUEST.PERSONAL_SIGN:
         return `${URL_PASSKEY}/${GROUP_SLUG}/mypage/${this.accounts[0]}`
       default:
         return `${URL_PASSKEY}/activate-by-passkey/${GROUP_SLUG}`
@@ -155,7 +155,7 @@ class MyCustomWalletProvider implements WalletProvider {
 
   getFavicon () {
     const link = document.querySelector("link[rel~='icon']")
-    return link ? (link as HTMLLinkElement).href : '/favicon.ico' // Trả về favicon mặc định nếu không tìm thấy
+    return link ? (link as HTMLLinkElement).href : `${URL_PASSKEY}/favicon.ico` // Trả về favicon mặc định nếu không tìm thấy
   };
 
   openPopup (type?:I_TYPE_URL, query?:{[key:string]:any}): Promise<any> {
@@ -180,12 +180,12 @@ class MyCustomWalletProvider implements WalletProvider {
     const encodedQuery = encodeBase64(query)
     let urlWithQuery = ''
     switch (type) {
-      case 'SEND_TRANSACTION':
+      case TYPE_REQUEST.SEND_TRANSACTION:
         urlWithQuery = `${url}?raw-transaction=${encodedQuery}`
         left = 0
         top = 0
         break
-      case 'PERSONAL_SIGN':
+      case TYPE_REQUEST.PERSONAL_SIGN:
         urlWithQuery = `${url}?sign-message=${encodedQuery}`
         left = 0
         top = 0
@@ -279,18 +279,20 @@ class MyCustomWalletProvider implements WalletProvider {
   }
 
   private async sendTransaction (params: any[]): Promise<string|undefined> {
+    const typeRequest = TYPE_REQUEST.SEND_TRANSACTION
+
     const tx = params[0]
 
     if (!tx.chainId) {
       tx.chainId = this.chainId
     }
 
-    const { data } = await this.openPopup('SEND_TRANSACTION', { transaction: tx })
+    const { data } = await this.openPopup(typeRequest, { transaction: tx })
 
-    if (data.type === 'ERROR_TRANSACTION') {
+    if (data.type === TYPE_ERROR.ERROR_TRANSACTION) {
       throw new Error(data.payload?.message || 'Error send transaction')
     }
-    if (data.type === 'SEND_TRANSACTION') {
+    if (data.type === typeRequest) {
       return data?.payload?.hash
     }
   }
@@ -299,6 +301,8 @@ class MyCustomWalletProvider implements WalletProvider {
     try {
       // Extract the transactions array from params
       const transactions = params[0]
+
+      const typeRequest = TYPE_REQUEST.SEND_TRANSACTION
 
       // Validate that transactions are provided and in correct format
       if (!Array.isArray(transactions) || transactions.length === 0) {
@@ -316,14 +320,14 @@ class MyCustomWalletProvider implements WalletProvider {
       }
 
       // Prepare the payload for the popup
-      const { data } = await this.openPopup('SEND_TRANSACTION', { transactions })
+      const { data } = await this.openPopup(typeRequest, { transactions })
 
       // Handle the response from the popup
-      if (data.type === 'ERROR_TRANSACTION') {
+      if (data.type === TYPE_ERROR.ERROR_TRANSACTION) {
         throw new Error(data.payload?.message || 'Error sending transactions')
       }
 
-      if (data.type === 'SEND_TRANSACTION') {
+      if (data.type === typeRequest) {
         // Assuming the popup returns an array of transaction hashes
         return data?.payload?.hashes
       }
@@ -343,15 +347,16 @@ class MyCustomWalletProvider implements WalletProvider {
   }
 
   private async personalSign (params: any[]): Promise<string|undefined> {
-    const { data } = await this.openPopup('PERSONAL_SIGN', {
+    const typeRequest = TYPE_REQUEST.PERSONAL_SIGN
+    const { data } = await this.openPopup(typeRequest, {
       chainId: this.chainId,
       message: params[0],
       account: params[1],
     })
-    if (data.type === 'ERROR_TRANSACTION') {
+    if (data.type === TYPE_ERROR.ERROR_TRANSACTION) {
       throw new Error(data?.payload?.message || 'Error sign message')
     }
-    if (data.type === 'PERSONAL_SIGN') {
+    if (data.type === typeRequest) {
       return data?.payload?.signature
     }
   }
