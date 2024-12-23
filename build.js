@@ -3,7 +3,7 @@ const path = require('path')
 
 // Bước 1: Thay thế groupSlug trong file constants/index.ts
 const constantsFilePath = path.join(__dirname, 'lib/constants/index.ts')
-const newGroupSlug = 'egglepasskeywallet'
+const newGroupSlug = 'egglepasskeywallet2'
 
 fs.readFile(constantsFilePath, 'utf8', (err, data) => {
   if (err) {
@@ -31,6 +31,7 @@ fs.readFile(constantsFilePath, 'utf8', (err, data) => {
 
       const packageJson = JSON.parse(data)
       const searchString = packageJson.name
+      const version = packageJson.version
       const replaceString = `sdk-v2-${newGroupSlug}`
 
       const directoryPath = path.join(__dirname, 'lib')
@@ -85,6 +86,7 @@ fs.readFile(constantsFilePath, 'utf8', (err, data) => {
         console.log('Build completed successfully')
         console.log(stdout)
         console.log(stderr)
+        console.log(`Publish ${replaceString} ver-${version}`)
 
         // Bước 4: Chạy lệnh yarn publish
         exec('yarn publish', (err, stdout, stderr) => {
@@ -95,6 +97,17 @@ fs.readFile(constantsFilePath, 'utf8', (err, data) => {
           console.log('Publish completed successfully')
           console.log(stdout)
           console.log(stderr)
+
+          // Commit và push các thay đổi
+          exec(`git add . && git commit -m "Build ${replaceString} ver.${version} " && git push`, (err, stdout, stderr) => {
+            if (err) {
+              console.error('Error committing and pushing changes:', err)
+              return
+            }
+            console.log('Changes committed and pushed successfully')
+            console.log(stdout)
+            console.log(stderr)
+          })
         })
       })
     })
