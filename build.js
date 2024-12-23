@@ -1,9 +1,15 @@
 const fs = require('fs')
 const path = require('path')
 
+// Lấy newGroupSlug từ tham số dòng lệnh
+const newGroupSlug = process.argv[2]
+if (!newGroupSlug) {
+  console.error('newGroupSlug is required')
+  process.exit(1)
+}
+
 // Bước 1: Thay thế groupSlug trong file constants/index.ts
 const constantsFilePath = path.join(__dirname, 'lib/constants/index.ts')
-const newGroupSlug = 'egglepasskeywallet'
 
 fs.readFile(constantsFilePath, 'utf8', (err, data) => {
   if (err) {
