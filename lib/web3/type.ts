@@ -25,7 +25,10 @@ export type I_TYPE_URL =
   | 'PERSONAL_SIGN'
   | undefined;
 
-export const TYPE_REQUEST: Record<Exclude<I_TYPE_URL, undefined>, I_TYPE_URL> = {
+export const TYPE_REQUEST: Record<
+  Exclude<I_TYPE_URL, undefined>,
+  I_TYPE_URL
+> = {
   SEND_TRANSACTION: 'SEND_TRANSACTION',
   ACCOUNT: 'ACCOUNT',
   NFT: 'NFT',
@@ -35,8 +38,11 @@ export const TYPE_REQUEST: Record<Exclude<I_TYPE_URL, undefined>, I_TYPE_URL> = 
   PERSONAL_SIGN: 'PERSONAL_SIGN',
 }
 
-export type I_TYPE_ERROR='ERROR_TRANSACTION'|undefined;
+export type I_TYPE_ERROR = 'ERROR_TRANSACTION' | undefined;
 
-export const TYPE_ERROR: Record<Exclude<I_TYPE_ERROR, undefined>, I_TYPE_ERROR> = {
+export const TYPE_ERROR: Record<
+  Exclude<I_TYPE_ERROR, undefined>,
+  I_TYPE_ERROR
+> = {
   ERROR_TRANSACTION: 'ERROR_TRANSACTION',
 }
