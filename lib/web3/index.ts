@@ -59,6 +59,8 @@ class MyCustomWalletProvider implements WalletProvider {
         return this.getNetwork()
       case 'eth_sendTransaction':
         return this.sendTransaction(params)
+      case 'wallet_sendCalls':
+        return this.sendCallsTransaction(params)
       case 'eth_sign':
         return this.signMessage(params)
       case 'personal_sign':
@@ -172,7 +174,7 @@ class MyCustomWalletProvider implements WalletProvider {
     let top = window.innerHeight / 2 - height / 2 + window.screenY
 
     if (isObject(query, true)) {
-      query = { ...query, infoPageConnected, id: Date.now() }
+      query = { ...query, infoPageConnected, id: Date.now(), type_request: type }
     }
 
     const encodedQuery = encodeBase64(query)
@@ -290,6 +292,46 @@ class MyCustomWalletProvider implements WalletProvider {
     }
     if (data.type === 'SEND_TRANSACTION') {
       return data?.payload?.hash
+    }
+  }
+
+  private async sendCallsTransaction (params: any[]): Promise<any> {
+    try {
+      // Extract the transactions array from params
+      const transactions = params[0]
+
+      // Validate that transactions are provided and in correct format
+      if (!Array.isArray(transactions) || transactions.length === 0) {
+        throw new Error('No transactions provided or invalid format.')
+      }
+
+      // Validate each transaction object
+      for (const tx of transactions) {
+        if (!tx.to || typeof tx.to !== 'string') {
+          throw new Error(`Transaction is missing a valid 'to' address: ${JSON.stringify(tx)}`)
+        }
+        if (!tx.data || typeof tx.data !== 'string' || tx.data === '0x') {
+          throw new Error(`Transaction is missing a valid 'data' field: ${JSON.stringify(tx)}`)
+        }
+      }
+
+      // Prepare the payload for the popup
+      const { data } = await this.openPopup('SEND_TRANSACTION', { transactions })
+
+      // Handle the response from the popup
+      if (data.type === 'ERROR_TRANSACTION') {
+        throw new Error(data.payload?.message || 'Error sending transactions')
+      }
+
+      if (data.type === 'SEND_TRANSACTION') {
+        // Assuming the popup returns an array of transaction hashes
+        return data?.payload?.hashes
+      }
+
+      throw new Error('Unexpected response from the popup')
+    } catch (error) {
+      console.error('Error in sendCallsTransaction:', error)
+      throw error
     }
   }
 
