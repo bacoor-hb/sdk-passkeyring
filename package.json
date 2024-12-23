@@ -10,6 +10,7 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "build-watch": "tsc && vite build --watch",
+    "build-publish": "node build.js",
     "preview": "vite preview",
     "lint": "eslint src --ext ts,tsx",
     "lint:fix": "yarn lint --fix",
