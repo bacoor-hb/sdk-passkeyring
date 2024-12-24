@@ -15,7 +15,13 @@ yarn add sdk-v2-egglepasskeywallet
 ## Usage
 
 ```jsx
-//MUST HAVE - Used for the first file to run (index.js)
+//Step Setup: MUST HAVE - Used for the first file to run (index.js)
+
+//NOTE:You have setup AppKit(web3modal) in your dapp, make sure enableEIP6963 = true, enableInjected = true
+
+//if you are using appkit(web3modal) with too old version then update to the latest appkit version
+
+#### 📚 [Documentation AppKit](https://docs.reown.com/appkit/overview)
 
 import React from "react";
 import { PasskeyProvider } from "sdk-v2-egglepasskeywallet";
@@ -27,11 +33,75 @@ const App = ({ children }) => {
 export default App;
 ```
 
+## 
+## Export
+
+#### PasskeyProvider
 ```jsx
-//If you want to connect wallet to browsers that do not support injected, for example on mobile, safari...
+import { PasskeyProvider } from "sdk-v2-egglepasskeywallet";
+```
+
+| Property                      | Description                                                     
+| ----------------------------- | ------------------------------------------------------------- 
+| `config`                      | config passkey
+
+```jsx
+PasskeyProvider is a wrapper that supports using wallets
+```
+
+```jsx
+//Example
+
+   <PasskeyProvider
+        config={{
+          rpc: {
+            1337: "http://rpc...",
+          },
+        }}
+      >
+        {/*CODE HERE */}
+      </PasskeyProvider>
+```
+
+#### infoWallet
+```jsx
+  import { infoWallet } from "sdk-v2-egglepasskeywallet";
+```
+
+| Property                      | Attribute                                                     
+| ----------------------------- | ------------------------------------------------------------- 
+| `infoWallet`                  | `ndns`
+|                               | `name`
+|                               | `icon`
+|                               | `id`
+
+
+
+#### isWeb3Injected
+```jsx
+import { isWeb3Injected } from "sdk-v2-egglepasskeywallet";
+```
+```jsx
+Function check bowers support web3 provider injected
+```
+
+
+
+```jsx
+//Example
+<div> 
+   {!isWeb3Injected() && <ButtonConnectWallet />}
+</div>
+
+ 
+```
+
+## Support
+```jsx
+//If you want to connect wallet to browsers that do not support injected 
+//or in case you are using appkit(web3modal) with too old version but you don't want to update to new version
 //Then follow these steps.
-//NOTE: You have setup AppKit in your dapp, make sure enableEIP6963 = true, enableInjected = true
-#### 📚 [Documentation AppKit](https://docs.reown.com/appkit/overview)
+
 
 //step 1 : create button to connect
 import React from "react";
