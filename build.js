@@ -113,6 +113,7 @@ fs.readFile(typeFilePath, 'utf8', (err, data) => {
           console.log(stderr)
           console.log(`Publish ${replaceString} ver-${version}`)
 
+          console.log('start publish')
           // Bước 4: Chạy lệnh yarn publish
           exec('yarn publish', (err, stdout, stderr) => {
             if (err) {
