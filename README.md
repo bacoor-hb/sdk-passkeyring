@@ -1,6 +1,6 @@
 # Passkey connect
 
-> The sdk package provides a simple support connect Smart account.
+> The sdk package provides a simple wallet connection support using passkey to interact with smart account, with pre-setup appkit ( web3modal) provider
 
 ## Install (for single position)
 
@@ -12,16 +12,23 @@ npm install --save sdk-v2-egglepasskeywallet
 yarn add sdk-v2-egglepasskeywallet
 ```
 
+## Document AppKit ( web3modal )
+
+📚 [Documentation AppKit](https://docs.reown.com/appkit/overview)
+
 ## Usage
 
 ```jsx
-//Step Setup: MUST HAVE - Used for the first file to run (index.js)
 
 //NOTE:You have setup AppKit(web3modal) in your dapp, make sure enableEIP6963 = true, enableInjected = true
 
+// 📚 [Documentation AppKit](https://docs.reown.com/appkit/overview)
+
+//Step Setup: MUST HAVE - Used for the first file to run (index.js)
+
 //if you are using appkit(web3modal) with too old version then update to the latest appkit version
 
-#### 📚 [Documentation AppKit](https://docs.reown.com/appkit/overview)
+
 
 import React from "react";
 import { PasskeyProvider } from "sdk-v2-egglepasskeywallet";
@@ -41,9 +48,9 @@ export default App;
 import { PasskeyProvider } from "sdk-v2-egglepasskeywallet";
 ```
 
-| Property                      | Description                                                     
-| ----------------------------- | ------------------------------------------------------------- 
-| `config`                      | config passkey
+| Property                      | Description             | required                                             
+| ----------------------------- | ----------------------- | -----------------------------
+| `config`                      | config passkey          |`optional`
 
 ```jsx
 PasskeyProvider is a wrapper that supports using wallets
@@ -55,7 +62,7 @@ PasskeyProvider is a wrapper that supports using wallets
    <PasskeyProvider
         config={{
           rpc: {
-            1337: "http://rpc...",
+            137: "http://rpc...",
           },
         }}
       >
@@ -97,9 +104,21 @@ Function check bowers support web3 provider injected
 ```
 
 ## Support
+
+if you don't want use provider AppKit(web3modal),
+
+📚 [Documentation Provider AppKit](https://docs.reown.com/appkit/overview)
+
+then you can also use wagmi provider
+
+📚 [Documentation Provider wagmi](https://wagmi.sh/react/getting-started)
+
+
 ```jsx
+//After you have set up one of the above providers
 //If you want to connect wallet to browsers that do not support injected 
-//or in case you are using appkit(web3modal) with too old version but you don't want to update to new version
+//or in case you are using appkit(web3modal)/wagmi with too old version but you don't want to update to new version
+// => will create a custom connect button
 //Then follow these steps.
 
 
@@ -154,29 +173,20 @@ export default ButtonConnectWallet;
 
 
 
-//step 2:
+//step 2: use button connect
 
 import React from "react";
 import { isWeb3Injected } from "sdk-v2-egglepasskeywallet";
 import ButtonConnectWallet from "./ButtonConnectWallet";// step above
-import { useWeb3Modal } from "@web3modal/wagmi/react";
 
 const YourComponent = () => {
-  const { open } = useWeb3Modal();
 
   return (
     <>
-      {isWeb3Injected() ? (
-        <div
-          onClick={() => {
-            open({ view: "Connect" });
-          }}
-        >
-          Connect
-        </div>
-      ) : (
-        <ButtonConnectWallet />
-      )}
+      {!isWeb3Injected() && (
+         <ButtonConnectWallet />
+      )
+       }
     </>
   );
 };
