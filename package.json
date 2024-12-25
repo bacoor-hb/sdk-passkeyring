@@ -32,14 +32,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Hungduc123/sdk-passkeyring.git"
+    "url": "git+https://github.com/bacoor-hb/sdk-passkeyring.git"
   },
   "keywords": [],
   "author": "Bacoor",
   "bugs": {
-    "url": "https://github.com/Hungduc123/sdk-passkeyring.git/issues"
+    "url": "https://github.com/bacoor-hb/sdk-passkeyring.git/issues"
   },
-  "homepage": "https://github.com/Hungduc123/sdk-passkeyring.git#readme",
+  "homepage": "https://github.com/bacoor-hb/sdk-passkeyring.git#readme",
   "peerDependencies": {
     "react": ">=17.x"
   },
