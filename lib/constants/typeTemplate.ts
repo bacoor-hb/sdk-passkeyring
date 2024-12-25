@@ -6,3 +6,6 @@
   | 'passkeywallet'
   | 'keyringpasskeywallet'
   | 'egglepasskeywallet-decard';
+
+const defaultExport = () => {}
+export default defaultExport
