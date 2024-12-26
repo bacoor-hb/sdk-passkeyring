@@ -3,4 +3,6 @@ export type SlugGroup =
   | 'egglegamewallet'
   | 'egglepasskeywallet'
   | 'egglepasskeywallet-decard'
+  | 'meteornrun'
+  | 'meteornrun-decard'
   | 'keyringpasskeywallet';

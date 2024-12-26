@@ -47,6 +47,18 @@ export const infoGroup: { [key in SlugGroup]: EIP6963ProviderInfo } = {
     icon: 'https://ipfs.pantograph.app/ipfs/QmUn7MnyA9HWfHNRG7oLTweNG93ztaErFdcg36Y2uxENUu?filename=noti.png',
     rdns: rdnsSdkDeCard,
   },
+  'meteornrun-decard': {
+    uuid: uuidSdkDeCard,
+    name: 'Meteorn Wallet DeCard',
+    icon: 'https://ipfs.pantograph.app/ipfs/Qmao1Uf2m1bRGHLy66AnLJuWtBWjFLhDpbBWBYGrUtB1qV?filename=notiDataIcon_Meteorn.png',
+    rdns: rdnsSdkDeCard,
+  },
+  meteornrun: {
+    uuid: rdnsSdk,
+    name: 'Meteorn Wallet',
+    icon: 'https://ipfs.pantograph.app/ipfs/Qmao1Uf2m1bRGHLy66AnLJuWtBWjFLhDpbBWBYGrUtB1qV?filename=notiDataIcon_Meteorn.png',
+    rdns: rdnsSdk,
+  },
 }
 
 export const STORAGE_KEY = {
