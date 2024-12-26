@@ -83,9 +83,9 @@ but your wallet is not listed in the AppKit (web3modal) modal
 PasskeyProvider is a wrapper that supports using wallets.
 
 
-| Property                      | Description             | required           |Attribute                                  
+| Property                      | Description             | Required           |Attribute                                  
 | ----------------------------- | ----------------------- | -------------------|----------
-| `config`                      | Config Passkey Provider |optional            |`rpcUrl`
+| `config`                      | Config Passkey Provider |Optional            |`rpcUrl`
 
 
 ```jsx
@@ -146,15 +146,15 @@ import { isWeb3Injected } from "sdk-v2-keyringpasskeywallet";
     {!isWeb3Injected() && <ButtonConnectWallet />}
   </div>
 
-  //The way to create a ButtonConnectWallet will be in Advanced
+ // The way to create a ButtonConnectWallet will be in Advanced
 ```
 
 ## #Advanced
-### Custom Button connect wallet
+### Custom Button to Connect Wallet
 
 
 
-#### #Required: To customize the button to connect the wallet, you can set up one of the below providers. 
+#### #Required:  To customize the button to connect the wallet, you can set up one of the below providers.
 
 
 
@@ -167,12 +167,12 @@ Or
 
 
 ```
-# Target:
+#Target: 
 
-- Connect a wallet to browsers that do not support injected wallets.
-- If you are using Provider AppKit: This resolves the issue of using an older version without needing to update to the latest version.
+- Connect wallet to browsers that do not support injected providers.
+- If you are using Provider AppKit: Resolve the issue of using an older version without updating to the latest version.
 - If you are using Provider wagmi: You only need a simple setup with wagmi.
-=> Follow these steps to create a custom connect button.
+=> Then follow these steps to create a custom connect button.
 ```
 
 ```jsx
