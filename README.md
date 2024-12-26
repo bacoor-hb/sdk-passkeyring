@@ -1,19 +1,15 @@
 # sdk-v2-keyringpasskeywallet
 
+> The SDK package provides simple wallet connection support using passkey to interact with smart accounts, with a pre-setup AppKit (web3modal) provider.
 
-> The sdk package provides a simple wallet connection support using passkey to interact with smart account, with pre-setup AppKit( web3modal) provider
-
-## Required setup before install sdk
-### Install and setup AppKit( web3modal)
+## Required Setup Before Installing the SDK
+### Install and Set Up AppKit (web3modal)
 #### ⚠ If you have already set it up, skip this step.
 
-
-
-📚 [Documentation AppKit](https://docs.reown.com/appkit/overview)
+📚 [AppKit Documentation](https://docs.reown.com/appkit/overview)
 
 ```
-If you prefer referring to a video tutorial for this,
-please click below 👇
+If you prefer a video tutorial, please click below 👇
 ```
 
 
@@ -22,22 +18,20 @@ please click below 👇
 
 [![IMAGE ALT TEXT HERE](https://i.ytimg.com/vi/lxTGqXh7LiA/hqdefault.jpg?sqp=-oaymwEnCNACELwBSFryq4qpAxkIARUAAIhCGAHYAQHiAQoIGBACGAY4AUAB&rs=AOn4CLDOS4gcXwP9GEZB4-Qei0TW-E4z7Q)](https://youtu.be/lxTGqXh7LiA)
 
-
-
 ```jsx
 # NOTE:
-// In step create the modal of web3modal,
-// make sure enableEIP6963 = true, enableInjected = true
+// when you are in the modal creation step of web3modal,
+// ensure enableEIP6963 = true and enableInjected = true
 
-//example
+// Example
 const modal = createAppKit({
-...yourConfig
-  enableEIP6963:true,
-  enableInjected:true
-})
+  ...yourConfig,
+  enableEIP6963: true,
+  enableInjected: true,
+});
 ```
 
-## Install
+## Installation
 
 ```bash
 npm install --save sdk-v2-keyringpasskeywallet
@@ -52,7 +46,7 @@ yarn add sdk-v2-keyringpasskeywallet
 ## Usage
 
 ```jsx
-//MUST HAVE - Used for the first file to run (index.js)
+// MUST HAVE - Use this in the first file to run (index.js)
 
 import React from "react";
 import { PasskeyProvider } from "sdk-v2-keyringpasskeywallet";
@@ -65,9 +59,9 @@ export default App;
 ```
 ## #Issue
 ```
-In case you have done the above steps,
-but your wallet is not listed on modal of AppKit( web3modal)
-=>Please update the AppKit to the latest version.
+If you have completed the above steps 
+but your wallet is not listed in the AppKit (web3modal) modal
+=> Please update AppKit to the latest version.
 ```
 
 
@@ -77,8 +71,8 @@ but your wallet is not listed on modal of AppKit( web3modal)
 | Name                           | Description                                         
 | -----------------------------  | -----------------------  
 | PasskeyProvider                | Component Passkey Provider     
-| infoWallet                     | Information wallet     
-| isWeb3Injected                 | check supported Web3 Injected Provider     
+| infoWallet                     | Wallet information    
+| isWeb3Injected                 | Check if Web3 Injected Provider is supported   
  
 
 
@@ -86,7 +80,7 @@ but your wallet is not listed on modal of AppKit( web3modal)
 
 #### `PasskeyProvider`
 
-PasskeyProvider is a wrapper that supports using wallets
+PasskeyProvider is a wrapper that supports using wallets.
 
 
 | Property                      | Description             | required           |Attribute                                  
@@ -111,7 +105,7 @@ import { PasskeyProvider } from "sdk-v2-keyringpasskeywallet";
 ```
 
 #### `infoWallet`
-Information about wallet
+Information about the wallet.
 
 | Property                      | Attribute                                                     
 | ----------------------------- | ------------------------------------------------------------- 
@@ -137,7 +131,7 @@ import { infoWallet } from "sdk-v2-keyringpasskeywallet";
 
 #### `isWeb3Injected`
 
-Function check browsers support web3 provider injected
+Function to check if the browser supports Web3 provider injection.
 
 | Function                      | result                                                     
 | ----------------------------- | ------------------------------------------------------------- 
@@ -159,21 +153,30 @@ import { isWeb3Injected } from "sdk-v2-keyringpasskeywallet";
 ### Custom Button connect wallet
 
 
-📚 [Documentation Provider AppKit ( web3modal)](https://docs.reown.com/appkit/overview) - recommend
 
-📚 [Documentation Provider wagmi](https://wagmi.sh/react/getting-started)
+#### #Required: To customize the button to connect the wallet, you can set up one of the below providers. 
 
-To custom Button connect wallet you can setup one of the above providers.
+
+
+#1 - [Documentation Provider AppKit ( web3modal)](https://docs.reown.com/appkit/overview) - recommended
+
+Or
+
+#2 - [Documentation Provider wagmi](https://wagmi.sh/react/getting-started)
+
+
 
 ```
-- If you want to connect wallet to browsers that do not support injected 
-- In case you are using AppKit(web3modal)/wagmi with too old version but you don't want to update to new version
-=> will create a custom connect button
-Then follow these steps.
+# Target:
+
+- Connect a wallet to browsers that do not support injected wallets.
+- If you are using Provider AppKit: This resolves the issue of using an older version without needing to update to the latest version.
+- If you are using Provider wagmi: You only need a simple setup with wagmi.
+=> Follow these steps to create a custom connect button.
 ```
 
 ```jsx
-//step 1 : create button to connect
+// Step 1: Create a button to connect
 import React from "react";
 import { infoWallet } from "sdk-v2-keyringpasskeywallet";
 import { useConnect, useConnectors, useSwitchChain } from "wagmi";
@@ -187,7 +190,7 @@ const ButtonConnectWallet = () => {
   const handleConnect = async () => {
     const chainId = 137;
 
-    await switchChainAsync({ chainId: chainId }); //  switch to chain you want connect
+    await switchChainAsync({ chainId: chainId });// Switch to the chain you want to connect
 
     connectors.forEach((connector) => {
       if (connector.id === infoWallet.rdns) {
@@ -222,7 +225,7 @@ const ButtonConnectWallet = () => {
 
 export default ButtonConnectWallet;
  
-//step 2: use button connect
+// Step 2: Use the connect button
 
 import React from "react";
 import { isWeb3Injected } from "sdk-v2-keyringpasskeywallet";
@@ -232,10 +235,7 @@ const YourComponent = () => {
 
   return (
     <>
-      {!isWeb3Injected() && (
          <ButtonConnectWallet />
-      )
-       }
     </>
   );
 };
