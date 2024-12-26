@@ -5,4 +5,6 @@ export type SlugGroup =
   | 'egglepasskeywallet-decard'
   | 'meteornrun'
   | 'meteornrun-decard'
+  | 'keyringsmart'
+  | 'passkeywallet'
   | 'keyringpasskeywallet';

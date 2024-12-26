@@ -23,18 +23,18 @@ export const infoGroup: { [key in SlugGroup]: EIP6963ProviderInfo } = {
     icon: 'https://ipfs.pantograph.app/ipfs/QmUn7MnyA9HWfHNRG7oLTweNG93ztaErFdcg36Y2uxENUu?filename=noti.png',
     rdns: rdnsSdk,
   },
-  // bacoorpasskeywallet: {
-  //   uuid: uuidSdk,
-  //   name: 'Bacoor Passkey Wallet',
-  //   icon: 'https://ipfs.pantograph.app/ipfs/QmUN2o25Bhf7nLdHRU6wivFLN7dTZCjuuMGszSdSy7TRHh?filename=bacoorem-fix-noti.png',
-  //   rdns: rdnsSdk,
-  // },
-  // passkeywallet: {
-  //   uuid: uuidSdk,
-  //   name: 'KEYRING SMART',
-  //   icon: 'https://ipfs.pantograph.app/ipfs/QmWdV4p9FvAUKEnGHefwsYxUrtY8qyEX61xbHdGXworS8k?filename=icon%20NOTI.png',
-  //   rdns: rdnsSdk,
-  // },
+  passkeywallet: {
+    uuid: uuidSdk,
+    name: 'KEYRING SMART',
+    icon: 'https://ipfs.pantograph.app/ipfs/QmWdV4p9FvAUKEnGHefwsYxUrtY8qyEX61xbHdGXworS8k?filename=icon%20NOTI.png',
+    rdns: rdnsSdk,
+  },
+  keyringsmart: {
+    uuid: rdnsSdkDeCard,
+    name: 'KEYRING SMART DECARD',
+    icon: 'https://ipfs.pantograph.app/ipfs/QmWdV4p9FvAUKEnGHefwsYxUrtY8qyEX61xbHdGXworS8k?filename=icon%20NOTI.png',
+    rdns: rdnsSdkDeCard,
+  },
   keyringpasskeywallet: {
     uuid: uuidSdk,
     name: 'KEYRING SMART',
