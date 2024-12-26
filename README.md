@@ -1,4 +1,4 @@
-# sdk-v2-egglepasskeywallet-decard
+# sdk-v2-keyringpasskeywallet
 
 
 > The sdk package provides a simple wallet connection support using passkey to interact with smart account, with pre-setup AppKit( web3modal) provider
@@ -40,12 +40,12 @@ const modal = createAppKit({
 ## Install
 
 ```bash
-npm install --save sdk-v2-egglepasskeywallet-decard
+npm install --save sdk-v2-keyringpasskeywallet
 ```
 or 
 
 ```bash
-yarn add sdk-v2-egglepasskeywallet-decard
+yarn add sdk-v2-keyringpasskeywallet
 ```
 
 
@@ -55,7 +55,7 @@ yarn add sdk-v2-egglepasskeywallet-decard
 //MUST HAVE - Used for the first file to run (index.js)
 
 import React from "react";
-import { PasskeyProvider } from "sdk-v2-egglepasskeywallet-decard";
+import { PasskeyProvider } from "sdk-v2-keyringpasskeywallet";
 
 const App = ({ children }) => {
   return <PasskeyProvider>{children}</PasskeyProvider>;
@@ -96,7 +96,7 @@ PasskeyProvider is a wrapper that supports using wallets
 
 ```jsx
 
-import { PasskeyProvider } from "sdk-v2-egglepasskeywallet-decard";
+import { PasskeyProvider } from "sdk-v2-keyringpasskeywallet";
 
   //Example
   <PasskeyProvider
@@ -121,7 +121,7 @@ Information about wallet
 |                               | `id`
 
 ```jsx
-import { infoWallet } from "sdk-v2-egglepasskeywallet-decard";
+import { infoWallet } from "sdk-v2-keyringpasskeywallet";
 
   //example
   <div>
@@ -145,7 +145,7 @@ Function check browsers support web3 provider injected
 
 
 ```jsx
-import { isWeb3Injected } from "sdk-v2-egglepasskeywallet-decard";
+import { isWeb3Injected } from "sdk-v2-keyringpasskeywallet";
 
   //Example
   <div> 
@@ -175,7 +175,7 @@ Then follow these steps.
 ```jsx
 //step 1 : create button to connect
 import React from "react";
-import { infoWallet } from "sdk-v2-egglepasskeywallet-decard";
+import { infoWallet } from "sdk-v2-keyringpasskeywallet";
 import { useConnect, useConnectors, useSwitchChain } from "wagmi";
 
 const ButtonConnectWallet = () => {
@@ -225,7 +225,7 @@ export default ButtonConnectWallet;
 //step 2: use button connect
 
 import React from "react";
-import { isWeb3Injected } from "sdk-v2-egglepasskeywallet-decard";
+import { isWeb3Injected } from "sdk-v2-keyringpasskeywallet";
 import ButtonConnectWallet from "./ButtonConnectWallet";// step 1
 
 const YourComponent = () => {
