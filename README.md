@@ -1,9 +1,9 @@
 # sdk-v2-keyringpasskeywallet
+## Introduction:
+> The `sdk-v2-keyringpasskeywallet` SDK provides a straightforward way to connect wallets using passkeys, allowing interaction with smart accounts. It is pre-configured with AppKit (web3modal), making it easy to integrate into your projects.
 
-> The SDK package provides simple wallet connection support using passkey to interact with smart accounts, with a pre-setup AppKit (web3modal) provider.
-
-## Required Setup Before Installing the SDK
-### Install and Set Up AppKit (web3modal)
+## Prerequisites:
+### Before installing the SDK, ensure you have set up AppKit (web3modal).
 #### ⚠ If you have already set it up, skip this step.
 
 📚 [AppKit Documentation](https://docs.reown.com/appkit/overview)
@@ -33,10 +33,11 @@ const modal = createAppKit({
 
 ## Installation
 
+Install the SDK using npm:
 ```bash
 npm install --save sdk-v2-keyringpasskeywallet
 ```
-or 
+or using yarn:
 
 ```bash
 yarn add sdk-v2-keyringpasskeywallet
@@ -113,6 +114,7 @@ Information about the wallet.
 |                               | `name`
 |                               | `icon`
 |                               | `id`
+
 
 ```jsx
 import { infoWallet } from "sdk-v2-keyringpasskeywallet";
