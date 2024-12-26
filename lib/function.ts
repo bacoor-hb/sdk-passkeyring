@@ -67,3 +67,11 @@ export const isObject = (data:any, checkEmpty = false) => {
     ? isObj && Object.keys(data).length > 0
     : isObj
 }
+
+export const getVersionSdk = () => {
+  try {
+    const packageJson = require('../package.json')
+    return packageJson.name + '_' + packageJson.version
+  } catch (error) {
+  }
+}

@@ -3,7 +3,7 @@ import React, { useState, ReactNode, useEffect } from 'react'
 
 import '../../styles/index.css'
 import AccountProvider from 'lib/Components/AccountProvider'
-import { onPageLoad } from 'lib/function'
+import { getVersionSdk, onPageLoad } from 'lib/function'
 
 interface PasskeyProviderProps {
   children: ReactNode;
@@ -14,6 +14,14 @@ const PasskeyProvider = ({ children, config = {} }: PasskeyProviderProps) => {
   useEffect(() => {
     onPageLoad(config)
   }, [config])
+  useEffect(() => {
+    try {
+      const version = getVersionSdk()
+      console.log('🚀 ~ version:', version)
+    } catch (error) {
+
+    }
+  }, [])
 
   return (
     <AccountProvider>
