@@ -59,11 +59,12 @@ const App = ({ children }) => {
 export default App;
 ```
 ## #Issue
-```
+
 If you have completed the above steps 
 but your wallet is not listed in the AppKit (web3modal) modal
-=> Please update AppKit to the latest version.
-```
+=> Please update AppKit( web3modal) to the [latest version.](https://docs.reown.com/appkit/overview)
+ 
+
 
 
 ## #API
