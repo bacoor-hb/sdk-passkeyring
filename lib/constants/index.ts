@@ -7,7 +7,7 @@ const rdnsSdk = 'co.bacoor.keyring'
 const uuidSdkDeCard = '13e4568-e89b-12d3-a456-426614174000'
 const rdnsSdkDeCard = 'app.decard.wallet'
 
-export const GROUP_SLUG: SlugGroup = 'keyringpasskeywallet'
+export const GROUP_SLUG: SlugGroup = 'egglegamewallet-decard'
 // export const GROUP_SLUG: SlugGroup = 'egglepasskeywallet'
 
 export const infoGroup: { [key in SlugGroup]: EIP6963ProviderInfo } = {
@@ -16,6 +16,12 @@ export const infoGroup: { [key in SlugGroup]: EIP6963ProviderInfo } = {
     name: 'Eggle Gamewallet',
     icon: 'https://ipfs.pantograph.app/ipfs/QmUn7MnyA9HWfHNRG7oLTweNG93ztaErFdcg36Y2uxENUu?filename=noti.png',
     rdns: rdnsSdk,
+  },
+  'egglegamewallet-decard': {
+    uuid: rdnsSdkDeCard,
+    name: 'Eggle Gamewallet DeCard',
+    icon: 'https://ipfs.pantograph.app/ipfs/QmUn7MnyA9HWfHNRG7oLTweNG93ztaErFdcg36Y2uxENUu?filename=noti.png',
+    rdns: rdnsSdkDeCard,
   },
   egglepasskeywallet: {
     uuid: uuidSdk,

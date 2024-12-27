@@ -23,6 +23,8 @@ export type I_TYPE_URL =
   | 'SWAP_NFT'
   | 'APPROVE'
   | 'PERSONAL_SIGN'
+  | 'SIGN_TYPED_DATA'
+  | 'SIGN_TRANSACTION'
   | undefined;
 
 export const TYPE_REQUEST: Record<
@@ -36,6 +38,8 @@ export const TYPE_REQUEST: Record<
   SWAP_NFT: 'SWAP_NFT',
   APPROVE: 'APPROVE',
   PERSONAL_SIGN: 'PERSONAL_SIGN',
+  SIGN_TYPED_DATA: 'SIGN_TYPED_DATA',
+  SIGN_TRANSACTION: 'SIGN_TRANSACTION',
 }
 
 export type I_TYPE_ERROR = 'ERROR_TRANSACTION' | undefined;

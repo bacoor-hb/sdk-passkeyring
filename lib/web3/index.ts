@@ -3,6 +3,7 @@ import { chainsSupported, GROUP_SLUG, infoGroup, RPC_DEFAULT, STORAGE_KEY, URL_P
 import { decodeBase64, encodeBase64, isObject } from 'lib/function'
 import { I_TYPE_URL, TYPE_ERROR, TYPE_REQUEST, WalletProvider } from 'lib/web3/type'
 import { isMobile } from 'react-device-detect'
+
   interface MyCustomWalletProviderProps {
     config?: any;
   }
@@ -58,17 +59,19 @@ class MyCustomWalletProvider implements WalletProvider {
       case 'wallet_getNetwork':
         return this.getNetwork()
       case 'eth_sendTransaction':
-        return this.sendTransaction(params)
       case 'wallet_sendCalls':
-        return this.sendCallsTransaction(params)
+        return this.sendTransaction(params)
       case 'eth_sign':
         return this.signMessage(params)
       case 'personal_sign':
         return this.personalSign(params)
       case 'eth_signTypedData':
+      case 'eth_signTypedData_v1':
       case 'eth_signTypedData_v3':
       case 'eth_signTypedData_v4':
-        return this.signTypedData(params)
+        return this.signTypedData(method, params)
+      case 'eth_signTransaction':
+        return this.signTransaction(params)
       case 'eth_subscribe':
         return this.subscribe(params)
       case 'eth_unsubscribe':
@@ -147,6 +150,8 @@ class MyCustomWalletProvider implements WalletProvider {
     switch (type) {
       case TYPE_REQUEST.SEND_TRANSACTION:
       case TYPE_REQUEST.PERSONAL_SIGN:
+      case TYPE_REQUEST.SIGN_TYPED_DATA:
+      case TYPE_REQUEST.SIGN_TRANSACTION:
         return `${URL_PASSKEY}/${GROUP_SLUG}/mypage/${this.accounts[0]}`
       default:
         return `${URL_PASSKEY}/activate-by-passkey/${GROUP_SLUG}`
@@ -187,6 +192,16 @@ class MyCustomWalletProvider implements WalletProvider {
         break
       case TYPE_REQUEST.PERSONAL_SIGN:
         urlWithQuery = `${url}?sign-message=${encodedQuery}`
+        left = 0
+        top = 0
+        break
+      case TYPE_REQUEST.SIGN_TYPED_DATA:
+        urlWithQuery = `${url}?sign-typed-data=${encodedQuery}`
+        left = 0
+        top = 0
+        break
+      case TYPE_REQUEST.SIGN_TRANSACTION:
+        urlWithQuery = `${url}?sign-transaction=${encodedQuery}`
         left = 0
         top = 0
         break
@@ -297,48 +312,6 @@ class MyCustomWalletProvider implements WalletProvider {
     }
   }
 
-  private async sendCallsTransaction (params: any[]): Promise<any> {
-    try {
-      // Extract the transactions array from params
-      const transactions = params[0]
-
-      const typeRequest = TYPE_REQUEST.SEND_TRANSACTION
-
-      // Validate that transactions are provided and in correct format
-      if (!Array.isArray(transactions) || transactions.length === 0) {
-        throw new Error('No transactions provided or invalid format.')
-      }
-
-      // Validate each transaction object
-      for (const tx of transactions) {
-        if (!tx.to || typeof tx.to !== 'string') {
-          throw new Error(`Transaction is missing a valid 'to' address: ${JSON.stringify(tx)}`)
-        }
-        if (!tx.data || typeof tx.data !== 'string' || tx.data === '0x') {
-          throw new Error(`Transaction is missing a valid 'data' field: ${JSON.stringify(tx)}`)
-        }
-      }
-
-      // Prepare the payload for the popup
-      const { data } = await this.openPopup(typeRequest, { transactions })
-
-      // Handle the response from the popup
-      if (data.type === TYPE_ERROR.ERROR_TRANSACTION) {
-        throw new Error(data.payload?.message || 'Error sending transactions')
-      }
-
-      if (data.type === typeRequest) {
-        // Assuming the popup returns an array of transaction hashes
-        return data?.payload?.hashes
-      }
-
-      throw new Error('Unexpected response from the popup')
-    } catch (error) {
-      console.error('Error in sendCallsTransaction:', error)
-      throw error
-    }
-  }
-
   private async signMessage (params: any[]): Promise<string> {
   // const [address, message] = params
     // return '0xSignedMessage'
@@ -361,10 +334,51 @@ class MyCustomWalletProvider implements WalletProvider {
     }
   }
 
-  private async signTypedData (params: any[]): Promise<string> {
-    // const [address, typedData] = params
-    // return '0xTypedDataSignature'
-    throw new Error('Unsupported method signTypedData')
+  private async signTypedData (method:string, params: any[]): Promise<string | undefined> {
+    const typeRequest = TYPE_REQUEST.SIGN_TYPED_DATA
+
+    if (!Array.isArray(params)) throw new Error('No transactions provided or invalid format.')
+
+    const address = params[method === 'eth_signTypedData_v1' ? 1 : 0]
+    const rawData = params[method === 'eth_signTypedData_v1' ? 0 : 1]
+    const { data } = await this.openPopup(typeRequest, {
+      chainId: this.chainId,
+      account: address,
+      message: rawData,
+      addPrefix: false,
+    })
+
+    if (data.type === TYPE_ERROR.ERROR_TRANSACTION) {
+      throw new Error(data?.payload?.message || 'Error sign message')
+    }
+    if (data.type === typeRequest) {
+      return data?.payload.signature
+    }
+  }
+
+  private async signTransaction (params: any[]): Promise<string | undefined> {
+    const typeRequest = TYPE_REQUEST.SIGN_TRANSACTION
+
+    if (!Array.isArray(params)) throw new Error('No transactions provided or invalid format.')
+
+    const tx = params[0]
+
+    if (!tx.chainId) {
+      tx.chainId = this.chainId
+    }
+
+    const { data } = await this.openPopup(typeRequest, {
+      chainId: this.chainId,
+      account: this.accounts[0],
+      transaction: tx,
+    })
+
+    if (data.type === TYPE_ERROR.ERROR_TRANSACTION) {
+      throw new Error(data.payload?.message || 'Error send transaction')
+    }
+    if (data.type === typeRequest) {
+      return data?.payload?.signature
+    }
   }
 
   private async subscribe (params: any[]): Promise<string> {
