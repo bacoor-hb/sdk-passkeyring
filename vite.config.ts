@@ -31,6 +31,12 @@ export default defineConfig(configEnv => ({
         },
       },
     },
+    minify: 'terser', // Minify the output
+    terserOptions: {
+      compress: {
+        drop_console: true, // Remove console logs
+      },
+    },
   },
   esbuild: {
     jsxInject: 'import React from \'react\'',

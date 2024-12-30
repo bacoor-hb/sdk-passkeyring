@@ -17,7 +17,7 @@ const PasskeyProvider = ({ children, config = {} }: PasskeyProviderProps) => {
   useEffect(() => {
     try {
       const version = getVersionSdk()
-      console.log('🚀 ~ version:', version)
+      console.warn('🚀 ~ version:', version)
     } catch (error) {
 
     }
