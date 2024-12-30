@@ -65,6 +65,14 @@ but your wallet is not listed in the AppKit (web3modal) modal
 
 => Please update AppKit( web3modal) to the [latest version.](https://docs.reown.com/appkit/overview)
  
+## #Supported chains
+```
+Ethereum:         '0x1'
+OP Mainnet:       '0xa'
+BNB Smart Chain:  '0x38'
+Polygon:          '0x89'
+Arbitrum One:     '0xa4b1'
+```
 
 
 
