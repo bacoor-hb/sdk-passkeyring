@@ -25,6 +25,14 @@ export default defineConfig(configEnv => ({
     },
     rollupOptions: {
       external: ['react'],
+      output: {
+        globals: {
+          react: 'React',
+        },
+      },
     },
+  },
+  esbuild: {
+    jsxInject: 'import React from \'react\'',
   },
 }))
