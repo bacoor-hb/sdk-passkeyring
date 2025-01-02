@@ -1,12 +1,25 @@
 import { ethers } from 'ethers'
-import { chainsSupported, GROUP_SLUG, infoGroup, RPC_DEFAULT, STORAGE_KEY, URL_PASSKEY } from 'lib/constants'
+import {
+  chainsSupported,
+  GROUP_SLUG,
+  infoGroup,
+  RPC_DEFAULT,
+  STORAGE_KEY,
+  URL_PASSKEY,
+} from 'lib/constants'
 import { decodeBase64, encodeBase64, isObject } from 'lib/function'
-import { I_TYPE_URL, TYPE_ERROR, TYPE_REQUEST, WalletProvider } from 'lib/web3/type'
+import {
+  I_TYPE_URL,
+  RequestArguments,
+  TYPE_ERROR,
+  TYPE_REQUEST,
+  WalletProvider,
+} from 'lib/web3/type'
 import { isMobile } from 'react-device-detect'
 
-  interface MyCustomWalletProviderProps {
-    config?: any;
-  }
+interface MyCustomWalletProviderProps {
+  config?: any;
+}
 class MyCustomWalletProvider implements WalletProvider {
   name: string
   icon: string
@@ -19,7 +32,9 @@ class MyCustomWalletProvider implements WalletProvider {
   private currentPopup: Window | null = null // Track the currently opened popup
 
   constructor (props: MyCustomWalletProviderProps) {
-    this.rpcUrl = isObject(props?.config?.rpcUrl, true) ? { ...RPC_DEFAULT, ...props?.config?.rpcUrl } : RPC_DEFAULT
+    this.rpcUrl = isObject(props?.config?.rpcUrl, true)
+      ? { ...RPC_DEFAULT, ...props?.config?.rpcUrl }
+      : RPC_DEFAULT
     this.name = infoGroup[GROUP_SLUG].name
     this.icon = infoGroup[GROUP_SLUG].icon
     this.uuid = infoGroup[GROUP_SLUG].uuid
@@ -44,7 +59,7 @@ class MyCustomWalletProvider implements WalletProvider {
     }
   }
 
-  async request ({ method, params = [] }: { method: string; params?: any[] }): Promise<any> {
+  async request ({ method, params = [] }: RequestArguments): Promise<any> {
     switch (method) {
       case 'wallet_requestPermissions':
         return this.requestPermissions(params)
@@ -119,7 +134,10 @@ class MyCustomWalletProvider implements WalletProvider {
     const supportedPermissions = ['eth_accounts', 'eth_chainId']
 
     // Validate requested permissions
-    const requestedPermissions = params[0]?.permissions || (params?.length > 0 && params?.map(obj => Object.keys(obj)[0])) || []
+    const requestedPermissions =
+      params[0]?.permissions ||
+      (params?.length > 0 && params?.map((obj) => Object.keys(obj)[0])) ||
+      []
     const invalidPermissions = requestedPermissions.filter(
       (perm: string) => !supportedPermissions.includes(perm),
     )
@@ -156,7 +174,7 @@ class MyCustomWalletProvider implements WalletProvider {
     return this.permissions
   }
 
-  getUrl (type?:I_TYPE_URL): string {
+  getUrl (type?: I_TYPE_URL): string {
     switch (type) {
       case TYPE_REQUEST.LOGIN:
         return `${URL_PASSKEY}/activate-by-passkey/${GROUP_SLUG}`
@@ -176,15 +194,14 @@ class MyCustomWalletProvider implements WalletProvider {
   getFavicon () {
     const link = document.querySelector("link[rel~='icon']")
     return link ? (link as HTMLLinkElement).href : `${URL_PASSKEY}/favicon.ico` // Trả về favicon mặc định nếu không tìm thấy
-  };
+  }
 
-  openPopup (type?:I_TYPE_URL, query?:{[key:string]:any}): Promise<any> {
+  openPopup (type?: I_TYPE_URL, query?: { [key: string]: any }): Promise<any> {
     const infoPageConnected = {
       site: window.location.origin,
       icon: this.getFavicon(),
       timeStamp: Date.now(),
       expiry: Date.now() + 1000 * 60 * 5, // 5 minutes
-
     }
     const url = this.getUrl(type)
 
@@ -194,7 +211,12 @@ class MyCustomWalletProvider implements WalletProvider {
     let top = window.innerHeight / 2 - height / 2 + window.screenY
 
     if (isObject(query, true)) {
-      query = { ...query, infoPageConnected, id: Date.now(), type_request: type }
+      query = {
+        ...query,
+        infoPageConnected,
+        id: Date.now(),
+        type_request: type,
+      }
     }
 
     const encodedQuery = encodeBase64(query)
@@ -279,7 +301,10 @@ class MyCustomWalletProvider implements WalletProvider {
       // Xử lý kết quả trả về từ popup
       this.accounts = [data.addressPasskey] // Giả sử popup trả về thông tin account
 
-      localStorage.setItem(STORAGE_KEY.ACCOUNT_PASSKEY, JSON.stringify({ address: this.accounts[0], chainId: this.chainId }))
+      localStorage.setItem(
+        STORAGE_KEY.ACCOUNT_PASSKEY,
+        JSON.stringify({ address: this.accounts[0], chainId: this.chainId }),
+      )
 
       this.triggerEvent('accountsChanged', this.accounts)
       return this.accounts
@@ -309,7 +334,7 @@ class MyCustomWalletProvider implements WalletProvider {
     return this.chainId
   }
 
-  private async sendTransaction (params: any[]): Promise<string|undefined> {
+  private async sendTransaction (params: any[]): Promise<string | undefined> {
     const typeRequest = TYPE_REQUEST.SEND_TRANSACTION
 
     const tx = params[0]
@@ -329,13 +354,13 @@ class MyCustomWalletProvider implements WalletProvider {
   }
 
   private async signMessage (params: any[]): Promise<string> {
-  // const [address, message] = params
+    // const [address, message] = params
     // return '0xSignedMessage'
 
     throw new Error('Unsupported method signMessage')
   }
 
-  private async personalSign (params: any[]): Promise<string|undefined> {
+  private async personalSign (params: any[]): Promise<string | undefined> {
     const typeRequest = TYPE_REQUEST.PERSONAL_SIGN
     const { data } = await this.openPopup(typeRequest, {
       chainId: this.chainId,
@@ -350,10 +375,13 @@ class MyCustomWalletProvider implements WalletProvider {
     }
   }
 
-  private async signTypedData (method:string, params: any[]): Promise<string | undefined> {
+  private async signTypedData (
+    method: string,
+    params: any[],
+  ): Promise<string | undefined> {
     const typeRequest = TYPE_REQUEST.SIGN_TYPED_DATA
 
-    if (!Array.isArray(params)) throw new Error('No transactions provided or invalid format.')
+    if (!Array.isArray(params)) { throw new Error('No transactions provided or invalid format.') }
 
     const address = params[method === 'eth_signTypedData_v1' ? 1 : 0]
     const rawData = params[method === 'eth_signTypedData_v1' ? 0 : 1]
@@ -375,7 +403,7 @@ class MyCustomWalletProvider implements WalletProvider {
   private async signTransaction (params: any[]): Promise<string | undefined> {
     const typeRequest = TYPE_REQUEST.SIGN_TRANSACTION
 
-    if (!Array.isArray(params)) throw new Error('No transactions provided or invalid format.')
+    if (!Array.isArray(params)) { throw new Error('No transactions provided or invalid format.') }
 
     const tx = params[0]
 
@@ -415,7 +443,10 @@ class MyCustomWalletProvider implements WalletProvider {
     }
 
     this.chainId = chainId
-    localStorage.setItem(STORAGE_KEY.ACCOUNT_PASSKEY, JSON.stringify({ address: this.accounts[0], chainId }))
+    localStorage.setItem(
+      STORAGE_KEY.ACCOUNT_PASSKEY,
+      JSON.stringify({ address: this.accounts[0], chainId }),
+    )
 
     // Kích hoạt sự kiện chainChanged
     this.triggerEvent('chainChanged', chainId)
@@ -435,8 +466,11 @@ class MyCustomWalletProvider implements WalletProvider {
     return gasPrice
   }
 
-  private async createProviderWeb3 (url?:string|undefined): Promise<any> {
-    const rpc = url || this.rpcUrl?.[Number(this.chainId)] || RPC_DEFAULT[Number(this.chainId) as keyof typeof RPC_DEFAULT]
+  private async createProviderWeb3 (url?: string | undefined): Promise<any> {
+    const rpc =
+      url ||
+      this.rpcUrl?.[Number(this.chainId)] ||
+      RPC_DEFAULT[Number(this.chainId) as keyof typeof RPC_DEFAULT]
     const provider = new ethers.providers.JsonRpcProvider(rpc)
     return provider
   }
@@ -486,7 +520,9 @@ class MyCustomWalletProvider implements WalletProvider {
       const receipt = await provider.getTransactionReceipt(transactionHash)
 
       if (!receipt) {
-        throw new Error(`Transaction receipt not found for hash: ${transactionHash}`)
+        throw new Error(
+          `Transaction receipt not found for hash: ${transactionHash}`,
+        )
       }
 
       return receipt
@@ -516,15 +552,23 @@ class MyCustomWalletProvider implements WalletProvider {
     }
   }
 
-  private async getTransactionCount (address: string, blockTag: string = 'latest'): Promise<number> {
+  private async getTransactionCount (
+    address: string,
+    blockTag: string = 'latest',
+  ): Promise<number> {
     try {
       if (!address || typeof address !== 'string') {
-        throw new Error('A valid address is required to get the transaction count.')
+        throw new Error(
+          'A valid address is required to get the transaction count.',
+        )
       }
 
       const provider = await this.createProviderWeb3()
 
-      const transactionCount = await provider.getTransactionCount(address, blockTag)
+      const transactionCount = await provider.getTransactionCount(
+        address,
+        blockTag,
+      )
 
       return transactionCount
     } catch (error) {
@@ -582,7 +626,9 @@ class MyCustomWalletProvider implements WalletProvider {
   private async personalEcRecover (params: any[]): Promise<string> {
     const [message, signature] = params
     if (!message || !signature) {
-      throw new Error('Message and signature are required for personalEcRecover.')
+      throw new Error(
+        'Message and signature are required for personalEcRecover.',
+      )
     }
 
     const prefixedMessage = ethers.utils.hashMessage(message)
@@ -625,7 +671,9 @@ class MyCustomWalletProvider implements WalletProvider {
 
   // Quản lý sự kiện
   on (event: string, handler: (...args: any[]) => void): void {
-    window.addEventListener(event, (e: Event) => handler((e as CustomEvent).detail))
+    window.addEventListener(event, (e: Event) =>
+      handler((e as CustomEvent).detail),
+    )
   }
 
   off (event: string, handler: (...args: any[]) => void): void {
@@ -639,7 +687,9 @@ class MyCustomWalletProvider implements WalletProvider {
 }
 
 const isWeb3Injected = () => {
-  return typeof window !== 'undefined' && typeof window?.ethereum !== 'undefined'
+  return (
+    typeof window !== 'undefined' && typeof window?.ethereum !== 'undefined'
+  )
 }
 
 export { MyCustomWalletProvider, isWeb3Injected }

@@ -8,6 +8,11 @@ export interface WalletProvider {
   off: (event: string, handler: (...args: any[]) => void) => void;
 }
 
+export interface RequestArguments {
+  readonly method: string;
+  readonly params?: any[];
+}
+
 interface EthereumWindow extends Window {
   ethereum?: {
     providers?: WalletProvider[];
