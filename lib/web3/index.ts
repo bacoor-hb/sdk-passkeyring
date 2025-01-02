@@ -107,6 +107,8 @@ class MyCustomWalletProvider implements WalletProvider {
         return this.ecRecover(params)
       case 'personal_ecRecover':
         return this.personalEcRecover(params)
+      case 'wallet_grantPermissions':
+        return this.grantPermissions(params)
       default:
         throw new Error(`Unsupported method: ${method}`)
     }
@@ -586,6 +588,39 @@ class MyCustomWalletProvider implements WalletProvider {
     const prefixedMessage = ethers.utils.hashMessage(message)
     const address = ethers.utils.recoverAddress(prefixedMessage, signature)
     return address
+  }
+
+  private async grantPermissions (params: any[]): Promise<any> {
+    try {
+      const requestedPermissions = params[0]?.permissions || []
+
+      if (!Array.isArray(requestedPermissions)) {
+        throw new Error('Invalid permissions format.')
+      }
+
+      // user approval
+      const grantedPermissions = requestedPermissions.reduce(
+        (acc: Record<string, boolean>, permission: string) => {
+          acc[permission] = true
+          return acc
+        },
+        {},
+      )
+
+      this.permissions = { ...this.permissions, ...grantedPermissions }
+
+      localStorage.setItem(
+        STORAGE_KEY.PERMISSIONS_PASSKEY,
+        JSON.stringify(this.permissions),
+      )
+
+      return {
+        permissions: this.permissions,
+      }
+    } catch (error) {
+      console.error('Error in grantPermissions:', error)
+      throw error
+    }
   }
 
   // Quản lý sự kiện
