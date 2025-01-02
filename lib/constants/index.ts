@@ -1,11 +1,14 @@
 import { SlugGroup } from 'lib/constants/type'
 import { EIP6963ProviderInfo } from 'lib/function'
 
-const uuidSdk = '23e4567-e89b-12d3-a456-426614174000'
+// Docs    ->   https://eips.ethereum.org/EIPS/eip-6963
+// Generate uuidv4  ->   https://www.uuidgenerator.net/version4
+
+const uuidSdk = 'f5316409-9ad8-451c-8aba-90835c0a726d'
 const rdnsSdk = 'co.bacoor.keyring'
 
-const uuidSdkDeCard = '13e4568-e89b-12d3-a456-426614174000'
-const rdnsSdkDeCard = 'app.decard.wallet'
+const uuidSdkDeCard = '026dbbaa-7d0c-4391-8213-2a28575f7e2a'
+const rdnsSdkDeCard = 'app.keyring.smart'
 
 export const GROUP_SLUG: SlugGroup = 'keyringpasskeywallet'
 // export const GROUP_SLUG: SlugGroup = 'egglepasskeywallet'
