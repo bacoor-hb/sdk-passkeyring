@@ -2,7 +2,7 @@ import { SlugGroup } from 'lib/constants/type'
 import { EIP6963ProviderInfo } from 'lib/function'
 
 // Docs    ->   https://eips.ethereum.org/EIPS/eip-6963
-// Generate uuidv4  ->   https://www.uuidgenerator.net/version4
+// Generate uuidV4  ->   https://www.uuidgenerator.net/version4
 
 const uuidSdk = 'f5316409-9ad8-451c-8aba-90835c0a726d'
 const rdnsSdk = 'co.bacoor.keyring'
