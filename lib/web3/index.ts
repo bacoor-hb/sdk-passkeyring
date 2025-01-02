@@ -255,8 +255,9 @@ class MyCustomWalletProvider implements WalletProvider {
       this.currentPopup.close()
     }
 
+    // Mở popup tạm ngay khi sự kiện người dùng xảy ra
     const popup = window.open(
-      urlFinal,
+      '',
       `${GROUP_SLUG}`,
       `toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=no,width=${width},height=${height},top=${top},left=${left}`,
     )
@@ -264,6 +265,9 @@ class MyCustomWalletProvider implements WalletProvider {
     if (!popup) {
       return Promise.reject(new Error('Popup could not be opened'))
     }
+
+    // Cập nhật URL cho popup tạm
+    popup.location.href = urlFinal
 
     this.currentPopup = popup
 
@@ -276,8 +280,6 @@ class MyCustomWalletProvider implements WalletProvider {
       }, 1000)
 
       window.addEventListener('message', function onMessage (event) {
-        // Kiểm tra nguồn dữ liệu nếu cần
-
         if (event.origin !== new URL(URL_PASSKEY).origin) {
           return
         }
@@ -285,7 +287,7 @@ class MyCustomWalletProvider implements WalletProvider {
         if (event?.data) {
           clearInterval(interval)
           window.removeEventListener('message', onMessage)
-          resolve({ data: event.data }) // Payload chứa dữ liệu từ popup
+          resolve({ data: event.data })
           const closePopupAfterDone = event?.data?.closePopupAfterDone
           if (isMobile || closePopupAfterDone) {
             popup.close()
