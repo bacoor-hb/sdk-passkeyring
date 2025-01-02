@@ -25,6 +25,7 @@ export type I_TYPE_URL =
   | 'PERSONAL_SIGN'
   | 'SIGN_TYPED_DATA'
   | 'SIGN_TRANSACTION'
+  | 'LOGIN'
   | undefined;
 
 export const TYPE_REQUEST: Record<
@@ -40,6 +41,7 @@ export const TYPE_REQUEST: Record<
   PERSONAL_SIGN: 'PERSONAL_SIGN',
   SIGN_TYPED_DATA: 'SIGN_TYPED_DATA',
   SIGN_TRANSACTION: 'SIGN_TRANSACTION',
+  LOGIN: 'LOGIN',
 }
 
 export type I_TYPE_ERROR = 'ERROR_TRANSACTION' | undefined;

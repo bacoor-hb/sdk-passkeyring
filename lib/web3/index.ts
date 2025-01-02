@@ -148,12 +148,17 @@ class MyCustomWalletProvider implements WalletProvider {
 
   getUrl (type?:I_TYPE_URL): string {
     switch (type) {
+      case TYPE_REQUEST.LOGIN:
+        return `${URL_PASSKEY}/activate-by-passkey/${GROUP_SLUG}`
       case TYPE_REQUEST.SEND_TRANSACTION:
       case TYPE_REQUEST.PERSONAL_SIGN:
       case TYPE_REQUEST.SIGN_TYPED_DATA:
       case TYPE_REQUEST.SIGN_TRANSACTION:
         return `${URL_PASSKEY}/${GROUP_SLUG}/mypage/${this.accounts[0]}`
       default:
+        if (this.accounts.length > 0) {
+          return `${URL_PASSKEY}/${GROUP_SLUG}/mypage/${this.accounts[0]}`
+        }
         return `${URL_PASSKEY}/activate-by-passkey/${GROUP_SLUG}`
     }
   }
@@ -258,7 +263,8 @@ class MyCustomWalletProvider implements WalletProvider {
 
   private async enable (): Promise<string[]> {
     try {
-      const { data } = await this.openPopup()
+      const typeRequest = TYPE_REQUEST.LOGIN
+      const { data } = await this.openPopup(typeRequest)
 
       // Xử lý kết quả trả về từ popup
       this.accounts = [data.addressPasskey] // Giả sử popup trả về thông tin account
