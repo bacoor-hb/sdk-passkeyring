@@ -45,7 +45,9 @@ class MyCustomWalletProvider implements WalletProvider {
   private async init () {
     try {
       if (this.accounts.length === 0) {
-        const accountPasskey = localStorage.getItem(STORAGE_KEY.ACCOUNT_PASSKEY)
+        const accountPasskey = localStorage.getItem(
+          STORAGE_KEY.ACCOUNT_PASSKEY,
+        )
         if (accountPasskey) {
           const accountPasskeyParse = JSON.parse(accountPasskey)
           this.accounts = [accountPasskeyParse.address]
@@ -381,7 +383,9 @@ class MyCustomWalletProvider implements WalletProvider {
   ): Promise<string | undefined> {
     const typeRequest = TYPE_REQUEST.SIGN_TYPED_DATA
 
-    if (!Array.isArray(params)) { throw new Error('No transactions provided or invalid format.') }
+    if (!Array.isArray(params)) {
+      throw new Error('No transactions provided or invalid format.')
+    }
 
     const address = params[method === 'eth_signTypedData_v1' ? 1 : 0]
     const rawData = params[method === 'eth_signTypedData_v1' ? 0 : 1]
@@ -403,7 +407,9 @@ class MyCustomWalletProvider implements WalletProvider {
   private async signTransaction (params: any[]): Promise<string | undefined> {
     const typeRequest = TYPE_REQUEST.SIGN_TRANSACTION
 
-    if (!Array.isArray(params)) { throw new Error('No transactions provided or invalid format.') }
+    if (!Array.isArray(params)) {
+      throw new Error('No transactions provided or invalid format.')
+    }
 
     const tx = params[0]
 
