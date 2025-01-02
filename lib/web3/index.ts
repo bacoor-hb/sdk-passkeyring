@@ -99,6 +99,14 @@ class MyCustomWalletProvider implements WalletProvider {
       case 'disconnect':
       case 'wallet_revokePermissions':
         return this.disconnect()
+      case 'wallet_showCallsStatus':
+        return this.showCallsStatus()
+      case 'wallet_getCapabilities':
+        return this.getCapabilities()
+      case 'eth_ecRecover':
+        return this.ecRecover(params)
+      case 'personal_ecRecover':
+        return this.personalEcRecover(params)
       default:
         throw new Error(`Unsupported method: ${method}`)
     }
@@ -534,6 +542,50 @@ class MyCustomWalletProvider implements WalletProvider {
       console.error('Error in getNetwork:', error)
       throw error
     }
+  }
+
+  private async showCallsStatus (): Promise<any> {
+    return {
+      connected: this.accounts.length > 0,
+      accounts: this.accounts,
+      chainId: this.chainId,
+      permissions: this.permissions,
+    }
+  }
+
+  private async getCapabilities (): Promise<string[]> {
+    return [
+      'eth_accounts',
+      'eth_chainId',
+      'eth_sendTransaction',
+      'personal_sign',
+      'eth_signTypedData',
+      'wallet_getCapabilities',
+      'eth_ecRecover',
+      'personal_ecRecover',
+      'wallet_showCallsStatus',
+    ]
+  }
+
+  private async ecRecover (params: any[]): Promise<string> {
+    const [message, signature] = params
+    if (!message || !signature) {
+      throw new Error('Message and signature are required for ecRecover.')
+    }
+
+    const address = ethers.utils.verifyMessage(message, signature)
+    return address
+  }
+
+  private async personalEcRecover (params: any[]): Promise<string> {
+    const [message, signature] = params
+    if (!message || !signature) {
+      throw new Error('Message and signature are required for personalEcRecover.')
+    }
+
+    const prefixedMessage = ethers.utils.hashMessage(message)
+    const address = ethers.utils.recoverAddress(prefixedMessage, signature)
+    return address
   }
 
   // Quản lý sự kiện
