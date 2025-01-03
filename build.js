@@ -102,6 +102,7 @@ fs.readFile(typeFilePath, 'utf8', (err, data) => {
         filesToUpdate.forEach(replaceInFile)
 
         // Bước 3: Chạy lệnh yarn build
+        console.log('Building...')
         const { exec } = require('child_process')
         exec('yarn build', (err, stdout, stderr) => {
           if (err) {
