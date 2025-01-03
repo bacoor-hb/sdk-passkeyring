@@ -7,7 +7,7 @@ import {
   STORAGE_KEY,
   URL_PASSKEY,
 } from 'lib/constants'
-import { decodeBase64, encodeBase64, isObject } from 'lib/function'
+import { decodeBase64, encodeBase64, isObject, sleep } from 'lib/function'
 import {
   I_TYPE_URL,
   RequestArguments,
@@ -198,7 +198,7 @@ class MyCustomWalletProvider implements WalletProvider {
     return link ? (link as HTMLLinkElement).href : `${URL_PASSKEY}/favicon.ico` // Trả về favicon mặc định nếu không tìm thấy
   }
 
-  openPopup (type?: I_TYPE_URL, query?: { [key: string]: any }): Promise<any> {
+  async openPopup (type?: I_TYPE_URL, query?: { [key: string]: any }): Promise<any> {
     const infoPageConnected = {
       site: window.location.origin,
       icon: this.getFavicon(),
@@ -266,7 +266,8 @@ class MyCustomWalletProvider implements WalletProvider {
       return Promise.reject(new Error('Popup could not be opened'))
     }
 
-    // Cập nhật URL cho popup tạm
+    await sleep(200)
+
     popup.location.href = urlFinal
 
     this.currentPopup = popup

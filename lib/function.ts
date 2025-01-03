@@ -75,3 +75,7 @@ export const getVersionSdk = () => {
   } catch (error) {
   }
 }
+
+export const sleep = (milliseconds: number | undefined) => {
+  return new Promise(resolve => setTimeout(resolve, milliseconds || 0))
+}
