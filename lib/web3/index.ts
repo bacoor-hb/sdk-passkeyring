@@ -266,9 +266,11 @@ class MyCustomWalletProvider implements WalletProvider {
       return Promise.reject(new Error('Popup could not be opened'))
     }
 
-    await sleep(200)
-
-    popup.location.href = urlFinal
+    setTimeout(() => {
+      if (popup) {
+        popup.location.href = urlFinal
+      }
+    }, 0) // Trì hoãn cực nhỏ nhưng không bị Safari chặn
 
     this.currentPopup = popup
 
