@@ -23,6 +23,18 @@ const PasskeyProvider = ({ children, config = {} }: PasskeyProviderProps) => {
     }
   }, [])
 
+  useEffect(() => {
+    const handleBeforeUnload = () => {
+      window.postMessage({ type: 'CLOSE_POPUP' }, '*')
+    }
+
+    window.addEventListener('beforeunload', handleBeforeUnload)
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload)
+    }
+  }, [])
+
   return (
     <AccountProvider>
       {children}

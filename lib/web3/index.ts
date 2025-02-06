@@ -270,14 +270,26 @@ class MyCustomWalletProvider implements WalletProvider {
       if (popup) {
         popup.location.href = urlFinal
       }
-    }, 0) // Trì hoãn cực nhỏ nhưng không bị Safari chặn
+    }, 100)
 
     this.currentPopup = popup
+
+    // Lắng nghe sự kiện CLOSE_POPUP từ PasskeyProvider
+    const handleMessage = (event: MessageEvent) => {
+      if (event?.data?.type === 'CLOSE_POPUP') {
+        if (popup && !popup.closed) {
+          popup.close()
+        }
+      }
+    }
+
+    window.addEventListener('message', handleMessage)
 
     return new Promise((resolve, reject) => {
       const interval = setInterval(() => {
         if (popup.closed) {
           clearInterval(interval)
+          window.removeEventListener('message', handleMessage) // Xóa sự kiện khi popup đóng
           reject(new Error('Popup closed before completing authentication'))
         }
       }, 1000)
@@ -290,6 +302,7 @@ class MyCustomWalletProvider implements WalletProvider {
         if (event?.data) {
           clearInterval(interval)
           window.removeEventListener('message', onMessage)
+          window.removeEventListener('message', handleMessage) // Xóa sự kiện sau khi xử lý xong
           resolve({ data: event.data })
           const closePopupAfterDone = event?.data?.closePopupAfterDone
           if (isMobile || closePopupAfterDone) {
