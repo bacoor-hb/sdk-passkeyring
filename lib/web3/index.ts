@@ -276,10 +276,8 @@ class MyCustomWalletProvider implements WalletProvider {
 
     // Lắng nghe sự kiện CLOSE_POPUP từ PasskeyProvider
     const handleMessage = (event: MessageEvent) => {
-      if (event?.data?.type === 'CLOSE_POPUP') {
-        if (popup && !popup.closed) {
-          popup.close()
-        }
+      if (event?.data?.type === 'CLOSE_POPUP' && popup && !popup.closed) {
+        popup.close()
       }
     }
 
