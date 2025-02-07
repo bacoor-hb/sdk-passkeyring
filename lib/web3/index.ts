@@ -300,7 +300,6 @@ class MyCustomWalletProvider implements WalletProvider {
         if (event?.data) {
           clearInterval(interval)
           window.removeEventListener('message', onMessage)
-          window.removeEventListener('message', handleMessage)
           resolve({ data: event.data })
           const closePopupAfterDone = event?.data?.closePopupAfterDone
           if (isMobile || closePopupAfterDone) {
