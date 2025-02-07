@@ -126,7 +126,7 @@ fs.readFile(typeFilePath, 'utf8', (err, data) => {
             console.log(stderr)
 
             // Commit và push các thay đổi
-            exec(`git add . && git commit -m "Build ${replaceString} ver.${version} "`, (err, stdout, stderr) => {
+            exec(`git add . && git commit -m "Build & publish ${replaceString} ver.${version} "`, (err, stdout, stderr) => {
               if (err) {
                 console.error('Error committing and pushing changes:', err)
                 return
