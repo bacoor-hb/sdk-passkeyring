@@ -322,13 +322,8 @@ class MyCustomWalletProvider implements WalletProvider {
         })
       })
 
-      const event = new MouseEvent('click', {
-        bubbles: true,
-        cancelable: true,
-        view: window,
-      })
-      button.dispatchEvent(event)
-      document.body.removeChild(button)
+      button.click()
+      setTimeout(() => document.body.removeChild(button), 500)
     })
   }
 
