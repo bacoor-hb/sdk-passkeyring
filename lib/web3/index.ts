@@ -8,7 +8,7 @@ import {
   TYPE_CLOSE_POPUP_GROUP_SLUG,
   URL_PASSKEY,
 } from 'lib/constants'
-import { decodeBase64, encodeBase64, isObject, sleep } from 'lib/function'
+import { decodeBase64, encodeBase64, getVersionSdk, isObject, sleep } from 'lib/function'
 import {
   I_TYPE_URL,
   RequestArguments,
@@ -53,6 +53,7 @@ class MyCustomWalletProvider implements WalletProvider {
           const accountPasskeyParse = JSON.parse(accountPasskey)
           this.accounts = [accountPasskeyParse.address]
           this.chainId = accountPasskeyParse.chainId || this.chainId
+          this.version = getVersionSdk(false)
           this.triggerEvent('accountsChanged', this.accounts)
           this.triggerEvent('chainChanged', this.chainId)
         }

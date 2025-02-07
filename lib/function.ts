@@ -18,7 +18,7 @@ interface ProviderMessage {
   readonly data: unknown;
 }
 
-export function onPageLoad (config:any) {
+export function onPageLoad (config: any) {
   if (typeof window === 'undefined') {
     return
   }
@@ -33,12 +33,9 @@ export function onPageLoad (config:any) {
     )
   }
 
-  window.addEventListener(
-    'eip6963:requestProvider',
-    (event: any) => {
-      announceProvider()
-    },
-  )
+  window.addEventListener('eip6963:requestProvider', (event: any) => {
+    announceProvider()
+  })
 
   announceProvider()
   setTimeout(() => {
@@ -46,14 +43,14 @@ export function onPageLoad (config:any) {
   }, 500)
 }
 
-export function encodeBase64<T> (data: T): T|string {
+export function encodeBase64<T> (data: T): T | string {
   try {
     return Buffer.from(JSON.stringify(data)).toString('base64')
   } catch (error) {
     return data
   }
 }
-export function decodeBase64 (encodedData?: any): string|undefined {
+export function decodeBase64 (encodedData?: any): string | undefined {
   try {
     return JSON.parse(Buffer.from(encodedData!, 'base64').toString('utf-8'))
   } catch {
@@ -61,21 +58,21 @@ export function decodeBase64 (encodedData?: any): string|undefined {
   }
 }
 
-export const isObject = (data:any, checkEmpty = false) => {
+export const isObject = (data: any, checkEmpty = false) => {
   const isObj = data && typeof data === 'object'
-  return checkEmpty
-    ? isObj && Object.keys(data).length > 0
-    : isObj
+  return checkEmpty ? isObj && Object.keys(data).length > 0 : isObj
 }
 
-export const getVersionSdk = () => {
+export const getVersionSdk = (includesNamePackage: boolean = true): string => {
   try {
     const packageJson = require('../package.json')
-    return packageJson.name + '_' + packageJson.version
+    const namePackage = includesNamePackage ? packageJson.name + '_' : ''
+    return `${namePackage}${packageJson.version}`
   } catch (error) {
+    return '2.0.0'
   }
 }
 
 export const sleep = (milliseconds: number | undefined) => {
-  return new Promise(resolve => setTimeout(resolve, milliseconds || 0))
+  return new Promise((resolve) => setTimeout(resolve, milliseconds || 0))
 }
