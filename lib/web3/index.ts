@@ -8,7 +8,13 @@ import {
   TYPE_CLOSE_POPUP_GROUP_SLUG,
   URL_PASSKEY,
 } from 'lib/constants'
-import { decodeBase64, encodeBase64, getVersionSdk, isObject, sleep } from 'lib/function'
+import {
+  decodeBase64,
+  encodeBase64,
+  getVersionSdk,
+  isObject,
+  sleep,
+} from 'lib/function'
 import {
   I_TYPE_URL,
   RequestArguments,
@@ -200,114 +206,129 @@ class MyCustomWalletProvider implements WalletProvider {
     return link ? (link as HTMLLinkElement).href : `${URL_PASSKEY}/favicon.ico` // Trả về favicon mặc định nếu không tìm thấy
   }
 
-  async openPopup (type?: I_TYPE_URL, query?: { [key: string]: any }): Promise<any> {
-    const infoPageConnected = {
-      site: window.location.origin,
-      icon: this.getFavicon(),
-      timeStamp: Date.now(),
-      expiry: Date.now() + 1000 * 60 * 5,
-    }
-    const url = this.getUrl(type)
-
-    const width = 470
-    const height = 800
-    let left: number, top: number
-
-    if (type === TYPE_REQUEST.LOGIN) {
-      left = window.innerWidth / 2 - width / 2 + window.screenX
-      top = window.innerHeight / 2 - height / 2 + window.screenY
-    } else {
-      left = window.screenX + window.innerWidth - width
-      top = window.screenY
-    }
-
-    if (isObject(query, true)) {
-      query = {
-        ...query,
-        infoPageConnected,
-        id: Date.now(),
-        type_request: type,
-      }
-    }
-
-    const encodedQuery = encodeBase64(query)
-    let urlWithQuery = ''
-    switch (type) {
-      case TYPE_REQUEST.SEND_TRANSACTION:
-        urlWithQuery = `${url}?raw-transaction=${encodedQuery}`
-        break
-      case TYPE_REQUEST.PERSONAL_SIGN:
-        urlWithQuery = `${url}?sign-message=${encodedQuery}`
-        break
-      case TYPE_REQUEST.SIGN_TYPED_DATA:
-        urlWithQuery = `${url}?sign-typed-data=${encodedQuery}`
-        break
-      case TYPE_REQUEST.SIGN_TRANSACTION:
-        urlWithQuery = `${url}?sign-transaction=${encodedQuery}`
-        break
-      default:
-        urlWithQuery = ''
-        break
-    }
-
-    const urlFinal = encodedQuery ? urlWithQuery : url
-
-    if (this.currentPopup && !this.currentPopup.closed && isMobile) {
-      this.currentPopup.close()
-    }
-
-    const popup = window.open(
-      '',
-      `${GROUP_SLUG}`,
-      `toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=no,width=${width},height=${height},top=${top},left=${left}`,
-    )
-
-    popup?.focus()
-
-    if (!popup) {
-      return Promise.reject(new Error('Pop up window failed to open'))
-    }
-
-    setTimeout(() => {
-      if (popup) {
-        popup.location.href = urlFinal
-      }
-    }, 100)
-
-    this.currentPopup = popup
-
-    const handleMessage = (event: MessageEvent) => {
-      if (event?.data?.type === TYPE_CLOSE_POPUP_GROUP_SLUG && popup && !popup.closed) {
-        popup.close()
-      }
-    }
-
-    window.removeEventListener('message', handleMessage)
-    window.addEventListener('message', handleMessage)
-
+  async openPopup (
+    type?: I_TYPE_URL,
+    query?: { [key: string]: any },
+  ): Promise<any> {
     return new Promise((resolve, reject) => {
-      const interval = setInterval(() => {
-        if (popup.closed) {
-          clearInterval(interval)
-          reject(new Error('Popup closed before completing authentication'))
-        }
-      }, 1000)
+      // why create button?=> because safari not allow open popup without user interaction (click) => so we need to create button and dispatch click event
+      const button = document.createElement('button')
+      button.style.display = 'none'
+      document.body.appendChild(button)
 
-      window.addEventListener('message', function onMessage (event) {
-        if (event.origin !== new URL(URL_PASSKEY).origin) {
+      button.addEventListener('click', () => {
+        const infoPageConnected = {
+          site: window.location.origin,
+          icon: this.getFavicon(),
+          timeStamp: Date.now(),
+          expiry: Date.now() + 1000 * 60 * 5,
+        }
+        const url = this.getUrl(type)
+
+        const width = 470
+        const height = 800
+        let left: number, top: number
+
+        if (type === TYPE_REQUEST.LOGIN) {
+          left = window.innerWidth / 2 - width / 2 + window.screenX
+          top = window.innerHeight / 2 - height / 2 + window.screenY
+        } else {
+          left = window.screenX + window.innerWidth - width
+          top = window.screenY
+        }
+
+        if (isObject(query, true)) {
+          query = {
+            ...query,
+            infoPageConnected,
+            id: Date.now(),
+            type_request: type,
+          }
+        }
+
+        const encodedQuery = encodeBase64(query)
+        let urlWithQuery = ''
+        switch (type) {
+          case TYPE_REQUEST.SEND_TRANSACTION:
+            urlWithQuery = `${url}?raw-transaction=${encodedQuery}`
+            break
+          case TYPE_REQUEST.PERSONAL_SIGN:
+            urlWithQuery = `${url}?sign-message=${encodedQuery}`
+            break
+          case TYPE_REQUEST.SIGN_TYPED_DATA:
+            urlWithQuery = `${url}?sign-typed-data=${encodedQuery}`
+            break
+          case TYPE_REQUEST.SIGN_TRANSACTION:
+            urlWithQuery = `${url}?sign-transaction=${encodedQuery}`
+            break
+          default:
+            urlWithQuery = ''
+            break
+        }
+
+        const urlFinal = encodedQuery ? urlWithQuery : url
+
+        if (this.currentPopup && !this.currentPopup.closed && isMobile) {
+          this.currentPopup.close()
+        }
+
+        const popup = window.open(
+          urlFinal,
+          `${GROUP_SLUG}`,
+          `toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=no,width=${width},height=${height},top=${top},left=${left}`,
+        )
+
+        if (!popup) {
+          reject(new Error('Pop-up window failed to open'))
           return
         }
 
-        if (event?.data) {
-          clearInterval(interval)
-          window.removeEventListener('message', onMessage)
-          resolve({ data: event.data })
-          const closePopupAfterDone = event?.data?.closePopupAfterDone
-          if (isMobile || closePopupAfterDone) {
+        this.currentPopup = popup
+
+        const handleMessage = (event: MessageEvent) => {
+          if (
+            event?.data?.type === TYPE_CLOSE_POPUP_GROUP_SLUG &&
+            popup &&
+            !popup.closed
+          ) {
             popup.close()
           }
         }
+
+        window.removeEventListener('message', handleMessage)
+        window.addEventListener('message', handleMessage)
+
+        const interval = setInterval(() => {
+          if (popup.closed) {
+            clearInterval(interval)
+            reject(new Error('Popup closed before completing authentication'))
+          }
+        }, 1000)
+
+        window.addEventListener('message', function onMessage (event) {
+          if (event.origin !== new URL(URL_PASSKEY).origin) {
+            return
+          }
+
+          if (event?.data) {
+            clearInterval(interval)
+            window.removeEventListener('message', onMessage)
+            resolve({ data: event.data })
+            const closePopupAfterDone = event?.data?.closePopupAfterDone
+            if (isMobile || closePopupAfterDone) {
+              popup.close()
+            }
+          }
+        })
       })
+
+      const event = new MouseEvent('click', {
+        bubbles: true,
+        cancelable: true,
+        view: window,
+      })
+      button.dispatchEvent(event)
+      document.body.removeChild(button)
     })
   }
 
