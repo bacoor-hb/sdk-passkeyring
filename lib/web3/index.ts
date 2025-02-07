@@ -255,7 +255,6 @@ class MyCustomWalletProvider implements WalletProvider {
       this.currentPopup.close()
     }
 
-    // Mở popup tạm ngay khi sự kiện người dùng xảy ra
     const popup = window.open(
       '',
       `${GROUP_SLUG}`,
