@@ -261,8 +261,10 @@ class MyCustomWalletProvider implements WalletProvider {
       `toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=no,width=${width},height=${height},top=${top},left=${left}`,
     )
 
+    popup?.focus()
+
     if (!popup) {
-      return Promise.reject(new Error('Popup could not be opened'))
+      return Promise.reject(new Error('Pop up window failed to open'))
     }
 
     setTimeout(() => {
