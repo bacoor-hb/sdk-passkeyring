@@ -287,7 +287,6 @@ class MyCustomWalletProvider implements WalletProvider {
       const interval = setInterval(() => {
         if (popup.closed) {
           clearInterval(interval)
-          window.removeEventListener('message', handleMessage)
           reject(new Error('Popup closed before completing authentication'))
         }
       }, 1000)
