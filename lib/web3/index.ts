@@ -5,6 +5,7 @@ import {
   infoGroup,
   RPC_DEFAULT,
   STORAGE_KEY,
+  TYPE_CLOSE_POPUP_GROUP_SLUG,
   URL_PASSKEY,
 } from 'lib/constants'
 import { decodeBase64, encodeBase64, isObject, sleep } from 'lib/function'
@@ -274,9 +275,9 @@ class MyCustomWalletProvider implements WalletProvider {
 
     this.currentPopup = popup
 
-    // Lắng nghe sự kiện CLOSE_POPUP từ PasskeyProvider
+    // listen message close popup
     const handleMessage = (event: MessageEvent) => {
-      if (event?.data?.type === 'CLOSE_POPUP' && popup && !popup.closed) {
+      if (event?.data?.type === TYPE_CLOSE_POPUP_GROUP_SLUG && popup && !popup.closed) {
         popup.close()
       }
     }

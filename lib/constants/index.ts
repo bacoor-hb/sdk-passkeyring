@@ -118,3 +118,5 @@ export const infoWallet = {
   url: URL_PASSKEY,
   ...infoGroup[GROUP_SLUG],
 }
+
+export const TYPE_CLOSE_POPUP_GROUP_SLUG = 'CLOSE_POPUP_' + GROUP_SLUG

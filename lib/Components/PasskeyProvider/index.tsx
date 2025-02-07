@@ -4,6 +4,7 @@ import React, { useState, ReactNode, useEffect } from 'react'
 import '../../styles/index.css'
 import AccountProvider from 'lib/Components/AccountProvider'
 import { getVersionSdk, onPageLoad } from 'lib/function'
+import { GROUP_SLUG, TYPE_CLOSE_POPUP_GROUP_SLUG } from 'lib/constants'
 
 interface PasskeyProviderProps {
   children: ReactNode;
@@ -25,7 +26,7 @@ const PasskeyProvider = ({ children, config = {} }: PasskeyProviderProps) => {
 
   useEffect(() => {
     const handleBeforeUnload = () => {
-      window.postMessage({ type: 'CLOSE_POPUP' }, '*')
+      window.postMessage({ type: TYPE_CLOSE_POPUP_GROUP_SLUG }, '*')
     }
 
     window.addEventListener('beforeunload', handleBeforeUnload)
