@@ -101,8 +101,8 @@ const getURLPasskey = () => {
   }
 }
 
-export const URL_PASSKEY = getURLPasskey()
-// export const URL_PASSKEY = 'https://pass.w3w.app'
+// export const URL_PASSKEY = getURLPasskey()
+export const URL_PASSKEY = 'http://localhost:3000'
 
 export const RPC_DEFAULT = {
   1: 'https://cloudflare-eth.com',

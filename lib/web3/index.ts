@@ -204,14 +204,21 @@ class MyCustomWalletProvider implements WalletProvider {
       site: window.location.origin,
       icon: this.getFavicon(),
       timeStamp: Date.now(),
-      expiry: Date.now() + 1000 * 60 * 5, // 5 minutes
+      expiry: Date.now() + 1000 * 60 * 5,
     }
     const url = this.getUrl(type)
 
     const width = 470
     const height = 800
-    let left = window.innerWidth / 2 - width / 2 + window.screenX
-    let top = window.innerHeight / 2 - height / 2 + window.screenY
+    let left: number, top: number
+
+    if (type === TYPE_REQUEST.LOGIN) {
+      left = window.innerWidth / 2 - width / 2 + window.screenX
+      top = window.innerHeight / 2 - height / 2 + window.screenY
+    } else {
+      left = window.screenX + window.innerWidth - width
+      top = window.screenY
+    }
 
     if (isObject(query, true)) {
       query = {
@@ -227,23 +234,15 @@ class MyCustomWalletProvider implements WalletProvider {
     switch (type) {
       case TYPE_REQUEST.SEND_TRANSACTION:
         urlWithQuery = `${url}?raw-transaction=${encodedQuery}`
-        left = 0
-        top = 0
         break
       case TYPE_REQUEST.PERSONAL_SIGN:
         urlWithQuery = `${url}?sign-message=${encodedQuery}`
-        left = 0
-        top = 0
         break
       case TYPE_REQUEST.SIGN_TYPED_DATA:
         urlWithQuery = `${url}?sign-typed-data=${encodedQuery}`
-        left = 0
-        top = 0
         break
       case TYPE_REQUEST.SIGN_TRANSACTION:
         urlWithQuery = `${url}?sign-transaction=${encodedQuery}`
-        left = 0
-        top = 0
         break
       default:
         urlWithQuery = ''
@@ -275,20 +274,20 @@ class MyCustomWalletProvider implements WalletProvider {
 
     this.currentPopup = popup
 
-    // listen message close popup
     const handleMessage = (event: MessageEvent) => {
       if (event?.data?.type === TYPE_CLOSE_POPUP_GROUP_SLUG && popup && !popup.closed) {
         popup.close()
       }
     }
 
+    window.removeEventListener('message', handleMessage)
     window.addEventListener('message', handleMessage)
 
     return new Promise((resolve, reject) => {
       const interval = setInterval(() => {
         if (popup.closed) {
           clearInterval(interval)
-          window.removeEventListener('message', handleMessage) // Xóa sự kiện khi popup đóng
+          window.removeEventListener('message', handleMessage)
           reject(new Error('Popup closed before completing authentication'))
         }
       }, 1000)
