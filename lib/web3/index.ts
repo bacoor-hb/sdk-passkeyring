@@ -211,119 +211,109 @@ class MyCustomWalletProvider implements WalletProvider {
     query?: { [key: string]: any },
   ): Promise<any> {
     return new Promise((resolve, reject) => {
-      // why create button?=> because safari not allow open popup without user interaction (click) => so we need to create button and dispatch click event
-      const button = document.createElement('button')
-      button.style.display = 'none'
-      document.body.appendChild(button)
+      const infoPageConnected = {
+        site: window.location.origin,
+        icon: this.getFavicon(),
+        timeStamp: Date.now(),
+        expiry: Date.now() + 1000 * 60 * 5,
+      }
+      const url = this.getUrl(type)
 
-      button.addEventListener('click', () => {
-        const infoPageConnected = {
-          site: window.location.origin,
-          icon: this.getFavicon(),
-          timeStamp: Date.now(),
-          expiry: Date.now() + 1000 * 60 * 5,
+      const width = 470
+      const height = 800
+      let left: number, top: number
+
+      if (type === TYPE_REQUEST.LOGIN) {
+        left = window.innerWidth / 2 - width / 2 + window.screenX
+        top = window.innerHeight / 2 - height / 2 + window.screenY
+      } else {
+        left = window.screenX + window.innerWidth - width
+        top = window.screenY
+      }
+
+      if (isObject(query, true)) {
+        query = {
+          ...query,
+          infoPageConnected,
+          id: Date.now(),
+          type_request: type,
         }
-        const url = this.getUrl(type)
+      }
 
-        const width = 470
-        const height = 800
-        let left: number, top: number
+      const encodedQuery = encodeBase64(query)
+      let urlWithQuery = ''
+      switch (type) {
+        case TYPE_REQUEST.SEND_TRANSACTION:
+          urlWithQuery = `${url}?raw-transaction=${encodedQuery}`
+          break
+        case TYPE_REQUEST.PERSONAL_SIGN:
+          urlWithQuery = `${url}?sign-message=${encodedQuery}`
+          break
+        case TYPE_REQUEST.SIGN_TYPED_DATA:
+          urlWithQuery = `${url}?sign-typed-data=${encodedQuery}`
+          break
+        case TYPE_REQUEST.SIGN_TRANSACTION:
+          urlWithQuery = `${url}?sign-transaction=${encodedQuery}`
+          break
+        default:
+          urlWithQuery = ''
+          break
+      }
 
-        if (type === TYPE_REQUEST.LOGIN) {
-          left = window.innerWidth / 2 - width / 2 + window.screenX
-          top = window.innerHeight / 2 - height / 2 + window.screenY
-        } else {
-          left = window.screenX + window.innerWidth - width
-          top = window.screenY
-        }
+      const urlFinal = encodedQuery ? urlWithQuery : url
 
-        if (isObject(query, true)) {
-          query = {
-            ...query,
-            infoPageConnected,
-            id: Date.now(),
-            type_request: type,
-          }
-        }
+      if (this.currentPopup && !this.currentPopup.closed && isMobile) {
+        this.currentPopup.close()
+      }
 
-        const encodedQuery = encodeBase64(query)
-        let urlWithQuery = ''
-        switch (type) {
-          case TYPE_REQUEST.SEND_TRANSACTION:
-            urlWithQuery = `${url}?raw-transaction=${encodedQuery}`
-            break
-          case TYPE_REQUEST.PERSONAL_SIGN:
-            urlWithQuery = `${url}?sign-message=${encodedQuery}`
-            break
-          case TYPE_REQUEST.SIGN_TYPED_DATA:
-            urlWithQuery = `${url}?sign-typed-data=${encodedQuery}`
-            break
-          case TYPE_REQUEST.SIGN_TRANSACTION:
-            urlWithQuery = `${url}?sign-transaction=${encodedQuery}`
-            break
-          default:
-            urlWithQuery = ''
-            break
-        }
-
-        const urlFinal = encodedQuery ? urlWithQuery : url
-
-        if (this.currentPopup && !this.currentPopup.closed && isMobile) {
-          this.currentPopup.close()
-        }
-
-        const popup = window.open(
-          urlFinal,
+      const popup = window.open(
+        urlFinal,
           `${GROUP_SLUG}`,
           `toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=no,width=${width},height=${height},top=${top},left=${left}`,
-        )
+      )
 
-        if (!popup) {
-          reject(new Error('Pop-up window failed to open'))
+      if (!popup) {
+        reject(new Error('Pop-up window failed to open'))
+        return
+      }
+
+      this.currentPopup = popup
+
+      const handleMessage = (event: MessageEvent) => {
+        if (
+          event?.data?.type === TYPE_CLOSE_POPUP_GROUP_SLUG &&
+            popup &&
+            !popup.closed
+        ) {
+          popup.close()
+        }
+      }
+
+      window.removeEventListener('message', handleMessage)
+      window.addEventListener('message', handleMessage)
+
+      const interval = setInterval(() => {
+        if (popup.closed) {
+          clearInterval(interval)
+          reject(new Error('Popup closed before completing authentication'))
+        }
+      }, 1000)
+
+      window.addEventListener('message', function onMessage (event) {
+        if (event.origin !== new URL(URL_PASSKEY).origin) {
           return
         }
 
-        this.currentPopup = popup
-
-        const handleMessage = (event: MessageEvent) => {
-          if (
-            event?.data?.type === TYPE_CLOSE_POPUP_GROUP_SLUG &&
-            popup &&
-            !popup.closed
-          ) {
+        if (event?.data) {
+          clearInterval(interval)
+          window.removeEventListener('message', onMessage)
+          resolve({ data: event.data })
+          const closePopupAfterDone = event?.data?.closePopupAfterDone
+          if (isMobile || closePopupAfterDone) {
             popup.close()
           }
         }
-
-        window.removeEventListener('message', handleMessage)
-        window.addEventListener('message', handleMessage)
-
-        const interval = setInterval(() => {
-          if (popup.closed) {
-            clearInterval(interval)
-            reject(new Error('Popup closed before completing authentication'))
-          }
-        }, 1000)
-
-        window.addEventListener('message', function onMessage (event) {
-          if (event.origin !== new URL(URL_PASSKEY).origin) {
-            return
-          }
-
-          if (event?.data) {
-            clearInterval(interval)
-            window.removeEventListener('message', onMessage)
-            resolve({ data: event.data })
-            const closePopupAfterDone = event?.data?.closePopupAfterDone
-            if (isMobile || closePopupAfterDone) {
-              popup.close()
-            }
-          }
-        })
       })
-
-      button.click()
-      setTimeout(() => document.body.removeChild(button), 500)
     })
   }
 
