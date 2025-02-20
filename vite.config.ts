@@ -39,6 +39,6 @@ export default defineConfig(configEnv => ({
     },
   },
   esbuild: {
-    jsxInject: 'import React from \'react\'',
+    // jsxInject: 'import React from \'react\'',
   },
 }))
