@@ -3522,10 +3522,10 @@ scrypt-js@3.0.1:
   resolved "https://registry.yarnpkg.com/scrypt-js/-/scrypt-js-3.0.1.tgz#d314a57c2aef69d1ad98a138a21fe9eafa9ee312"
   integrity sha512-cdwTTnqPu0Hyvf5in5asVdZocVDTNRmR7XEcJuIzMjJeSHybHl7vpB66AzwTaIg6CLSbtjcxc8fqcySfnTkccA==
 
-sdk-v2-keyringpasskeywallet@2.4.28:
-  version "2.4.28"
-  resolved "https://registry.yarnpkg.com/sdk-v2-keyringpasskeywallet/-/sdk-v2-keyringpasskeywallet-2.4.28.tgz#d34e847158c2eb071be36ee24ce97d982a5b66be"
-  integrity sha512-uEkXJZ/LDn79FU9faDiCStgdx/tXjDSyTMAbWMUAlaB90GYGwP+A6DOium2Z7PlLEPLMTCCfXWxYopxflWIR5w==
+sdk-v2-keyringpasskeywallet@^2.5:
+  version "2.5.2"
+  resolved "https://registry.yarnpkg.com/sdk-v2-keyringpasskeywallet/-/sdk-v2-keyringpasskeywallet-2.5.2.tgz#450944daec177f4719c10ed8cf2017abe07365cf"
+  integrity sha512-gnUDM0Uxv4wZn/XcUAqsOvK2I2UEltPeW/jCnF3nmMdar1Wzl1hNWa2PGyZm1uawQJ2GPiCb8dWyUrDcPwWbXw==
   dependencies:
     "@webcomponents/custom-elements" "^1.6.0"
     autoprefixer "^10.4.20"
