@@ -1,8 +1,10 @@
 # sdk-v2-keyringpasskeywallet
-## NOTE: Only Support `React.js` and Web application framework Software related to `React.js`( recommended: Next.js)
+
+## This docs is for `React.js` and `Next.js`, if you are using Javacript, please refer to  [sdk-v2-keyringpasskeywallet JavaScript](https://github.com/bacoor-hb/sdk-passkeyring/tree/javascript-integration/sdk-v2-keyringpasskeywallet)
 
 ## Introduction:
 > The `sdk-v2-keyringpasskeywallet` SDK is built on `React.js`, provides a straightforward way to connect wallets using passkeys, allowing interaction with smart accounts. It is pre-configured with AppKit (web3modal), making it easy to integrate into your projects.
+
 
 ## Prerequisites:
 ### Before installing the SDK, ensure you have set up AppKit (web3modal).
@@ -13,10 +15,6 @@
 ```
 If you prefer a video tutorial, please click below 👇
 ```
-
-
-
-
 
 [![IMAGE ALT TEXT HERE](https://i.ytimg.com/vi/lxTGqXh7LiA/hqdefault.jpg?sqp=-oaymwEnCNACELwBSFryq4qpAxkIARUAAIhCGAHYAQHiAQoIGBACGAY4AUAB&rs=AOn4CLDOS4gcXwP9GEZB4-Qei0TW-E4z7Q)](https://youtu.be/lxTGqXh7LiA)
 
@@ -62,11 +60,11 @@ export default App;
 ```
 ## #Issue
 
-If you have completed the above steps 
+If you have completed the above steps
 but your wallet is not listed in the AppKit (web3modal) modal
 
 => Please update AppKit( web3modal) to the [latest version.](https://docs.reown.com/appkit/overview)
- 
+
 ## #Supported chains
 ```
 Ethereum:         '0x1'
@@ -81,12 +79,12 @@ Arbitrum One:     '0xa4b1'
 ## #API
 
 
-| Name                           | Description                                         
-| -----------------------------  | -----------------------  
-| PasskeyProvider                | Component Passkey Provider     
-| infoWallet                     | Wallet information    
-| isWeb3Injected                 | Check if Web3 Injected Provider is supported   
- 
+| Name                           | Description
+| -----------------------------  | -----------------------
+| PasskeyProvider                | Component Passkey Provider
+| infoWallet                     | Wallet information
+| isWeb3Injected                 | Check if Web3 Injected Provider is supported
+
 
 
 ## #API Details
@@ -96,7 +94,7 @@ Arbitrum One:     '0xa4b1'
 PasskeyProvider is a wrapper that supports using wallets.
 
 
-| Property                      | Description             | Required           |Attribute                                  
+| Property                      | Description             | Required           |Attribute
 | ----------------------------- | ----------------------- | -------------------|----------
 | `config`                      | Config Passkey Provider |Optional            |`rpcUrl`
 
@@ -120,8 +118,8 @@ import { PasskeyProvider } from "sdk-v2-keyringpasskeywallet";
 #### `infoWallet`
 Information about the wallet.
 
-| Property                      | Attribute                                                     
-| ----------------------------- | ------------------------------------------------------------- 
+| Property                      | Attribute
+| ----------------------------- | -------------------------------------------------------------
 | `infoWallet`                  | `ndns`
 |                               | `name`
 |                               | `icon`
@@ -147,8 +145,8 @@ import { infoWallet } from "sdk-v2-keyringpasskeywallet";
 
 Function to check if the browser supports Web3 provider injection.
 
-| Function                      | result                                                     
-| ----------------------------- | ------------------------------------------------------------- 
+| Function                      | result
+| ----------------------------- | -------------------------------------------------------------
 | `isWeb3Injected()`            | `boolean`
 
 
@@ -156,7 +154,7 @@ Function to check if the browser supports Web3 provider injection.
 import { isWeb3Injected } from "sdk-v2-keyringpasskeywallet";
 
   //Example
-  <div> 
+  <div>
     {!isWeb3Injected() && <ButtonConnectWallet />}
   </div>
 
@@ -181,7 +179,7 @@ Or
 
 
 ```
-#Target: 
+#Target:
 
 - Connect wallet to browsers that do not support injected providers.
 - If you are using Provider AppKit: Resolve the issue of using an older version without updating to the latest version.
@@ -238,7 +236,7 @@ const ButtonConnectWallet = () => {
 };
 
 export default ButtonConnectWallet;
- 
+
 // Step 2: Use the connect button
 
 import React from "react";
