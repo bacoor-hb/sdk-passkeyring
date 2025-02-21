@@ -82,7 +82,7 @@ const getBalance = async (provider, address) => {
 ```
 
 ## We already deployed this example to Vercel for testing
-You can access this example at [https://sdk-v2-keyringsmart-javascript.vercel.app/](https://sdk-v2-keyringsmart-javascript.vercel.app/)
+You can access this example at [https://sdk-v2-passkeywallet-javascript.vercel.app/](https://sdk-v2-passkeywallet-javascript.vercel.app/)
 
 
 ## Or you can run this example locally
