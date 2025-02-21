@@ -12,11 +12,10 @@ yarn add @reown/appkit @reown/appkit-adapter-wagmi wagmi viem
 ```
 > More detail about install AppKit JavaScript SDK, please visit [here](https://docs.reown.com/appkit/javascript/core/installation)
 
-**Installation sdk-v2-passkeywallet package version >=2.4.28**
+**Installation sdk-v2-passkeywallet package version >=2.5**
 ```
-yarn add sdk-v2-passkeywallet@2.4.28
+yarn add sdk-v2-passkeywallet@^2.5
 ```
-> In this example we're using package `sdk-v2-passkeywallet@2.4.28`
 
 **Pleae note that sdk-v2-passkeywallet supports the following chains**
 ```
