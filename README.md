@@ -12,13 +12,13 @@ yarn add @reown/appkit @reown/appkit-adapter-wagmi wagmi viem
 ```
 > More detail about install AppKit JavaScript SDK, please visit [here](https://docs.reown.com/appkit/javascript/core/installation)
 
-**Installation sdk-passkeyring package version >=2.4.28**
+**Installation sdk-v2-keyringpasskeywallet package version >=2.4.28**
 ```
 yarn add sdk-v2-keyringpasskeywallet@2.4.28
 ```
 > In this example we're using package `sdk-v2-keyringpasskeywallet@2.4.28`
 
-**Pleae note that sdk-passkeyring supports the following chains**
+**Pleae note that sdk-v2-keyringpasskeywallet supports the following chains**
 ```
 Ethereum:         '0x1'
 OP Mainnet:       '0xa'
@@ -47,11 +47,11 @@ export const appKit = createAppKit({
 ```
 
 ## Trigger the modal
-> Add `<appkit-button>` and `<passkey-provider />` to your html file  
+> Add `<appkit-button>` and `<passkey-provider />` to your html file
 > Full html file at this example at [/index.html](index.html)
 
 
-> Load your javacript config file `main.js` here  
+> Load your javacript config file `main.js` here
 > Full code for `main.js` file at this example at [/src/main.js](/src/main.js)
 ```html
 <!doctype html>
@@ -68,8 +68,8 @@ export const appKit = createAppKit({
 ```
 
 ## Blockchain Interaction
-> You can use `provider.request()` method to call Ethereum JSON-RPC API  
-> For example you can call `eth_getBalance` like below  
+> You can use `provider.request()` method to call Ethereum JSON-RPC API
+> For example you can call `eth_getBalance` like below
 > Full code for `eth_getBalance` at this example at [/src/services/wallet.js](/src/services/wallet.js)
 ```javascript
 const getBalance = async (provider, address) => {

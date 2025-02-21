@@ -10,7 +10,7 @@ if (!projectId) {
   throw new Error('VITE_PROJECT_ID is not set')
 }
 
-// supported networks by sdk-passkeyring: mainnet, optimism, bsc, polygon, arbitrum
+// supported networks by sdk-v2-keyringpasskeywallet: mainnet, optimism, bsc, polygon, arbitrum
 export const networks = [polygon]
 
 //Set up the Wagmi Adapter (Config)
