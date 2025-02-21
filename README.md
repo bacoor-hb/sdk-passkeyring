@@ -81,7 +81,7 @@ const getBalance = async (provider, address) => {
   }
 ```
 
-## How to run this example t your local?
+## How to run this example in your local?
 1. Clone source
 2. Run `yarn` to install dependencies
 3. Run `yarn dev` to start the development server
