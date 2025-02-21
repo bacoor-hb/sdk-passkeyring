@@ -81,7 +81,10 @@ const getBalance = async (provider, address) => {
   }
 ```
 
-## How to run this example in your local?
+## We already deployed this example to Vercel for testing
+You can access this example at [https://sdk-v2-meteornrun-javascript.vercel.app/index.html](https://sdk-v2-meteornrun-javascript.vercel.app/index.html)
+
+## Or you can run this example locally
 1. Clone source
 2. Run `yarn` to install dependencies
 3. Run `yarn dev` to start the development server
