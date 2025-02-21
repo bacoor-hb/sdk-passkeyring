@@ -1,6 +1,6 @@
 # sdk-v2-keyringpasskeywallet
 
-## This docs is for `React.js` and `Next.js`, if you are using Javacript, please refer to  [sdk-v2-keyringpasskeywallet JavaScript](https://github.com/bacoor-hb/sdk-passkeyring/tree/javascript-integration)
+## This docs is for `React.js` and `Next.js`, if you are using Javacript, please refer to  [sdk-v2-keyringpasskeywallet JavaScript](https://github.com/bacoor-hb/sdk-passkeyring/tree/javascript-integration/sdk-v2-keyringpasskeywallet)
 
 ## Introduction:
 > The `sdk-v2-keyringpasskeywallet` SDK is built on `React.js`, provides a straightforward way to connect wallets using passkeys, allowing interaction with smart accounts. It is pre-configured with AppKit (web3modal), making it easy to integrate into your projects.
