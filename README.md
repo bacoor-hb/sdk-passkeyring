@@ -82,7 +82,7 @@ const getBalance = async (provider, address) => {
 ```
 
 ## We already deployed this example to Vercel for testing
-You can access this example at [https://sdk-v2-meteornrun-javascript.vercel.app/index.html](https://sdk-v2-meteornrun-javascript.vercel.app/index.html)
+You can access this example at [https://sdk-v2-meteornrun-javascript-hb2s-projects.vercel.app/](https://sdk-v2-meteornrun-javascript-hb2s-projects.vercel.app/)
 
 ## Or you can run this example locally
 1. Clone source
