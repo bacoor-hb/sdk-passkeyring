@@ -12,13 +12,13 @@ yarn add @reown/appkit @reown/appkit-adapter-wagmi wagmi viem
 ```
 > More detail about install AppKit JavaScript SDK, please visit [here](https://docs.reown.com/appkit/javascript/core/installation)
 
-**Installation sdk-passkeyring package version >=2.4.28**
+**Installation sdk-v2-egglegamewallet package version >=2.4.28**
 ```
 yarn add sdk-v2-egglegamewallet@2.4.28
 ```
 > In this example we're using package `sdk-v2-egglegamewallet@2.4.28`
 
-**Pleae note that sdk-passkeyring supports the following chains**
+**Pleae note that sdk-v2-egglegamewallet supports the following chains**
 ```
 Ethereum:         '0x1'
 OP Mainnet:       '0xa'
