@@ -38,6 +38,9 @@ export default defineConfig(configEnv => ({
       },
     },
   },
+  define: {
+    self: 'globalThis', // Provide a fallback for `self`
+  },
   esbuild: {
     // jsxInject: 'import React from \'react\'',
   },
