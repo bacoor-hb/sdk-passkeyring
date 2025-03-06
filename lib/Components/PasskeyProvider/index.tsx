@@ -25,14 +25,16 @@ const PasskeyProvider = ({ children, config = {} }: PasskeyProviderProps) => {
   }, [])
 
   useEffect(() => {
-    const handleBeforeUnload = () => {
-      window.postMessage({ type: TYPE_CLOSE_POPUP_GROUP_SLUG }, '*')
-    }
+    if (typeof window !== 'undefined') {
+      const handleBeforeUnload = () => {
+        window.postMessage({ type: TYPE_CLOSE_POPUP_GROUP_SLUG }, '*')
+      }
 
-    window.addEventListener('beforeunload', handleBeforeUnload)
+      window.addEventListener('beforeunload', handleBeforeUnload)
 
-    return () => {
-      window.removeEventListener('beforeunload', handleBeforeUnload)
+      return () => {
+        window.removeEventListener('beforeunload', handleBeforeUnload)
+      }
     }
   }, [])
 
