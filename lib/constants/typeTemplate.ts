@@ -7,6 +7,8 @@ type SlugGroup =
   | 'keyringpasskeywallet'
   | 'egglepasskeywallet-decard'
   | 'meteornrun-decard'
+  | 'cyberstepwallet'
+  | 'cyberstepwallet-decard'
   | 'meteornrun';
 
 const defaultExport = () => {}
