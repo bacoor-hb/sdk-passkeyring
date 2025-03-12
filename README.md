@@ -1,8 +1,8 @@
-# sdk-v2-cyberstepwallet
+# sdk-v2-cyberstepwallet-decard
 ## NOTE: Only Support `React.js` and Web application framework Software related to `React.js`( recommended: Next.js)
 
 ## Introduction:
-> The `sdk-v2-cyberstepwallet` SDK is built on `React.js`, provides a straightforward way to connect wallets using passkeys, allowing interaction with smart accounts. It is pre-configured with AppKit (web3modal), making it easy to integrate into your projects.
+> The `sdk-v2-cyberstepwallet-decard` SDK is built on `React.js`, provides a straightforward way to connect wallets using passkeys, allowing interaction with smart accounts. It is pre-configured with AppKit (web3modal), making it easy to integrate into your projects.
 
 ## Prerequisites:
 ### Before installing the SDK, ensure you have set up AppKit (web3modal).
@@ -37,12 +37,12 @@ const modal = createAppKit({
 
 Install the SDK using npm:
 ```bash
-npm install --save sdk-v2-cyberstepwallet
+npm install --save sdk-v2-cyberstepwallet-decard
 ```
 or using yarn:
 
 ```bash
-yarn add sdk-v2-cyberstepwallet
+yarn add sdk-v2-cyberstepwallet-decard
 ```
 
 
@@ -52,7 +52,7 @@ yarn add sdk-v2-cyberstepwallet
 // MUST HAVE - Use this in the first file to run (index.js)
 
 import React from "react";
-import { PasskeyProvider } from "sdk-v2-cyberstepwallet";
+import { PasskeyProvider } from "sdk-v2-cyberstepwallet-decard";
 
 const App = ({ children }) => {
   return <PasskeyProvider>{children}</PasskeyProvider>;
@@ -103,7 +103,7 @@ PasskeyProvider is a wrapper that supports using wallets.
 
 ```jsx
 
-import { PasskeyProvider } from "sdk-v2-cyberstepwallet";
+import { PasskeyProvider } from "sdk-v2-cyberstepwallet-decard";
 
   //Example
   <PasskeyProvider
@@ -129,7 +129,7 @@ Information about the wallet.
 
 
 ```jsx
-import { infoWallet } from "sdk-v2-cyberstepwallet";
+import { infoWallet } from "sdk-v2-cyberstepwallet-decard";
 
   //example
   <div>
@@ -153,7 +153,7 @@ Function to check if the browser supports Web3 provider injection.
 
 
 ```jsx
-import { isWeb3Injected } from "sdk-v2-cyberstepwallet";
+import { isWeb3Injected } from "sdk-v2-cyberstepwallet-decard";
 
   //Example
   <div> 
@@ -192,7 +192,7 @@ Or
 ```jsx
 // Step 1: Create a button to connect
 import React from "react";
-import { infoWallet } from "sdk-v2-cyberstepwallet";
+import { infoWallet } from "sdk-v2-cyberstepwallet-decard";
 import { useConnect, useConnectors, useSwitchChain } from "wagmi";
 
 const ButtonConnectWallet = () => {
@@ -242,7 +242,7 @@ export default ButtonConnectWallet;
 // Step 2: Use the connect button
 
 import React from "react";
-import { isWeb3Injected } from "sdk-v2-cyberstepwallet";
+import { isWeb3Injected } from "sdk-v2-cyberstepwallet-decard";
 import ButtonConnectWallet from "./ButtonConnectWallet";// step 1
 
 const YourComponent = () => {
