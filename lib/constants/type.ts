@@ -8,4 +8,6 @@ export type SlugGroup =
   | 'meteornrun-decard'
   | 'keyringsmart'
   | 'passkeywallet'
+  | 'cyberstepwallet'
+  | 'cyberstepwallet-decard'
   | 'keyringpasskeywallet';

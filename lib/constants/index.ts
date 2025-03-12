@@ -10,7 +10,7 @@ const rdnsSdk = 'co.bacoor.keyring'
 const uuidSdkDeCard = '026dbbaa-7d0c-4391-8213-2a28575f7e2a'
 const rdnsSdkDeCard = 'app.keyring.smart'
 
-export const GROUP_SLUG: SlugGroup = 'keyringpasskeywallet'
+export const GROUP_SLUG: SlugGroup = 'cyberstepwallet'
 // export const GROUP_SLUG: SlugGroup = 'egglepasskeywallet'
 
 export const infoGroup: { [key in SlugGroup]: EIP6963ProviderInfo } = {
@@ -67,6 +67,18 @@ export const infoGroup: { [key in SlugGroup]: EIP6963ProviderInfo } = {
     name: 'Meteorn Wallet',
     icon: 'https://ipfs.pantograph.app/ipfs/Qmao1Uf2m1bRGHLy66AnLJuWtBWjFLhDpbBWBYGrUtB1qV?filename=notiDataIcon_Meteorn.png',
     rdns: rdnsSdk,
+  },
+  cyberstepwallet: {
+    uuid: uuidSdk,
+    name: 'CyberStep Wallet',
+    icon: 'https://ipfs.pantograph.app/ipfs/QmQArGRp6XiP9nnqNruti6vw3gQuHyDMsbSEeRhvkfBDrK?filename=notiDataIcon_cyberstep.png',
+    rdns: rdnsSdk,
+  },
+  'cyberstepwallet-decard': {
+    uuid: uuidSdkDeCard,
+    name: 'CyberStep Wallet DeCard',
+    icon: 'https://ipfs.pantograph.app/ipfs/QmQArGRp6XiP9nnqNruti6vw3gQuHyDMsbSEeRhvkfBDrK?filename=notiDataIcon_cyberstep.png',
+    rdns: rdnsSdkDeCard,
   },
 }
 
