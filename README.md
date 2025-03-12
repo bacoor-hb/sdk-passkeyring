@@ -1,8 +1,8 @@
-# sdk-v2-egglegamewallet JavaScript
+# sdk-v2-cyberstepwallet-decard JavaScript
 
-This repository provides example of how to integrate and use **sdk-v2-egglegamewallet** in **Javascript**. This example is designed to demonstrate best practices and simplify the integration process.
+This repository provides example of how to integrate and use **sdk-v2-cyberstepwallet-decard** in **Javascript**. This example is designed to demonstrate best practices and simplify the integration process.
 
-> We recommend using [Vite](https://vitejs.dev/guide/#scaffolding-your-first-vite-project) to get started with sdk-v2-egglegamewallet JavaScript.
+> We recommend using [Vite](https://vitejs.dev/guide/#scaffolding-your-first-vite-project) to get started with sdk-v2-cyberstepwallet-decard JavaScript.
 
 ## Prerequisites
 
@@ -12,12 +12,12 @@ yarn add @reown/appkit @reown/appkit-adapter-wagmi wagmi viem
 ```
 > More detail about install AppKit JavaScript SDK, please visit [here](https://docs.reown.com/appkit/javascript/core/installation)
 
-**Installation sdk-v2-egglegamewallet package version >=2.5**
+**Installation sdk-v2-cyberstepwallet-decard package version >=2.5**
 ```
-yarn add sdk-v2-egglegamewallet@^2.5
+yarn add sdk-v2-cyberstepwallet-decard@^2.5
 ```
 
-**Pleae note that sdk-v2-egglegamewallet supports the following chains**
+**Pleae note that sdk-v2-cyberstepwallet-decard supports the following chains**
 ```
 Ethereum:         '0x1'
 OP Mainnet:       '0xa'
@@ -34,7 +34,7 @@ Arbitrum One:     '0xa4b1'
 ...
 import { createAppKit } from '@reown/appkit'
 // This import is required to inject global html tag into the app
-import { PasskeyProviderJS } from "sdk-v2-egglegamewallet";
+import { PasskeyProviderJS } from "sdk-v2-cyberstepwallet-decard";
 ...
 
 export const appKit = createAppKit({

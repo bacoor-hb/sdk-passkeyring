@@ -1,5 +1,5 @@
 {
-  "name": "sdk-v2-egglegamewallet-javascript",
+  "name": "sdk-v2-cyberstepwallet-decard-javascript",
   "private": true,
   "version": "0.0.1",
   "scripts": {
@@ -10,7 +10,7 @@
     "@reown/appkit": "1.6.8",
     "@reown/appkit-adapter-wagmi": "1.6.8",
     "@wagmi/core": "^2.16.3",
-    "sdk-v2-egglegamewallet": "^2.5",
+    "sdk-v2-cyberstepwallet-decard": "^2.5",
     "viem": "^2.22.8",
     "wagmi": "^2.13.3"
   },

@@ -5,7 +5,7 @@ export const signMessage = (provider, address) => {
 
     return provider.request({
       method: 'personal_sign',
-      params: [toHex('Hello from sdk-v2-egglegamewallet!'), address]
+      params: [toHex('Hello from sdk-v2-cyberstepwallet-decard!'), address]
     })
   }
 
