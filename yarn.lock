@@ -3522,9 +3522,9 @@ scrypt-js@3.0.1:
   resolved "https://registry.yarnpkg.com/scrypt-js/-/scrypt-js-3.0.1.tgz#d314a57c2aef69d1ad98a138a21fe9eafa9ee312"
   integrity sha512-cdwTTnqPu0Hyvf5in5asVdZocVDTNRmR7XEcJuIzMjJeSHybHl7vpB66AzwTaIg6CLSbtjcxc8fqcySfnTkccA==
 
-sdk-v2-egglegamewallet@^2.5:
+sdk-v2-cyberstepwallet@^2.5:
   version "2.5.2"
-  resolved "https://registry.yarnpkg.com/sdk-v2-egglegamewallet/-/sdk-v2-egglegamewallet-2.5.2.tgz#999faf9fabd035f6f44c7917d93e3ffb3a3cf43f"
+  resolved "https://registry.yarnpkg.com/sdk-v2-cyberstepwallet/-/sdk-v2-cyberstepwallet-2.5.2.tgz#999faf9fabd035f6f44c7917d93e3ffb3a3cf43f"
   integrity sha512-aUm9dB0VakoB8A1o9zr4qsFlIQ1Hv9vQOfgnqUppfjnLFOgEZwXLVmrSeHOGdFuI5fvgvLotZd9/52EQMeajqw==
   dependencies:
     "@webcomponents/custom-elements" "^1.6.0"
