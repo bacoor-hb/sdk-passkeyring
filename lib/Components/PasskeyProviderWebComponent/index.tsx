@@ -14,10 +14,6 @@ const PasskeyProviderJS = ({ children, config = {} }: PasskeyProviderProps) => {
     import('@webcomponents/custom-elements')
   }, [])
 
-  if (typeof window === 'undefined') {
-    return null
-  }
-
   return (
     <PasskeyProvider>
       {children}
