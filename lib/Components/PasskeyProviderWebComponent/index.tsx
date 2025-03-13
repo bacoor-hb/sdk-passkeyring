@@ -1,5 +1,3 @@
-'use client'
-import '@webcomponents/custom-elements'
 import React, { useEffect, ReactNode } from 'react'
 import ReactDOM from 'react-dom'
 // @ts-ignore
@@ -10,15 +8,26 @@ interface PasskeyProviderProps {
   children: ReactNode;
   config?: any;
 }
+
 const PasskeyProviderJS = ({ children, config = {} }: PasskeyProviderProps) => {
+  useEffect(() => {
+    import('@webcomponents/custom-elements')
+  }, [])
+
+  if (typeof window === 'undefined') {
+    return null
+  }
+
   return (
     <PasskeyProvider>
       {children}
     </PasskeyProvider>
   )
 }
-const PasskeyProviderToWebComponent = reactToWebComponent(PasskeyProvider, React, ReactDOM)
 
-customElements.define('passkey-provider', PasskeyProviderToWebComponent)
+if (typeof window !== 'undefined' && typeof customElements !== 'undefined') {
+  const PasskeyProviderToWebComponent = reactToWebComponent(PasskeyProvider, React, ReactDOM)
+  customElements.define('passkey-provider', PasskeyProviderToWebComponent)
+}
 
 export default PasskeyProviderJS

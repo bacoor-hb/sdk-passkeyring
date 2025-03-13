@@ -22,6 +22,7 @@ export default defineConfig(configEnv => ({
       entry: resolve('lib', 'main.tsx'),
       name: 'ReactFeatureFlag',
       fileName: (format) => `main.${format}.js`,
+      formats: ['es', 'cjs'],
     },
     rollupOptions: {
       external: ['react'],

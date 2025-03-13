@@ -3,7 +3,7 @@
   "version": "2.5.4",
   "description": "sdk passkeyring to connect smart account",
   "license": "MIT",
-  "main": "./dist/main.umd.js",
+  "main": "./dist/main.cjs.js",
   "module": "./dist/main.es.js",
   "types": "./dist/main.d.ts",
   "scripts": {
