@@ -72,6 +72,7 @@ OP Mainnet:       '0xa'
 BNB Smart Chain:  '0x38'
 Polygon:          '0x89'
 Arbitrum One:     '0xa4b1'
+Base:             '0x2105'
 ```
 
 
