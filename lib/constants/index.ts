@@ -103,8 +103,12 @@ export const chainsSupported = [
 const getURLPasskey = () => {
   try {
     const modeEnv = localStorage.getItem(STORAGE_KEY.MODE_ENV_PASSKEY)
-    if (modeEnv && modeEnv === 'development') {
-      return 'https://pass.w3w.app'
+    if (modeEnv) {
+      if (modeEnv === 'development') {
+        return 'https://pass.w3w.app'
+      } else {
+        return modeEnv
+      }
     } else {
       return 'https://smart.keyring.app'
     }
