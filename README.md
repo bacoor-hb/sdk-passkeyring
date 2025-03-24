@@ -46,7 +46,7 @@ export const appKit = createAppKit({
 ```
 
 ## Trigger the modal
-> Add `<appkit-button>` and `<passkey-provider />` to your html file
+> Add `<appkit-button>` and `<passkey-decard-provider />` to your html file
 > Full html file at this example at [/index.html](index.html)
 
 
@@ -59,7 +59,7 @@ export const appKit = createAppKit({
   <body>
       ...
         <appkit-button />
-        <passkey-provider />
+        <passkey-decard-provider />
       ...
       <script type="module" src="/src/main.js"></script>
   </body>
