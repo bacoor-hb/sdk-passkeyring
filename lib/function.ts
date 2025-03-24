@@ -12,6 +12,7 @@ export interface EIP6963ProviderInfo {
   name: string;
   icon: string;
   rdns: string;
+  isDecard?: boolean;
 }
 interface ProviderMessage {
   readonly type: string;

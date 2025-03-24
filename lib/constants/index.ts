@@ -25,6 +25,7 @@ export const infoGroup: { [key in SlugGroup]: EIP6963ProviderInfo } = {
     name: 'Eggle Gamewallet DeCard',
     icon: 'https://ipfs.pantograph.app/ipfs/QmUn7MnyA9HWfHNRG7oLTweNG93ztaErFdcg36Y2uxENUu?filename=noti.png',
     rdns: rdnsSdkDeCard,
+    isDecard: true,
   },
   egglepasskeywallet: {
     uuid: uuidSdk,
@@ -43,6 +44,7 @@ export const infoGroup: { [key in SlugGroup]: EIP6963ProviderInfo } = {
     name: 'KEYRING SMART DECARD',
     icon: 'https://ipfs.pantograph.app/ipfs/QmWdV4p9FvAUKEnGHefwsYxUrtY8qyEX61xbHdGXworS8k?filename=icon%20NOTI.png',
     rdns: rdnsSdkDeCard,
+    isDecard: true,
   },
   keyringpasskeywallet: {
     uuid: uuidSdk,
@@ -55,12 +57,14 @@ export const infoGroup: { [key in SlugGroup]: EIP6963ProviderInfo } = {
     name: 'DECARD EGGLE GAME WALLET',
     icon: 'https://ipfs.pantograph.app/ipfs/QmUn7MnyA9HWfHNRG7oLTweNG93ztaErFdcg36Y2uxENUu?filename=noti.png',
     rdns: rdnsSdkDeCard,
+    isDecard: true,
   },
   'meteornrun-decard': {
     uuid: uuidSdkDeCard,
     name: 'Meteorn Wallet DeCard',
     icon: 'https://ipfs.pantograph.app/ipfs/Qmao1Uf2m1bRGHLy66AnLJuWtBWjFLhDpbBWBYGrUtB1qV?filename=notiDataIcon_Meteorn.png',
     rdns: rdnsSdkDeCard,
+    isDecard: true,
   },
   meteornrun: {
     uuid: uuidSdk,
@@ -79,6 +83,7 @@ export const infoGroup: { [key in SlugGroup]: EIP6963ProviderInfo } = {
     name: 'CyberStep Wallet DeCard',
     icon: 'https://ipfs.pantograph.app/ipfs/QmQArGRp6XiP9nnqNruti6vw3gQuHyDMsbSEeRhvkfBDrK?filename=notiDataIcon_cyberstep.png',
     rdns: rdnsSdkDeCard,
+    isDecard: true,
   },
 }
 
