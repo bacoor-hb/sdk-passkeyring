@@ -15,6 +15,10 @@ export const SDK_VERSION = '2.5.7'
 // export const GROUP_SLUG: SlugGroup = 'egglepasskeywallet'
 
 const groups:{ [key in SlugGroup]: GroupsInfo } = {
+  'egglegamewallet-test': {
+    name: 'Eggle Gamewallet',
+    icon: 'https://ipfs.pantograph.app/ipfs/QmUn7MnyA9HWfHNRG7oLTweNG93ztaErFdcg36Y2uxENUu?filename=noti.png',
+  },
   egglegamewallet: {
     name: 'Eggle Gamewallet',
     icon: 'https://ipfs.pantograph.app/ipfs/QmUn7MnyA9HWfHNRG7oLTweNG93ztaErFdcg36Y2uxENUu?filename=noti.png',

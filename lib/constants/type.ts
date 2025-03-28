@@ -10,4 +10,5 @@ export type SlugGroup =
   | 'passkeywallet'
   | 'cyberstepwallet'
   | 'cyberstepwallet-decard'
+  | 'egglegamewallet-test'
   | 'keyringpasskeywallet';
