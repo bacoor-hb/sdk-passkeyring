@@ -4,10 +4,10 @@ import {
   GROUP_SLUG,
   infoGroup,
   RPC_DEFAULT,
-  SDK_VERSION,
   STORAGE_KEY,
   TYPE_CLOSE_POPUP_GROUP_SLUG,
   URL_PASSKEY,
+  SDK_VERSION,
 } from 'lib/constants'
 import {
   decodeBase64,
