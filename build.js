@@ -62,14 +62,14 @@ fs.readFile(typeFilePath, 'utf8', (err, data) => {
         const searchString = packageJson.name
         const replaceString = `sdk-v2-${newGroupSlug}`
 
-        // Cập nhật VERSION_SDK trong constants/index.ts
+        // Cập nhật SDK_VERSION trong constants/index.ts
         fs.readFile(constantsFilePath, 'utf8', (err, data) => {
           if (err) {
             console.error('Error reading constants file:', err)
             return
           }
 
-          const versionUpdatedData = data.replace(/export const VERSION_SDK = '.*?'/, `export const VERSION_SDK = '${version}'`)
+          const versionUpdatedData = data.replace(/export const SDK_VERSION = '.*?'/, `export const SDK_VERSION = '${version}'`)
 
           fs.writeFile(constantsFilePath, versionUpdatedData, 'utf8', (err) => {
             if (err) {
