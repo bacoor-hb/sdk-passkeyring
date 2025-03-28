@@ -58,10 +58,6 @@ const groups:{ [key in SlugGroup]: GroupsInfo } = {
     name: 'CyberStep Wallet',
     icon: 'https://ipfs.pantograph.app/ipfs/QmQArGRp6XiP9nnqNruti6vw3gQuHyDMsbSEeRhvkfBDrK?filename=notiDataIcon_cyberstep.png',
   },
-  'egglegamewallet-test': {
-    name: 'CyberStep Wallet',
-    icon: 'https://ipfs.pantograph.app/ipfs/QmQArGRp6XiP9nnqNruti6vw3gQuHyDMsbSEeRhvkfBDrK?filename=notiDataIcon_cyberstep.png',
-  },
   'cyberstepwallet-decard': {
     name: 'CyberStep Wallet DeCard',
     icon: 'https://ipfs.pantograph.app/ipfs/QmQArGRp6XiP9nnqNruti6vw3gQuHyDMsbSEeRhvkfBDrK?filename=notiDataIcon_cyberstep.png',
