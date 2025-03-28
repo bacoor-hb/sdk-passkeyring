@@ -1,4 +1,4 @@
-import { GROUP_SLUG, infoGroup, VERSION_SDK } from 'lib/constants'
+import { GROUP_SLUG, infoGroup, SDK_VERSION } from 'lib/constants'
 import { MyCustomWalletProvider } from 'lib/web3'
 
 declare global {
@@ -75,9 +75,9 @@ export const getVersionSdk = (includesNamePackage: boolean = true): string => {
   try {
     const packageJson = require('../package.json')
     const namePackage = includesNamePackage ? packageJson.name + '_' : ''
-    return `${namePackage}${VERSION_SDK}`
+    return `${namePackage}${SDK_VERSION}`
   } catch (error) {
-    return VERSION_SDK
+    return SDK_VERSION
   }
 }
 
