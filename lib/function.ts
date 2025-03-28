@@ -14,6 +14,13 @@ export interface EIP6963ProviderInfo {
   rdns: string;
   isDecard?: boolean;
 }
+export interface GroupsInfo {
+  uuid?: string;
+  name: string;
+  icon: string;
+  rdns?: string;
+  isDecard?: boolean;
+}
 interface ProviderMessage {
   readonly type: string;
   readonly data: unknown;

@@ -1,5 +1,5 @@
 import { SlugGroup } from 'lib/constants/type'
-import { EIP6963ProviderInfo } from 'lib/function'
+import { EIP6963ProviderInfo, GroupsInfo } from 'lib/function'
 
 // Docs    ->   https://eips.ethereum.org/EIPS/eip-6963
 // Generate uuidV4  ->   https://www.uuidgenerator.net/version4
@@ -11,81 +11,89 @@ const uuidSdkDeCard = '026dbbaa-7d0c-4391-8213-2a28575f7e2a'
 const rdnsSdkDeCard = 'app.keyring.smart'
 
 export const GROUP_SLUG: SlugGroup = 'keyringpasskeywallet'
+export const VERSION_SDK = '2.5.6'
 // export const GROUP_SLUG: SlugGroup = 'egglepasskeywallet'
 
-export const infoGroup: { [key in SlugGroup]: EIP6963ProviderInfo } = {
+const groups:{ [key in SlugGroup]: GroupsInfo } = {
   egglegamewallet: {
-    uuid: uuidSdk,
     name: 'Eggle Gamewallet',
     icon: 'https://ipfs.pantograph.app/ipfs/QmUn7MnyA9HWfHNRG7oLTweNG93ztaErFdcg36Y2uxENUu?filename=noti.png',
-    rdns: rdnsSdk,
   },
   'egglegamewallet-decard': {
-    uuid: uuidSdkDeCard,
     name: 'Eggle Gamewallet DeCard',
     icon: 'https://ipfs.pantograph.app/ipfs/QmUn7MnyA9HWfHNRG7oLTweNG93ztaErFdcg36Y2uxENUu?filename=noti.png',
-    rdns: rdnsSdkDeCard,
     isDecard: true,
   },
   egglepasskeywallet: {
-    uuid: uuidSdk,
     name: 'EGGLE GAME WALLET',
     icon: 'https://ipfs.pantograph.app/ipfs/QmUn7MnyA9HWfHNRG7oLTweNG93ztaErFdcg36Y2uxENUu?filename=noti.png',
-    rdns: rdnsSdk,
   },
   passkeywallet: {
-    uuid: uuidSdk,
     name: 'KEYRING SMART',
     icon: 'https://ipfs.pantograph.app/ipfs/QmWdV4p9FvAUKEnGHefwsYxUrtY8qyEX61xbHdGXworS8k?filename=icon%20NOTI.png',
-    rdns: rdnsSdk,
   },
   keyringsmart: {
-    uuid: uuidSdkDeCard,
     name: 'KEYRING SMART DECARD',
     icon: 'https://ipfs.pantograph.app/ipfs/QmWdV4p9FvAUKEnGHefwsYxUrtY8qyEX61xbHdGXworS8k?filename=icon%20NOTI.png',
-    rdns: rdnsSdkDeCard,
-    isDecard: true,
   },
   keyringpasskeywallet: {
-    uuid: uuidSdk,
     name: 'KEYRING SMART',
     icon: 'https://ipfs.pantograph.app/ipfs/QmWdV4p9FvAUKEnGHefwsYxUrtY8qyEX61xbHdGXworS8k?filename=icon%20NOTI.png',
-    rdns: rdnsSdk,
   },
   'egglepasskeywallet-decard': {
-    uuid: uuidSdkDeCard,
     name: 'DECARD EGGLE GAME WALLET',
     icon: 'https://ipfs.pantograph.app/ipfs/QmUn7MnyA9HWfHNRG7oLTweNG93ztaErFdcg36Y2uxENUu?filename=noti.png',
-    rdns: rdnsSdkDeCard,
     isDecard: true,
   },
   'meteornrun-decard': {
-    uuid: uuidSdkDeCard,
     name: 'Meteorn Wallet DeCard',
     icon: 'https://ipfs.pantograph.app/ipfs/Qmao1Uf2m1bRGHLy66AnLJuWtBWjFLhDpbBWBYGrUtB1qV?filename=notiDataIcon_Meteorn.png',
-    rdns: rdnsSdkDeCard,
     isDecard: true,
   },
   meteornrun: {
-    uuid: uuidSdk,
     name: 'Meteorn Wallet',
     icon: 'https://ipfs.pantograph.app/ipfs/Qmao1Uf2m1bRGHLy66AnLJuWtBWjFLhDpbBWBYGrUtB1qV?filename=notiDataIcon_Meteorn.png',
-    rdns: rdnsSdk,
   },
   cyberstepwallet: {
-    uuid: uuidSdk,
     name: 'CyberStep Wallet',
     icon: 'https://ipfs.pantograph.app/ipfs/QmQArGRp6XiP9nnqNruti6vw3gQuHyDMsbSEeRhvkfBDrK?filename=notiDataIcon_cyberstep.png',
-    rdns: rdnsSdk,
   },
   'cyberstepwallet-decard': {
-    uuid: uuidSdkDeCard,
     name: 'CyberStep Wallet DeCard',
     icon: 'https://ipfs.pantograph.app/ipfs/QmQArGRp6XiP9nnqNruti6vw3gQuHyDMsbSEeRhvkfBDrK?filename=notiDataIcon_cyberstep.png',
-    rdns: rdnsSdkDeCard,
     isDecard: true,
   },
 }
+
+const getUuid = (options:{isDecard?:boolean}) => {
+  const { isDecard } = options
+  if (isDecard) {
+    return uuidSdkDeCard
+  }
+  return uuidSdk
+}
+const getRdns = (options:{isDecard?:boolean}) => {
+  const { isDecard } = options
+  if (isDecard) {
+    return rdnsSdkDeCard
+  }
+  return rdnsSdk
+}
+
+const getInfoGroup = (groups:{ [key in SlugGroup]: GroupsInfo }) => {
+  const tempGroups = { ...groups }
+  for (const [key, value] of Object.entries(tempGroups)) {
+    const isDecard = value.isDecard
+    tempGroups[key as SlugGroup] = {
+      ...value,
+      uuid: getUuid({ isDecard }),
+      rdns: getRdns({ isDecard }),
+    } as EIP6963ProviderInfo
+  }
+  return tempGroups as { [key in SlugGroup]: EIP6963ProviderInfo }
+}
+
+export const infoGroup = getInfoGroup(groups)
 
 export const STORAGE_KEY = {
   ACCOUNT_PASSKEY: 'ACCOUNT_PASSKEY_' + GROUP_SLUG,
