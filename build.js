@@ -76,7 +76,7 @@ fs.readFile(typeFilePath, 'utf8', (err, data) => {
               console.error('Error writing constants file:', err)
               return
             }
-            console.log(`Updated VERSION_SDK to ${version} in constants/index.ts`)
+            console.log(`Updated SDK_VERSION to ${version} in constants/index.ts`)
           })
         })
 
