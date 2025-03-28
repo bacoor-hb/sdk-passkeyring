@@ -132,26 +132,26 @@ fs.readFile(typeFilePath, 'utf8', (err, data) => {
 
           console.log('Start publishing...')
           // 6️⃣ Chạy lệnh yarn publish
-          // exec('yarn publish', (err, stdout, stderr) => {
-          //   if (err) {
-          //     console.error('Error executing yarn publish:', err)
-          //     return
-          //   }
-          //   console.log('Publish completed successfully')
-          //   console.log(stdout)
-          //   console.log(stderr)
+          exec('yarn publish', (err, stdout, stderr) => {
+            if (err) {
+              console.error('Error executing yarn publish:', err)
+              return
+            }
+            console.log('Publish completed successfully')
+            console.log(stdout)
+            console.log(stderr)
 
-          //   // 7️⃣ Commit và push các thay đổi
-          //   exec(`git add . && git commit -m "Build & publish ${replaceString} ver.${version}" && git push`, (err, stdout, stderr) => {
-          //     if (err) {
-          //       console.error('Error committing and pushing changes:', err)
-          //       return
-          //     }
-          //     console.log('Changes committed and pushed successfully')
-          //     console.log(stdout)
-          //     console.log(stderr)
-          //   })
-          // })
+            // 7️⃣ Commit và push các thay đổi
+            exec(`git add . && git commit -m "Build & publish ${replaceString} ver.${version}" && git push`, (err, stdout, stderr) => {
+              if (err) {
+                console.error('Error committing and pushing changes:', err)
+                return
+              }
+              console.log('Changes committed and pushed successfully')
+              console.log(stdout)
+              console.log(stderr)
+            })
+          })
         })
       })
     })
