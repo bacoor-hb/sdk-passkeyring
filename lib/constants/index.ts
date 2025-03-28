@@ -10,8 +10,8 @@ const rdnsSdk = 'co.bacoor.keyring'
 const uuidSdkDeCard = '026dbbaa-7d0c-4391-8213-2a28575f7e2a'
 const rdnsSdkDeCard = 'app.keyring.smart'
 
-export const GROUP_SLUG: SlugGroup = 'keyringpasskeywallet'
-export const SDK_VERSION = '2.5.6'
+export const GROUP_SLUG: SlugGroup = 'egglegamewallet-test'
+export const SDK_VERSION = '2.5.7'
 // export const GROUP_SLUG: SlugGroup = 'egglepasskeywallet'
 
 const groups:{ [key in SlugGroup]: GroupsInfo } = {
@@ -55,6 +55,10 @@ const groups:{ [key in SlugGroup]: GroupsInfo } = {
     icon: 'https://ipfs.pantograph.app/ipfs/Qmao1Uf2m1bRGHLy66AnLJuWtBWjFLhDpbBWBYGrUtB1qV?filename=notiDataIcon_Meteorn.png',
   },
   cyberstepwallet: {
+    name: 'CyberStep Wallet',
+    icon: 'https://ipfs.pantograph.app/ipfs/QmQArGRp6XiP9nnqNruti6vw3gQuHyDMsbSEeRhvkfBDrK?filename=notiDataIcon_cyberstep.png',
+  },
+  'egglegamewallet-test': {
     name: 'CyberStep Wallet',
     icon: 'https://ipfs.pantograph.app/ipfs/QmQArGRp6XiP9nnqNruti6vw3gQuHyDMsbSEeRhvkfBDrK?filename=notiDataIcon_cyberstep.png',
   },
