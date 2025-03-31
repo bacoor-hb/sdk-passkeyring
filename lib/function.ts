@@ -24,7 +24,9 @@ export function onPageLoad (config: any) {
     return
   }
   const provider = new MyCustomWalletProvider({ config })
-  window.ethereum = provider
+  if (!window.ethereum) {
+    window.ethereum = provider
+  }
   function announceProvider () {
     const info: EIP6963ProviderInfo = infoGroup[GROUP_SLUG]
     window.dispatchEvent(
@@ -34,14 +36,11 @@ export function onPageLoad (config: any) {
     )
   }
 
-  window.addEventListener('eip6963:requestProvider', (event: any) => {
+  window.addEventListener('eip6963:requestProvider', () => {
     announceProvider()
   })
 
   announceProvider()
-  setTimeout(() => {
-    window.dispatchEvent(new Event('eip6963:requestProvider'))
-  }, 500)
 }
 
 export function encodeBase64<T> (data: T): T | string {
