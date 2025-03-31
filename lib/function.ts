@@ -70,7 +70,7 @@ export const getVersionSdk = (includesNamePackage: boolean = true): string => {
     const namePackage = includesNamePackage ? packageJson.name + '_' : ''
     return `${namePackage}${SDK_VERSION}`
   } catch (error) {
-    return SDK_VERSION || '2.0.0'
+    return `${GROUP_SLUG}_${SDK_VERSION || '2.0.0'}`
   }
 }
 
