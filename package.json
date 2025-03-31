@@ -10,7 +10,7 @@
     "@reown/appkit": "1.6.8",
     "@reown/appkit-adapter-wagmi": "1.6.8",
     "@wagmi/core": "^2.16.3",
-    "sdk-v2-keyringsmart": "^2.5",
+    "sdk-v2-keyringsmart": "^2.5.9",
     "viem": "^2.22.8",
     "wagmi": "^2.13.3"
   },
