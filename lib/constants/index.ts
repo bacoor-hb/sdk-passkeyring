@@ -10,9 +10,9 @@ const rdnsSdk = 'co.bacoor.keyring'
 const uuidSdkDeCard = '026dbbaa-7d0c-4391-8213-2a28575f7e2a'
 const rdnsSdkDeCard = 'app.keyring.smart'
 
-export const GROUP_SLUG: SlugGroup = 'keyringpasskeywallet'
+export const GROUP_SLUG: SlugGroup = 'egglegamewallet-test'
 // export const GROUP_SLUG: SlugGroup = 'egglepasskeywallet'
-export const SDK_VERSION = '2.5.6'
+export const SDK_VERSION = '2.5.8'
 
 export const infoGroup: { [key in SlugGroup]: EIP6963ProviderInfo } = {
   egglegamewallet: {
