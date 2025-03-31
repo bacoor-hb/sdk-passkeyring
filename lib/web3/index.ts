@@ -4,6 +4,7 @@ import {
   GROUP_SLUG,
   infoGroup,
   RPC_DEFAULT,
+  SDK_VERSION,
   STORAGE_KEY,
   TYPE_CLOSE_POPUP_GROUP_SLUG,
   URL_PASSKEY,
@@ -45,7 +46,7 @@ class MyCustomWalletProvider implements WalletProvider {
     this.name = infoGroup[GROUP_SLUG].name
     this.icon = infoGroup[GROUP_SLUG].icon
     this.uuid = infoGroup[GROUP_SLUG].uuid
-    this.version = '1.0.0'
+    this.version = SDK_VERSION
     this.init()
   }
 
