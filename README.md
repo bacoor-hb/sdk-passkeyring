@@ -81,8 +81,13 @@ const getBalance = async (provider, address) => {
   }
 ```
 
-## How to run this example t your local?
+## We already deployed this example to Vercel for testing
+You can access this example at [https://sdk-v2-cyberstepwallet-javascript.vercel.app/](https://sdk-v2-cyberstepwallet-javascript.vercel.app/)
+
+
+## Or you can run this example locally
 1. Clone source
 2. Run `yarn` to install dependencies
 3. Run `yarn dev` to start the development server
 4. Open your local url at [http://localhost:3011](http://localhost:3011/)
+
