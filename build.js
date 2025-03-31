@@ -1,7 +1,7 @@
 const fs = require('fs')
 const path = require('path')
+const { exec } = require('child_process')
 
-// Lấy newGroupSlug từ tham số dòng lệnh
 const newGroupSlug = process.argv[2]
 if (!newGroupSlug) {
   console.error('newGroupSlug is required')
@@ -9,6 +9,11 @@ if (!newGroupSlug) {
 }
 
 const typeFilePath = path.join(__dirname, 'lib/constants/type.ts')
+const constantsFilePath = path.join(__dirname, 'lib/constants/index.ts')
+const packageJsonPath = path.join(__dirname, 'package.json')
+const readmePath = path.join(__dirname, 'README.md')
+const directoryPath = path.join(__dirname, 'lib')
+
 fs.readFile(typeFilePath, 'utf8', (err, data) => {
   if (err) {
     console.error('Error reading type.ts file:', err)
@@ -28,8 +33,7 @@ fs.readFile(typeFilePath, 'utf8', (err, data) => {
     process.exit(1)
   }
 
-  const constantsFilePath = path.join(__dirname, 'lib/constants/index.ts')
-
+  // 2️⃣ Cập nhật GROUP_SLUG trong constants/index.ts
   fs.readFile(constantsFilePath, 'utf8', (err, data) => {
     if (err) {
       console.error('Error reading constants file:', err)
@@ -44,27 +48,39 @@ fs.readFile(typeFilePath, 'utf8', (err, data) => {
         return
       }
 
-      console.log('Constants file updated successfully')
+      console.log('Updated GROUP_SLUG successfully')
 
-      // Bước 2: Lấy giá trị của name từ package.json và sử dụng nó làm searchString
-      const packageJsonPath = path.join(__dirname, 'package.json')
-      fs.readFile(packageJsonPath, 'utf8', (err, data) => {
+      // 3️⃣ Đọc version từ package.json và cập nhật VERSION_SDK
+      fs.readFile(packageJsonPath, 'utf8', (err, packageData) => {
         if (err) {
           console.error('Error reading package.json:', err)
           return
         }
 
-        const packageJson = JSON.parse(data)
+        const packageJson = JSON.parse(packageData)
+        const version = packageJson.version // Lấy version từ package.json
         const searchString = packageJson.name
-        const version = packageJson.version
         const replaceString = `sdk-v2-${newGroupSlug}`
 
-        const directoryPath = path.join(__dirname, 'lib')
-        const filesToUpdate = [
-          path.join(__dirname, 'README.md'),
-          packageJsonPath,
-        ]
+        // Cập nhật SDK_VERSION trong constants/index.ts
+        fs.readFile(constantsFilePath, 'utf8', (err, data) => {
+          if (err) {
+            console.error('Error reading constants file:', err)
+            return
+          }
 
+          const versionUpdatedData = data.replace(/export const SDK_VERSION = '.*?'/, `export const SDK_VERSION = '${version}'`)
+
+          fs.writeFile(constantsFilePath, versionUpdatedData, 'utf8', (err) => {
+            if (err) {
+              console.error('Error writing constants file:', err)
+              return
+            }
+            console.log(`Updated SDK_VERSION to ${version} in constants/index.ts`)
+          })
+        })
+
+        // 4️⃣ Thay thế searchString trong toàn bộ thư mục lib và README.md
         function replaceInFile (filePath) {
           fs.readFile(filePath, 'utf8', (err, data) => {
             if (err) {
@@ -99,11 +115,11 @@ fs.readFile(typeFilePath, 'utf8', (err, data) => {
         }
 
         traverseDirectory(directoryPath)
-        filesToUpdate.forEach(replaceInFile)
+        replaceInFile(readmePath)
+        replaceInFile(packageJsonPath)
 
-        // Bước 3: Chạy lệnh yarn build
+        // 5️⃣ Chạy lệnh yarn build
         console.log('Building...')
-        const { exec } = require('child_process')
         exec('yarn build', (err, stdout, stderr) => {
           if (err) {
             console.error('Error executing yarn build:', err)
@@ -114,8 +130,8 @@ fs.readFile(typeFilePath, 'utf8', (err, data) => {
           console.log(stderr)
           console.log(`Publish ${replaceString} ver-${version}`)
 
-          console.log('start publish')
-          // Bước 4: Chạy lệnh yarn publish
+          console.log('Start publishing...')
+          // 6️⃣ Chạy lệnh yarn publish
           exec('yarn publish', (err, stdout, stderr) => {
             if (err) {
               console.error('Error executing yarn publish:', err)
@@ -125,7 +141,7 @@ fs.readFile(typeFilePath, 'utf8', (err, data) => {
             console.log(stdout)
             console.log(stderr)
 
-            // Commit và push các thay đổi
+            // 7️⃣ Commit và push các thay đổi
             exec(`git add . && git commit -m "Build & publish ${replaceString} ver.${version} "`, (err, stdout, stderr) => {
               if (err) {
                 console.error('Error committing and pushing changes:', err)
