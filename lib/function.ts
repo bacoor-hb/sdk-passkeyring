@@ -29,6 +29,7 @@ export function onPageLoad (config: any) {
   }
   function announceProvider () {
     const info: EIP6963ProviderInfo = infoGroup[GROUP_SLUG]
+    delete info.isDecard
     window.dispatchEvent(
       new CustomEvent('eip6963:announceProvider', {
         detail: Object.freeze({ info, provider }),
