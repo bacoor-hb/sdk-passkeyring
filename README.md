@@ -46,11 +46,11 @@ export const appKit = createAppKit({
 ```
 
 ## Trigger the modal
-> Add `<appkit-button>` and `<passkey-provider />` to your html file
+> Add `<appkit-button>` and `<passkey-provider />` to your html file \
 > Full html file at this example at [/index.html](index.html)
 
 
-> Load your javacript config file `main.js` here
+> Load your javacript config file `main.js` here \
 > Full code for `main.js` file at this example at [/src/main.js](/src/main.js)
 ```html
 <!doctype html>
@@ -67,8 +67,8 @@ export const appKit = createAppKit({
 ```
 
 ## Blockchain Interaction
-> You can use `provider.request()` method to call Ethereum JSON-RPC API
-> For example you can call `eth_getBalance` like below
+> You can use `provider.request()` method to call Ethereum JSON-RPC API \
+> For example you can call `eth_getBalance` like below \
 > Full code for `eth_getBalance` at this example at [/src/services/wallet.js](/src/services/wallet.js)
 ```javascript
 const getBalance = async (provider, address) => {
