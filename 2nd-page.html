@@ -10,7 +10,7 @@
   <body>
     <div class="pages" id="app">
       <h1 style="margin-bottom: 5px;">sdk-v2-meteornrun JavaScript dApp Example</h1>
-      <h1 style="margin-top: 5px;">index.html</h1>
+      <h1 style="margin-top: 5px;">2nd-page.html</h1>
 
       <!-- AppKit UI Components -->
       <div class="button-group" style="margin-top: 20px;">
@@ -29,23 +29,16 @@
         <button id="send-tx" data-connected-only>Send tx <span style="color: #9a9a9a">[send 0.001 POL to yourself]</span></button>
       </div>
 
-        <a href="2nd-page.html" class="button" data-connected-only>Navigate to [2nd-page.html] in the same tab</a>
-        <a target="_blank" href="2nd-page.html" class="button" data-connected-only>Navigate to [2nd-page.html] in a new tab</a>
+      <div class="button-group">
+        <!-- back home -->
+        <a href="index.html" class="button" data-connected-only>Home</a>
+        <button id="disconnect" data-connected-only>Disconnect</button>
+      </div>
 
       <!-- State Displays -->
-        <section id="balanceSection" style="display: none;">
-          <h2>Balance</h2>
-          <pre id="balanceState"></pre>
-        </section>
-
-        <section id="txSection" style="display: none;">
-          <h2>Tx</h2>
-          <pre id="txState"></pre>
-        </section>
-
-        <section id="signatureSection" style="display: none;">
-          <h2>Signature</h2>
-          <pre id="signatureState"></pre>
+        <section id="allowanceSection" style="display: none;">
+          <h2>Allowance</h2>
+          <pre id="allowanceState"></pre>
         </section>
 
         <section>
