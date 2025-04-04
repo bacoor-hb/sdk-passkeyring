@@ -2,9 +2,11 @@
   "name": "sdk-v2-meteornrun-javascript",
   "private": true,
   "version": "0.0.1",
+  "main": "./dist/index.html",
   "scripts": {
     "dev": "vite --port 3011",
-    "build": "vite build"
+    "build": "vite build",
+    "preview": "vite preview"
   },
   "dependencies": {
     "@reown/appkit": "1.6.8",
