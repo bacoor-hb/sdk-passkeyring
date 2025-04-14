@@ -128,7 +128,7 @@ export const chainsSupported = [
   '0x89',
   '0xa4b1',
   '0x2105',
-]
+] as const
 
 // export const URL_PASSKEY = 'https://smart.keyring.app'
 // export const URL_PASSKEY = 'https://pass.w3w.app'
