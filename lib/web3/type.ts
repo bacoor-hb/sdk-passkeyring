@@ -3,6 +3,7 @@ export interface WalletProvider {
   icon: string; // URL đến biểu tượng nhà cung cấp
   uuid: string; // UUID duy nhất
   version: string; // Phiên bản nhà cung cấp
+  signer:any;
   request: (args: { method: string; params?: any[] }) => Promise<any>;
   on: (event: string, handler: (...args: any[]) => void) => void;
   off: (event: string, handler: (...args: any[]) => void) => void;

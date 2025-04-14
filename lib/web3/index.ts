@@ -1,3 +1,5 @@
+import { createPublicClient, http } from 'viem'
+import { polygon } from 'viem/chains'
 import { ethers } from 'ethers'
 import {
   chainsSupported,
@@ -10,6 +12,7 @@ import {
   URL_PASSKEY,
 } from 'lib/constants'
 import {
+  convertChainIdToChainView,
   decodeBase64,
   encodeBase64,
   getVersionSdk,
@@ -25,21 +28,22 @@ import {
 } from 'lib/web3/type'
 import { isMobile } from 'react-device-detect'
 
-interface MyCustomWalletProviderProps {
+interface MyPasskeyWalletProviderProps {
   config?: any;
 }
-class MyCustomWalletProvider implements WalletProvider {
+class MyPasskeyWalletProvider implements WalletProvider {
   name: string
   icon: string
   uuid: string
   version: string
+  signer: any
   rpcUrl: { [key: number]: string }
   private permissions: Record<string, boolean> = {}
   private accounts: string[] = []
-  private chainId: string = '0x1' // Ethereum Mainnet
+  private chainId: typeof chainsSupported[number] = '0x1' // Ethereum Mainnet
   private currentPopup: Window | null = null // Track the currently opened popup
 
-  constructor (props: MyCustomWalletProviderProps) {
+  constructor (props: MyPasskeyWalletProviderProps) {
     this.rpcUrl = isObject(props?.config?.rpcUrl, true)
       ? { ...RPC_DEFAULT, ...props?.config?.rpcUrl }
       : RPC_DEFAULT
@@ -61,6 +65,7 @@ class MyCustomWalletProvider implements WalletProvider {
           this.accounts = [accountPasskeyParse.address]
           this.chainId = accountPasskeyParse.chainId || this.chainId
           this.version = getVersionSdk(false)
+          await this.createProviderWeb3()
           this.triggerEvent('accountsChanged', this.accounts)
           this.triggerEvent('chainChanged', this.chainId)
         }
@@ -71,6 +76,8 @@ class MyCustomWalletProvider implements WalletProvider {
   }
 
   async request ({ method, params = [] }: RequestArguments): Promise<any> {
+    console.log('🚀 ~ MyPasskeyWalletProvider ~ request ~ params:', params)
+    console.log('🚀 ~ MyPasskeyWalletProvider ~ request ~ method:', method)
     switch (method) {
       case 'wallet_requestPermissions':
         return this.requestPermissions(params)
@@ -136,7 +143,7 @@ class MyCustomWalletProvider implements WalletProvider {
       case 'wallet_grantPermissions':
         return this.grantPermissions(params)
       default:
-        throw new Error(`Unsupported method: ${method}`)
+        return this.proxyRequest(method, params)
     }
   }
 
@@ -331,6 +338,8 @@ class MyCustomWalletProvider implements WalletProvider {
         JSON.stringify({ address: this.accounts[0], chainId: this.chainId }),
       )
 
+      await this.createProviderWeb3()
+
       this.triggerEvent('accountsChanged', this.accounts)
       return this.accounts
     } catch (error) {
@@ -501,6 +510,7 @@ class MyCustomWalletProvider implements WalletProvider {
       this.rpcUrl?.[Number(this.chainId)] ||
       RPC_DEFAULT[Number(this.chainId) as keyof typeof RPC_DEFAULT]
     const provider = new ethers.providers.JsonRpcProvider(rpc)
+    this.signer = provider.getSigner()
     return provider
   }
 
@@ -701,7 +711,7 @@ class MyCustomWalletProvider implements WalletProvider {
   // Quản lý sự kiện
   on (event: string, handler: (...args: any[]) => void): void {
     window.addEventListener(event, (e: Event) =>
-      handler((e as CustomEvent).detail),
+      handler((e as CustomEvent).detail || (e as CustomEvent)),
     )
   }
 
@@ -713,6 +723,28 @@ class MyCustomWalletProvider implements WalletProvider {
     const customEvent = new CustomEvent(event, { detail })
     window.dispatchEvent(customEvent)
   }
+
+  private proxyRequest = async (
+    method: string,
+    params: any[],
+  ): Promise<any> => {
+    try {
+      const provider = await this.createProviderWeb3()
+
+      const client = createPublicClient({
+        chain: convertChainIdToChainView(this.chainId),
+        transport: http(provider.connection.url),
+      })
+      const res = await client.request({
+        method: method as keyof typeof client['request'],
+        params: params as any,
+      })
+
+      return res
+    } catch (error) {
+      throw new Error(`Error in proxyRequest: ${method} - ${error}`)
+    }
+  }
 }
 
 const isWeb3Injected = () => {
@@ -721,4 +753,4 @@ const isWeb3Injected = () => {
   )
 }
 
-export { MyCustomWalletProvider, isWeb3Injected }
+export { MyPasskeyWalletProvider, isWeb3Injected }

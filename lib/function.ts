@@ -1,5 +1,5 @@
 import { chainsSupported, GROUP_SLUG, infoGroup, SDK_VERSION } from 'lib/constants'
-import { MyCustomWalletProvider } from 'lib/web3'
+import { MyPasskeyWalletProvider } from 'lib/web3'
 import { arbitrum, base, bsc, Chain, mainnet, optimism, polygon } from 'viem/chains'
 
 declare global {
@@ -24,7 +24,7 @@ export function onPageLoad (config: any) {
   if (typeof window === 'undefined') {
     return
   }
-  const provider = new MyCustomWalletProvider({ config })
+  const provider = new MyPasskeyWalletProvider({ config })
   if (!window.ethereum) {
     window.ethereum = provider
   }
