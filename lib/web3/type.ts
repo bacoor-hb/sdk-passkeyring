@@ -21,6 +21,8 @@ interface EthereumWindow extends Window {
   };
 }
 
+export type EventHandler = (...args: any[]) => void
+
 export type I_TYPE_URL =
   | 'SEND_TRANSACTION'
   | 'ACCOUNT'
