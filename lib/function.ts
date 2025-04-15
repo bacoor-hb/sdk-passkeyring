@@ -71,7 +71,8 @@ export const getVersionSdk = (includesNamePackage: boolean = true): string => {
     const namePackage = includesNamePackage ? packageJson.name + '_' : ''
     return `${namePackage}${SDK_VERSION}`
   } catch (error) {
-    return `${GROUP_SLUG}_${SDK_VERSION || '2.0.0'}`
+    const namePackage = includesNamePackage ? GROUP_SLUG + '_' : ''
+    return `${namePackage}${SDK_VERSION || '2.0.0'}`
   }
 }
 export const convertChainIdToChainView = (chainId: typeof chainsSupported[number]):Chain => {

@@ -1,5 +1,4 @@
 import { createPublicClient, http } from 'viem'
-import { polygon } from 'viem/chains'
 import { ethers } from 'ethers'
 import {
   chainsSupported,
@@ -20,6 +19,7 @@ import {
   sleep,
 } from 'lib/function'
 import {
+  EventHandler,
   I_TYPE_URL,
   RequestArguments,
   TYPE_ERROR,
@@ -27,6 +27,7 @@ import {
   WalletProvider,
 } from 'lib/web3/type'
 import { isMobile } from 'react-device-detect'
+import { createProviderRpcError } from 'lib/web3/errors'
 
 interface MyPasskeyWalletProviderProps {
   config?: any;
@@ -37,11 +38,12 @@ class MyPasskeyWalletProvider implements WalletProvider {
   uuid: string
   version: string
   signer: any
-  rpcUrl: { [key: number]: string }
+  private rpcUrl: { [key: number]: string }
   private permissions: Record<string, boolean> = {}
   private accounts: string[] = []
   private chainId: typeof chainsSupported[number] = '0x1' // Ethereum Mainnet
   private currentPopup: Window | null = null // Track the currently opened popup
+  private listeners: Record<string, Set<EventHandler>> = {}
 
   constructor (props: MyPasskeyWalletProviderProps) {
     this.rpcUrl = isObject(props?.config?.rpcUrl, true)
@@ -75,7 +77,7 @@ class MyPasskeyWalletProvider implements WalletProvider {
     }
   }
 
-  async request ({ method, params = [] }: RequestArguments): Promise<any> {
+  request = async ({ method, params = [] }: RequestArguments): Promise<any> => {
     console.log('🚀 ~ MyPasskeyWalletProvider ~ request ~ params:', params)
     console.log('🚀 ~ MyPasskeyWalletProvider ~ request ~ method:', method)
     switch (method) {
@@ -387,11 +389,8 @@ class MyPasskeyWalletProvider implements WalletProvider {
     }
   }
 
-  private async signMessage (params: any[]): Promise<string> {
-    // const [address, message] = params
-    // return '0xSignedMessage'
-
-    throw new Error('Unsupported method signMessage')
+  private async signMessage (params: any[]): Promise<any> {
+    return this.personalSign([params[1], params[0]])
   }
 
   private async personalSign (params: any[]): Promise<string | undefined> {
@@ -402,7 +401,11 @@ class MyPasskeyWalletProvider implements WalletProvider {
       account: params[1],
     })
     if (data.type === TYPE_ERROR.ERROR_TRANSACTION) {
-      throw new Error(data?.payload?.message || 'Error sign message')
+      throw createProviderRpcError(
+        data?.payload?.message || 'Error sign message',
+        data?.payload?.code || 4001,
+        data?.payload?.data,
+      )
     }
     if (data.type === typeRequest) {
       return data?.payload?.signature
@@ -416,7 +419,10 @@ class MyPasskeyWalletProvider implements WalletProvider {
     const typeRequest = TYPE_REQUEST.SIGN_TYPED_DATA
 
     if (!Array.isArray(params)) {
-      throw new Error('No transactions provided or invalid format.')
+      throw createProviderRpcError(
+        'No transactions provided or invalid format.',
+        4001,
+      )
     }
 
     const address = params[method === 'eth_signTypedData_v1' ? 1 : 0]
@@ -429,7 +435,11 @@ class MyPasskeyWalletProvider implements WalletProvider {
     })
 
     if (data.type === TYPE_ERROR.ERROR_TRANSACTION) {
-      throw new Error(data?.payload?.message || 'Error sign message')
+      throw createProviderRpcError(
+        data?.payload?.message || 'Error sign message',
+        data?.payload?.code || 4001,
+        data?.payload?.data,
+      )
     }
     if (data.type === typeRequest) {
       return data?.payload.signature
@@ -440,7 +450,10 @@ class MyPasskeyWalletProvider implements WalletProvider {
     const typeRequest = TYPE_REQUEST.SIGN_TRANSACTION
 
     if (!Array.isArray(params)) {
-      throw new Error('No transactions provided or invalid format.')
+      throw createProviderRpcError(
+        'No transactions provided or invalid format.',
+        4001,
+      )
     }
 
     const tx = params[0]
@@ -456,7 +469,11 @@ class MyPasskeyWalletProvider implements WalletProvider {
     })
 
     if (data.type === TYPE_ERROR.ERROR_TRANSACTION) {
-      throw new Error(data.payload?.message || 'Error send transaction')
+      throw createProviderRpcError(
+        data?.payload?.message || 'Error send transaction',
+        data?.payload?.code || 4001,
+        data?.payload?.data,
+      )
     }
     if (data.type === typeRequest) {
       return data?.payload?.signature
@@ -477,7 +494,10 @@ class MyPasskeyWalletProvider implements WalletProvider {
     const chainId = params[0].chainId
 
     if (!chainsSupported.includes(chainId)) {
-      throw new Error(`Unsupported chainId: ${chainId}`)
+      throw createProviderRpcError(
+        `Unsupported chainId: ${chainId}`,
+        4001,
+      )
     }
 
     this.chainId = chainId
@@ -491,7 +511,10 @@ class MyPasskeyWalletProvider implements WalletProvider {
   }
 
   private async addEthereumChain (params: any[]): Promise<void> {
-    throw new Error('Unsupported method addEthereumChain')
+    throw createProviderRpcError(
+      'Unsupported method addEthereumChain',
+      4200,
+    )
   }
 
   private async estimateGas (params: any[]): Promise<string> {
@@ -531,20 +554,29 @@ class MyPasskeyWalletProvider implements WalletProvider {
     try {
       const [transactionHash] = params
       if (!transactionHash) {
-        throw new Error('Transaction hash is required.')
+        throw createProviderRpcError(
+          'Transaction hash is required.',
+          4001,
+        )
       }
 
       const provider = await this.createProviderWeb3()
       const transaction = await provider.getTransaction(transactionHash)
 
       if (!transaction) {
-        throw new Error(`Transaction not found for hash: ${transactionHash}`)
+        throw createProviderRpcError(
+         `Transaction not found for hash: ${transactionHash}`,
+         4001,
+        )
       }
 
       return transaction
     } catch (error) {
-      console.error('Error in getTransactionByHash:', error)
-      throw error
+      throw createProviderRpcError(
+        'Error in getTransactionByHash:',
+        4001,
+        error,
+      )
     }
   }
 
@@ -552,22 +584,29 @@ class MyPasskeyWalletProvider implements WalletProvider {
     try {
       const [transactionHash] = params
       if (!transactionHash) {
-        throw new Error('Transaction hash is required.')
+        throw createProviderRpcError(
+          'Transaction hash is required.',
+          4001,
+        )
       }
 
       const provider = await this.createProviderWeb3()
       const receipt = await provider.getTransactionReceipt(transactionHash)
 
       if (!receipt) {
-        throw new Error(
+        throw createProviderRpcError(
           `Transaction receipt not found for hash: ${transactionHash}`,
+          4001,
         )
       }
 
       return receipt
     } catch (error) {
-      console.error('Error in getTransactionReceipt:', error)
-      throw error
+      throw createProviderRpcError(
+        'Error in getTransactionReceipt:',
+        4001,
+        error,
+      )
     }
   }
 
@@ -575,7 +614,10 @@ class MyPasskeyWalletProvider implements WalletProvider {
     try {
       // Kiểm tra đầu vào hợp lệ
       if (!address || typeof address !== 'string') {
-        throw new Error('A valid address is required to get the code.')
+        throw createProviderRpcError(
+          'A valid address is required to get the code.',
+          4001,
+        )
       }
 
       const provider = await this.createProviderWeb3()
@@ -586,8 +628,11 @@ class MyPasskeyWalletProvider implements WalletProvider {
       // Trả về bytecode (hex string)
       return code
     } catch (error) {
-      console.error('Error in getCode:', error)
-      throw error
+      throw createProviderRpcError(
+        'Error in getCode',
+        4001,
+        error,
+      )
     }
   }
 
@@ -597,22 +642,21 @@ class MyPasskeyWalletProvider implements WalletProvider {
   ): Promise<number> {
     try {
       if (!address || typeof address !== 'string') {
-        throw new Error(
+        throw createProviderRpcError(
           'A valid address is required to get the transaction count.',
+          4001,
         )
       }
 
       const provider = await this.createProviderWeb3()
-
-      const transactionCount = await provider.getTransactionCount(
-        address,
-        blockTag,
-      )
-
-      return transactionCount
+      const count = await provider.getTransactionCount(address, blockTag)
+      return count
     } catch (error) {
-      console.error('Error in getTransactionCount:', error)
-      throw error
+      throw createProviderRpcError(
+        'Error in getTransactionCount',
+        4001,
+        error,
+      )
     }
   }
 
@@ -624,8 +668,11 @@ class MyPasskeyWalletProvider implements WalletProvider {
 
       return network
     } catch (error) {
-      console.error('Error in getNetwork:', error)
-      throw error
+      throw createProviderRpcError(
+        'Error in getNetwork',
+        4001,
+        error,
+      )
     }
   }
 
@@ -655,7 +702,10 @@ class MyPasskeyWalletProvider implements WalletProvider {
   private async ecRecover (params: any[]): Promise<string> {
     const [message, signature] = params
     if (!message || !signature) {
-      throw new Error('Message and signature are required for ecRecover.')
+      throw createProviderRpcError(
+        'Message and signature are required for ecRecover.',
+        4001,
+      )
     }
 
     const address = ethers.utils.verifyMessage(message, signature)
@@ -665,8 +715,9 @@ class MyPasskeyWalletProvider implements WalletProvider {
   private async personalEcRecover (params: any[]): Promise<string> {
     const [message, signature] = params
     if (!message || !signature) {
-      throw new Error(
+      throw createProviderRpcError(
         'Message and signature are required for personalEcRecover.',
+        4001,
       )
     }
 
@@ -680,7 +731,10 @@ class MyPasskeyWalletProvider implements WalletProvider {
       const requestedPermissions = params[0]?.permissions || []
 
       if (!Array.isArray(requestedPermissions)) {
-        throw new Error('Invalid permissions format.')
+        throw createProviderRpcError(
+          'Invalid permissions format. Expected an array.',
+          4001,
+        )
       }
 
       // user approval
@@ -703,20 +757,29 @@ class MyPasskeyWalletProvider implements WalletProvider {
         permissions: this.permissions,
       }
     } catch (error) {
-      console.error('Error in grantPermissions:', error)
-      throw error
+      throw createProviderRpcError(
+        'Error in grantPermissions',
+        4001,
+        error,
+      )
     }
   }
 
-  // Quản lý sự kiện
-  on (event: string, handler: (...args: any[]) => void): void {
-    window.addEventListener(event, (e: Event) =>
-      handler((e as CustomEvent).detail || (e as CustomEvent)),
-    )
+  on (event: string, handler: EventHandler): this {
+    if (!this.listeners[event]) {
+      this.listeners[event] = new Set()
+    }
+    this.listeners[event].add(handler)
+    return this
   }
 
-  off (event: string, handler: (...args: any[]) => void): void {
-    window.removeEventListener(event, handler)
+  off (event: string, handler: EventHandler): this {
+    this.listeners[event]?.delete(handler)
+    return this
+  }
+
+  emit (event: string, ...args: any[]): void {
+    this.listeners[event]?.forEach(fn => fn(...args))
   }
 
   private triggerEvent (event: string, detail: any): void {
@@ -724,10 +787,10 @@ class MyPasskeyWalletProvider implements WalletProvider {
     window.dispatchEvent(customEvent)
   }
 
-  private proxyRequest = async (
+  private async proxyRequest (
     method: string,
     params: any[],
-  ): Promise<any> => {
+  ): Promise<any> {
     try {
       const provider = await this.createProviderWeb3()
 
@@ -742,7 +805,11 @@ class MyPasskeyWalletProvider implements WalletProvider {
 
       return res
     } catch (error) {
-      throw new Error(`Error in proxyRequest: ${method} - ${error}`)
+      throw createProviderRpcError(
+        `Error in proxyRequest: method ${method}`,
+        4001,
+        error,
+      )
     }
   }
 }
