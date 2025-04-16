@@ -21,22 +21,9 @@ export const infoGroup: { [key in SlugGroup]: EIP6963ProviderInfo } = {
     icon: 'https://ipfs.pantograph.app/ipfs/QmUn7MnyA9HWfHNRG7oLTweNG93ztaErFdcg36Y2uxENUu?filename=noti.png',
     rdns: rdnsSdk,
   },
-  'egglegamewallet-test': {
-    uuid: uuidSdk,
-    name: 'Eggle Gamewallet',
-    icon: 'https://ipfs.pantograph.app/ipfs/QmUn7MnyA9HWfHNRG7oLTweNG93ztaErFdcg36Y2uxENUu?filename=noti.png',
-    rdns: rdnsSdk,
-  },
   'egglegamewallet-decard': {
     uuid: uuidSdkDeCard,
     name: 'Eggle Gamewallet DeCard',
-    icon: 'https://ipfs.pantograph.app/ipfs/QmUn7MnyA9HWfHNRG7oLTweNG93ztaErFdcg36Y2uxENUu?filename=noti.png',
-    rdns: rdnsSdkDeCard,
-    isDecard: true,
-  },
-  'egglegamewallet-decard-test': {
-    uuid: uuidSdkDeCard,
-    name: 'DECARD EGGLE GAME WALLET',
     icon: 'https://ipfs.pantograph.app/ipfs/QmUn7MnyA9HWfHNRG7oLTweNG93ztaErFdcg36Y2uxENUu?filename=noti.png',
     rdns: rdnsSdkDeCard,
     isDecard: true,
@@ -47,20 +34,7 @@ export const infoGroup: { [key in SlugGroup]: EIP6963ProviderInfo } = {
     icon: 'https://ipfs.pantograph.app/ipfs/QmUn7MnyA9HWfHNRG7oLTweNG93ztaErFdcg36Y2uxENUu?filename=noti.png',
     rdns: rdnsSdk,
   },
-  'egglepasskeywallet-test': {
-    uuid: uuidSdk,
-    name: 'EGGLE GAME WALLET',
-    icon: 'https://ipfs.pantograph.app/ipfs/QmUn7MnyA9HWfHNRG7oLTweNG93ztaErFdcg36Y2uxENUu?filename=noti.png',
-    rdns: rdnsSdk,
-  },
   'egglepasskeywallet-decard': {
-    uuid: uuidSdkDeCard,
-    name: 'DECARD EGGLE GAME WALLET',
-    icon: 'https://ipfs.pantograph.app/ipfs/QmUn7MnyA9HWfHNRG7oLTweNG93ztaErFdcg36Y2uxENUu?filename=noti.png',
-    rdns: rdnsSdkDeCard,
-    isDecard: true,
-  },
-  'egglepasskeywallet-decard-test': {
     uuid: uuidSdkDeCard,
     name: 'DECARD EGGLE GAME WALLET',
     icon: 'https://ipfs.pantograph.app/ipfs/QmUn7MnyA9HWfHNRG7oLTweNG93ztaErFdcg36Y2uxENUu?filename=noti.png',
