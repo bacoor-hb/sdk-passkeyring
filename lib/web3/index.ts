@@ -40,13 +40,14 @@ class MyPasskeyWalletProvider extends EventEmitter implements WalletProvider {
   uuid: string
   version: string
   signer: any
+  isMetaMask?: boolean
   private rpcUrl: { [key: number]: string }
   private permissions: Record<string, boolean> = {}
   private accounts: string[] = []
   private chainId: typeof chainsSupported[number] = '0x1' // Ethereum Mainnet
   private currentPopup: Window | null = null // Track the currently opened popup
 
-  constructor (props: MyPasskeyWalletProviderProps) {
+  constructor (props?: MyPasskeyWalletProviderProps) {
     super()
     this.rpcUrl = isObject(props?.config?.rpcUrl, true)
       ? { ...RPC_DEFAULT, ...props?.config?.rpcUrl }
@@ -55,6 +56,7 @@ class MyPasskeyWalletProvider extends EventEmitter implements WalletProvider {
     this.icon = infoGroup[GROUP_SLUG].icon
     this.uuid = infoGroup[GROUP_SLUG].uuid
     this.version = SDK_VERSION
+    this.isMetaMask = false
     this.init()
   }
 
@@ -360,7 +362,7 @@ class MyPasskeyWalletProvider extends EventEmitter implements WalletProvider {
     }
   }
 
-  private async disconnect (): Promise<void> {
+  disconnect = async (): Promise<void> => {
     this.accounts = []
     localStorage.removeItem(STORAGE_KEY.ACCOUNT_PASSKEY)
     localStorage.removeItem(STORAGE_KEY.PERMISSIONS_PASSKEY)
@@ -376,6 +378,14 @@ class MyPasskeyWalletProvider extends EventEmitter implements WalletProvider {
     if (this.currentPopup && !this.currentPopup.closed) {
       this.currentPopup.close()
     }
+  }
+
+  selectedAddress = (): string | null => {
+    return this.accounts.length > 0 ? this.accounts[0] : null
+  }
+
+  networkVersion = (): string | null => {
+    return this.chainId ? BigInt(this.chainId).toString() : null
   }
 
   private async getAccounts (): Promise<string[]> {

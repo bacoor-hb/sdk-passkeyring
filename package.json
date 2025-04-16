@@ -68,6 +68,7 @@
     "autoprefixer": "^10.4.20",
     "bignumber.js": "^9.1.2",
     "ethers": "5.7.2",
+    "eventemitter3": "^5.0.1",
     "postcss": "^8.4.47",
     "react": "17.0.2",
     "react-device-detect": "^2.2.3",
