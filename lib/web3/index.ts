@@ -28,11 +28,13 @@ import {
 } from 'lib/web3/type'
 import { isMobile } from 'react-device-detect'
 import { createProviderRpcError } from 'lib/web3/errors'
+import EventEmitter from 'eventemitter3'
 
 interface MyPasskeyWalletProviderProps {
   config?: any;
 }
-class MyPasskeyWalletProvider implements WalletProvider {
+
+class MyPasskeyWalletProvider extends EventEmitter implements WalletProvider {
   name: string
   icon: string
   uuid: string
@@ -43,9 +45,9 @@ class MyPasskeyWalletProvider implements WalletProvider {
   private accounts: string[] = []
   private chainId: typeof chainsSupported[number] = '0x1' // Ethereum Mainnet
   private currentPopup: Window | null = null // Track the currently opened popup
-  private listeners: Record<string, Set<EventHandler>> = {}
 
   constructor (props: MyPasskeyWalletProviderProps) {
+    super()
     this.rpcUrl = isObject(props?.config?.rpcUrl, true)
       ? { ...RPC_DEFAULT, ...props?.config?.rpcUrl }
       : RPC_DEFAULT
@@ -68,10 +70,13 @@ class MyPasskeyWalletProvider implements WalletProvider {
           this.chainId = accountPasskeyParse.chainId || this.chainId
           this.version = getVersionSdk(false)
           await this.createProviderWeb3()
-          this.triggerEvent('accountsChanged', this.accounts)
-          this.triggerEvent('chainChanged', this.chainId)
+          this.emit('connect', { chainId: this.chainId })
+          this.emit('accountsChanged', this.accounts)
+          this.emit('chainChanged', this.chainId)
         }
       }
+      const formatNameGroup = GROUP_SLUG.charAt(0).toUpperCase() + GROUP_SLUG.slice(1)
+      ;(this as any)[`is${formatNameGroup}`] = true
     } catch (error) {
       console.log('🚀 ~ init ~ error:', error)
     }
@@ -327,6 +332,10 @@ class MyPasskeyWalletProvider implements WalletProvider {
     })
   }
 
+  connect = (): Promise<string[]> => {
+    return this.enable()
+  }
+
   private async enable (): Promise<string[]> {
     try {
       const typeRequest = TYPE_REQUEST.LOGIN
@@ -342,7 +351,8 @@ class MyPasskeyWalletProvider implements WalletProvider {
 
       await this.createProviderWeb3()
 
-      this.triggerEvent('accountsChanged', this.accounts)
+      this.emit('connect', { chainId: this.chainId })
+      this.emit('accountsChanged', this.accounts)
       return this.accounts
     } catch (error) {
       console.error('Error during enable:', error)
@@ -354,9 +364,15 @@ class MyPasskeyWalletProvider implements WalletProvider {
     this.accounts = []
     localStorage.removeItem(STORAGE_KEY.ACCOUNT_PASSKEY)
     localStorage.removeItem(STORAGE_KEY.PERMISSIONS_PASSKEY)
-    this.triggerEvent('accountsChanged', [])
-    console.log('🚀 ~  Wallet disconnected.')
-    // close popup
+
+    const message = createProviderRpcError(
+      'The Provider is disconnected',
+      4900,
+    )
+
+    this.emit('accountsChanged', [])
+    this.emit('disconnect', message)
+
     if (this.currentPopup && !this.currentPopup.closed) {
       this.currentPopup.close()
     }
@@ -507,7 +523,7 @@ class MyPasskeyWalletProvider implements WalletProvider {
     )
 
     // Kích hoạt sự kiện chainChanged
-    this.triggerEvent('chainChanged', chainId)
+    this.emit('chainChanged', chainId)
   }
 
   private async addEthereumChain (params: any[]): Promise<void> {
@@ -765,26 +781,12 @@ class MyPasskeyWalletProvider implements WalletProvider {
     }
   }
 
-  on (event: string, handler: EventHandler): this {
-    if (!this.listeners[event]) {
-      this.listeners[event] = new Set()
-    }
-    this.listeners[event].add(handler)
-    return this
+  on = <T extends string | symbol>(event: T, listener: (...args: any[]) => void): this => {
+    return super.on(event, listener)
   }
 
-  off (event: string, handler: EventHandler): this {
-    this.listeners[event]?.delete(handler)
-    return this
-  }
-
-  emit (event: string, ...args: any[]): void {
-    this.listeners[event]?.forEach(fn => fn(...args))
-  }
-
-  private triggerEvent (event: string, detail: any): void {
-    const customEvent = new CustomEvent(event, { detail })
-    window.dispatchEvent(customEvent)
+  removeListener = <T extends string | symbol> (event: T, listener?: (...args: any[]) => void): this => {
+    return super.removeListener(event, listener)
   }
 
   private async proxyRequest (
