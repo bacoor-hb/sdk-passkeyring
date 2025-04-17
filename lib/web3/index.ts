@@ -1,4 +1,4 @@
-import { createPublicClient, http } from 'viem'
+import { createPublicClient, http, maxUint144, maxUint256, parseEther } from 'viem'
 import { ethers } from 'ethers'
 import {
   chainsSupported,
@@ -537,8 +537,34 @@ class MyPasskeyWalletProvider extends EventEmitter implements WalletProvider {
     throw createProviderRpcError('Unsupported method addEthereumChain', 4200)
   }
 
-  private async estimateGas (params: any[]): Promise<string> {
-    return '0x0'
+  private async estimateGas (params: any[]): Promise<any> {
+    try {
+      const publicClient = await this.createPublicClientViem()
+      const rawTransaction = params[0]
+      const account = rawTransaction.from
+
+      const data = await publicClient.estimateGas({
+        account,
+        data: rawTransaction.data,
+        to: rawTransaction.to,
+        value: rawTransaction.value,
+        stateOverride: [
+          {
+            address: account,
+            balance: maxUint256,
+
+          },
+        ],
+      })
+
+      return data
+    } catch (error) {
+      throw createProviderRpcError(
+        'Error in estimateGas',
+        4001,
+        error,
+      )
+    }
   }
 
   private async createProviderWeb3 (url?: string | undefined): Promise<any> {
@@ -764,6 +790,15 @@ class MyPasskeyWalletProvider extends EventEmitter implements WalletProvider {
     }
   }
 
+  private async createPublicClientViem () {
+    const provider = await this.createProviderWeb3()
+    const client = createPublicClient({
+      chain: convertChainIdToChainView(this.chainId),
+      transport: http(provider.connection.url),
+    })
+    return client
+  }
+
   private async proxyRequest (method: string, params: any[]): Promise<any> {
     try {
       const provider = await this.createProviderWeb3()
@@ -779,6 +814,7 @@ class MyPasskeyWalletProvider extends EventEmitter implements WalletProvider {
 
       return res
     } catch (error) {
+      console.log('🚀 ~ MyPasskeyWalletProvider ~ proxyRequest ~ error:', error)
       throw createProviderRpcError(
         `Error in proxyRequest: method ${method}`,
         4001,
