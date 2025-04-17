@@ -44,7 +44,7 @@ class MyPasskeyWalletProvider extends EventEmitter implements WalletProvider {
   private rpcUrl: { [key: number]: string }
   private permissions: Record<string, boolean> = {}
   private accounts: string[] = []
-  private chainId: typeof chainsSupported[number] = '0x1' // Ethereum Mainnet
+  private chainId: (typeof chainsSupported)[number] = '0x1' // Ethereum Mainnet
   private currentPopup: Window | null = null // Track the currently opened popup
 
   constructor (props?: MyPasskeyWalletProviderProps) {
@@ -85,8 +85,8 @@ class MyPasskeyWalletProvider extends EventEmitter implements WalletProvider {
   }
 
   request = async ({ method, params = [] }: RequestArguments): Promise<any> => {
-    console.log('🚀 ~ MyPasskeyWalletProvider ~ request ~ params:', params)
     console.log('🚀 ~ MyPasskeyWalletProvider ~ request ~ method:', method)
+    console.log('🚀 ~ MyPasskeyWalletProvider ~ request ~ params', params)
     switch (method) {
       case 'wallet_requestPermissions':
         return this.requestPermissions(params)
@@ -124,20 +124,20 @@ class MyPasskeyWalletProvider extends EventEmitter implements WalletProvider {
         return this.addEthereumChain(params)
       case 'eth_estimateGas':
         return this.estimateGas(params)
-      case 'eth_gasPrice':
-        return this.getGasPrice()
-      case 'eth_blockNumber':
-        return this.getBlockNumber()
-      case 'eth_getBalance':
-        return this.getBalance(params)
-      case 'eth_getTransactionByHash':
-        return this.getTransactionByHash(params)
-      case 'eth_getTransactionReceipt':
-        return this.getTransactionReceipt(params)
-      case 'eth_getCode':
-        return this.getCode(params?.[0])
-      case 'eth_getTransactionCount':
-        return this.getTransactionCount(params?.[0], params?.[1] || 'latest')
+      // case 'eth_gasPrice':
+      //   return this.getGasPrice()
+      // case 'eth_blockNumber':
+      //   return this.getBlockNumber()
+      // case 'eth_getBalance':
+      //   return this.getBalance(params)
+      // case 'eth_getTransactionByHash':
+      //   return this.getTransactionByHash(params)
+      // case 'eth_getTransactionReceipt':
+      //   return this.getTransactionReceipt(params)
+      // case 'eth_getCode':
+      //   return this.getCode(params?.[0])
+      // case 'eth_getTransactionCount':
+      //   return this.getTransactionCount(params?.[0], params?.[1] || 'latest')
       case 'disconnect':
       case 'wallet_revokePermissions':
         return this.disconnect()
@@ -197,11 +197,11 @@ class MyPasskeyWalletProvider extends EventEmitter implements WalletProvider {
   }
 
   // Add a method to retrieve current permissions
-  getPermissions (): Record<string, boolean> {
+  private getPermissions (): Record<string, boolean> {
     return this.permissions
   }
 
-  getUrl (type?: I_TYPE_URL): string {
+  private getUrl (type?: I_TYPE_URL): string {
     switch (type) {
       case TYPE_REQUEST.LOGIN:
         return `${URL_PASSKEY}/activate-by-passkey/${GROUP_SLUG}`
@@ -218,7 +218,7 @@ class MyPasskeyWalletProvider extends EventEmitter implements WalletProvider {
     }
   }
 
-  getFavicon () {
+  private getFavicon () {
     const link = document.querySelector("link[rel~='icon']")
     return link ? (link as HTMLLinkElement).href : `${URL_PASSKEY}/favicon.ico` // Trả về favicon mặc định nếu không tìm thấy
   }
@@ -285,8 +285,8 @@ class MyPasskeyWalletProvider extends EventEmitter implements WalletProvider {
 
       const popup = window.open(
         urlFinal,
-          `${GROUP_SLUG}`,
-          `toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=no,width=${width},height=${height},top=${top},left=${left}`,
+        `${GROUP_SLUG}`,
+        `toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=no,width=${width},height=${height},top=${top},left=${left}`,
       )
 
       if (!popup) {
@@ -299,8 +299,8 @@ class MyPasskeyWalletProvider extends EventEmitter implements WalletProvider {
       const handleMessage = (event: MessageEvent) => {
         if (
           event?.data?.type === TYPE_CLOSE_POPUP_GROUP_SLUG &&
-            popup &&
-            !popup.closed
+          popup &&
+          !popup.closed
         ) {
           popup.close()
         }
@@ -520,10 +520,7 @@ class MyPasskeyWalletProvider extends EventEmitter implements WalletProvider {
     const chainId = params[0].chainId
 
     if (!chainsSupported.includes(chainId)) {
-      throw createProviderRpcError(
-        `Unsupported chainId: ${chainId}`,
-        4001,
-      )
+      throw createProviderRpcError(`Unsupported chainId: ${chainId}`, 4001)
     }
 
     this.chainId = chainId
@@ -537,20 +534,11 @@ class MyPasskeyWalletProvider extends EventEmitter implements WalletProvider {
   }
 
   private async addEthereumChain (params: any[]): Promise<void> {
-    throw createProviderRpcError(
-      'Unsupported method addEthereumChain',
-      4200,
-    )
+    throw createProviderRpcError('Unsupported method addEthereumChain', 4200)
   }
 
   private async estimateGas (params: any[]): Promise<string> {
     return '0x0'
-  }
-
-  private async getGasPrice (): Promise<string> {
-    const provider = await this.createProviderWeb3()
-    const gasPrice = await provider.getGasPrice()
-    return gasPrice
   }
 
   private async createProviderWeb3 (url?: string | undefined): Promise<any> {
@@ -563,27 +551,32 @@ class MyPasskeyWalletProvider extends EventEmitter implements WalletProvider {
     return provider
   }
 
+  private async getGasPrice (): Promise<string> {
+    const provider = await this.createProviderWeb3()
+    const gasPrice = await provider.getGasPrice()
+    return gasPrice
+  }
+
   private async getBlockNumber (): Promise<string> {
     const provider = await this.createProviderWeb3()
     const blockNumber = await provider.getBlockNumber()
     return blockNumber
   }
 
-  private async getBalance (params: any[]): Promise<string> {
+  private async getBalance (
+    params: any[],
+  ): Promise<string | ethers.BigNumber | bigint> {
     const [address, blockNumber] = params
     const provider = await this.createProviderWeb3()
     const balance = await provider.getBalance(address, blockNumber)
-    return balance
+    return BigInt(balance.toString())
   }
 
   private async getTransactionByHash (params: any[]): Promise<any> {
     try {
       const [transactionHash] = params
       if (!transactionHash) {
-        throw createProviderRpcError(
-          'Transaction hash is required.',
-          4001,
-        )
+        throw createProviderRpcError('Transaction hash is required.', 4001)
       }
 
       const provider = await this.createProviderWeb3()
@@ -591,8 +584,7 @@ class MyPasskeyWalletProvider extends EventEmitter implements WalletProvider {
 
       if (!transaction) {
         throw createProviderRpcError(
-         `Transaction not found for hash: ${transactionHash}`,
-         4001,
+          `Transaction not found for hash: ${transactionHash}`, 4001,
         )
       }
 
@@ -610,10 +602,7 @@ class MyPasskeyWalletProvider extends EventEmitter implements WalletProvider {
     try {
       const [transactionHash] = params
       if (!transactionHash) {
-        throw createProviderRpcError(
-          'Transaction hash is required.',
-          4001,
-        )
+        throw createProviderRpcError('Transaction hash is required.', 4001)
       }
 
       const provider = await this.createProviderWeb3()
@@ -654,11 +643,7 @@ class MyPasskeyWalletProvider extends EventEmitter implements WalletProvider {
       // Trả về bytecode (hex string)
       return code
     } catch (error) {
-      throw createProviderRpcError(
-        'Error in getCode',
-        4001,
-        error,
-      )
+      throw createProviderRpcError('Error in getCode', 4001, error)
     }
   }
 
@@ -678,11 +663,7 @@ class MyPasskeyWalletProvider extends EventEmitter implements WalletProvider {
       const count = await provider.getTransactionCount(address, blockTag)
       return count
     } catch (error) {
-      throw createProviderRpcError(
-        'Error in getTransactionCount',
-        4001,
-        error,
-      )
+      throw createProviderRpcError('Error in getTransactionCount', 4001, error)
     }
   }
 
@@ -694,11 +675,7 @@ class MyPasskeyWalletProvider extends EventEmitter implements WalletProvider {
 
       return network
     } catch (error) {
-      throw createProviderRpcError(
-        'Error in getNetwork',
-        4001,
-        error,
-      )
+      throw createProviderRpcError('Error in getNetwork', 4001, error)
     }
   }
 
@@ -783,26 +760,11 @@ class MyPasskeyWalletProvider extends EventEmitter implements WalletProvider {
         permissions: this.permissions,
       }
     } catch (error) {
-      throw createProviderRpcError(
-        'Error in grantPermissions',
-        4001,
-        error,
-      )
+      throw createProviderRpcError('Error in grantPermissions', 4001, error)
     }
   }
 
-  on = <T extends string | symbol>(event: T, listener: (...args: any[]) => void): this => {
-    return super.on(event, listener)
-  }
-
-  removeListener = <T extends string | symbol> (event: T, listener?: (...args: any[]) => void): this => {
-    return super.removeListener(event, listener)
-  }
-
-  private async proxyRequest (
-    method: string,
-    params: any[],
-  ): Promise<any> {
+  private async proxyRequest (method: string, params: any[]): Promise<any> {
     try {
       const provider = await this.createProviderWeb3()
 
@@ -811,7 +773,7 @@ class MyPasskeyWalletProvider extends EventEmitter implements WalletProvider {
         transport: http(provider.connection.url),
       })
       const res = await client.request({
-        method: method as keyof typeof client['request'],
+        method: method as keyof (typeof client)['request'],
         params: params as any,
       })
 
@@ -823,6 +785,20 @@ class MyPasskeyWalletProvider extends EventEmitter implements WalletProvider {
         error,
       )
     }
+  }
+
+  on = <T extends string | symbol>(
+    event: T,
+    listener: (...args: any[]) => void,
+  ): this => {
+    return super.on(event, listener)
+  }
+
+  removeListener = <T extends string | symbol>(
+    event: T,
+    listener?: (...args: any[]) => void,
+  ): this => {
+    return super.removeListener(event, listener)
   }
 }
 
