@@ -1,3 +1,4 @@
+import { createPublicClient, http } from 'viem'
 import { ethers } from 'ethers'
 import {
   chainsSupported,
@@ -10,6 +11,7 @@ import {
   URL_PASSKEY,
 } from 'lib/constants'
 import {
+  convertChainIdToChainView,
   decodeBase64,
   encodeBase64,
   getVersionSdk,
@@ -17,6 +19,7 @@ import {
   sleep,
 } from 'lib/function'
 import {
+  EventHandler,
   I_TYPE_URL,
   RequestArguments,
   TYPE_ERROR,
@@ -24,22 +27,28 @@ import {
   WalletProvider,
 } from 'lib/web3/type'
 import { isMobile } from 'react-device-detect'
+import { createProviderRpcError } from 'lib/web3/errors'
+import EventEmitter from 'eventemitter3'
 
-interface MyCustomWalletProviderProps {
+interface MyPasskeyWalletProviderProps {
   config?: any;
 }
-class MyCustomWalletProvider implements WalletProvider {
+
+class MyPasskeyWalletProvider extends EventEmitter implements WalletProvider {
   name: string
   icon: string
   uuid: string
   version: string
-  rpcUrl: { [key: number]: string }
+  signer: any
+  isMetaMask?: boolean
+  private rpcUrl: { [key: number]: string }
   private permissions: Record<string, boolean> = {}
   private accounts: string[] = []
-  private chainId: string = '0x1' // Ethereum Mainnet
+  private chainId: (typeof chainsSupported)[number] = '0x1' // Ethereum Mainnet
   private currentPopup: Window | null = null // Track the currently opened popup
 
-  constructor (props: MyCustomWalletProviderProps) {
+  constructor (props?: MyPasskeyWalletProviderProps) {
+    super()
     this.rpcUrl = isObject(props?.config?.rpcUrl, true)
       ? { ...RPC_DEFAULT, ...props?.config?.rpcUrl }
       : RPC_DEFAULT
@@ -47,6 +56,7 @@ class MyCustomWalletProvider implements WalletProvider {
     this.icon = infoGroup[GROUP_SLUG].icon
     this.uuid = infoGroup[GROUP_SLUG].uuid
     this.version = SDK_VERSION
+    this.isMetaMask = false
     this.init()
   }
 
@@ -61,16 +71,22 @@ class MyCustomWalletProvider implements WalletProvider {
           this.accounts = [accountPasskeyParse.address]
           this.chainId = accountPasskeyParse.chainId || this.chainId
           this.version = getVersionSdk(false)
-          this.triggerEvent('accountsChanged', this.accounts)
-          this.triggerEvent('chainChanged', this.chainId)
+          await this.createProviderWeb3()
+          this.emit('connect', { chainId: this.chainId })
+          this.emit('accountsChanged', this.accounts)
+          this.emit('chainChanged', this.chainId)
         }
       }
+      const formatNameGroup = GROUP_SLUG.charAt(0).toUpperCase() + GROUP_SLUG.slice(1)
+      ;(this as any)[`is${formatNameGroup}`] = true
     } catch (error) {
       console.log('🚀 ~ init ~ error:', error)
     }
   }
 
-  async request ({ method, params = [] }: RequestArguments): Promise<any> {
+  request = async ({ method, params = [] }: RequestArguments): Promise<any> => {
+    console.log('🚀 ~ MyPasskeyWalletProvider ~ request ~ method:', method)
+    console.log('🚀 ~ MyPasskeyWalletProvider ~ request ~ params', params)
     switch (method) {
       case 'wallet_requestPermissions':
         return this.requestPermissions(params)
@@ -108,20 +124,20 @@ class MyCustomWalletProvider implements WalletProvider {
         return this.addEthereumChain(params)
       case 'eth_estimateGas':
         return this.estimateGas(params)
-      case 'eth_gasPrice':
-        return this.getGasPrice()
-      case 'eth_blockNumber':
-        return this.getBlockNumber()
-      case 'eth_getBalance':
-        return this.getBalance(params)
-      case 'eth_getTransactionByHash':
-        return this.getTransactionByHash(params)
-      case 'eth_getTransactionReceipt':
-        return this.getTransactionReceipt(params)
-      case 'eth_getCode':
-        return this.getCode(params?.[0])
-      case 'eth_getTransactionCount':
-        return this.getTransactionCount(params?.[0], params?.[1] || 'latest')
+      // case 'eth_gasPrice':
+      //   return this.getGasPrice()
+      // case 'eth_blockNumber':
+      //   return this.getBlockNumber()
+      // case 'eth_getBalance':
+      //   return this.getBalance(params)
+      // case 'eth_getTransactionByHash':
+      //   return this.getTransactionByHash(params)
+      // case 'eth_getTransactionReceipt':
+      //   return this.getTransactionReceipt(params)
+      // case 'eth_getCode':
+      //   return this.getCode(params?.[0])
+      // case 'eth_getTransactionCount':
+      //   return this.getTransactionCount(params?.[0], params?.[1] || 'latest')
       case 'disconnect':
       case 'wallet_revokePermissions':
         return this.disconnect()
@@ -136,7 +152,7 @@ class MyCustomWalletProvider implements WalletProvider {
       case 'wallet_grantPermissions':
         return this.grantPermissions(params)
       default:
-        throw new Error(`Unsupported method: ${method}`)
+        return this.proxyRequest(method, params)
     }
   }
 
@@ -181,11 +197,11 @@ class MyCustomWalletProvider implements WalletProvider {
   }
 
   // Add a method to retrieve current permissions
-  getPermissions (): Record<string, boolean> {
+  private getPermissions (): Record<string, boolean> {
     return this.permissions
   }
 
-  getUrl (type?: I_TYPE_URL): string {
+  private getUrl (type?: I_TYPE_URL): string {
     switch (type) {
       case TYPE_REQUEST.LOGIN:
         return `${URL_PASSKEY}/activate-by-passkey/${GROUP_SLUG}`
@@ -202,7 +218,7 @@ class MyCustomWalletProvider implements WalletProvider {
     }
   }
 
-  getFavicon () {
+  private getFavicon () {
     const link = document.querySelector("link[rel~='icon']")
     return link ? (link as HTMLLinkElement).href : `${URL_PASSKEY}/favicon.ico` // Trả về favicon mặc định nếu không tìm thấy
   }
@@ -269,8 +285,8 @@ class MyCustomWalletProvider implements WalletProvider {
 
       const popup = window.open(
         urlFinal,
-          `${GROUP_SLUG}`,
-          `toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=no,width=${width},height=${height},top=${top},left=${left}`,
+        `${GROUP_SLUG}`,
+        `toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=no,width=${width},height=${height},top=${top},left=${left}`,
       )
 
       if (!popup) {
@@ -283,8 +299,8 @@ class MyCustomWalletProvider implements WalletProvider {
       const handleMessage = (event: MessageEvent) => {
         if (
           event?.data?.type === TYPE_CLOSE_POPUP_GROUP_SLUG &&
-            popup &&
-            !popup.closed
+          popup &&
+          !popup.closed
         ) {
           popup.close()
         }
@@ -318,6 +334,10 @@ class MyCustomWalletProvider implements WalletProvider {
     })
   }
 
+  connect = (): Promise<string[]> => {
+    return this.enable()
+  }
+
   private async enable (): Promise<string[]> {
     try {
       const typeRequest = TYPE_REQUEST.LOGIN
@@ -331,7 +351,10 @@ class MyCustomWalletProvider implements WalletProvider {
         JSON.stringify({ address: this.accounts[0], chainId: this.chainId }),
       )
 
-      this.triggerEvent('accountsChanged', this.accounts)
+      await this.createProviderWeb3()
+
+      this.emit('connect', { chainId: this.chainId })
+      this.emit('accountsChanged', this.accounts)
       return this.accounts
     } catch (error) {
       console.error('Error during enable:', error)
@@ -339,16 +362,30 @@ class MyCustomWalletProvider implements WalletProvider {
     }
   }
 
-  private async disconnect (): Promise<void> {
+  disconnect = async (): Promise<void> => {
     this.accounts = []
     localStorage.removeItem(STORAGE_KEY.ACCOUNT_PASSKEY)
     localStorage.removeItem(STORAGE_KEY.PERMISSIONS_PASSKEY)
-    this.triggerEvent('accountsChanged', [])
-    console.log('🚀 ~  Wallet disconnected.')
-    // close popup
+
+    const message = createProviderRpcError(
+      'The Provider is disconnected',
+      4900,
+    )
+
+    this.emit('accountsChanged', [])
+    this.emit('disconnect', message)
+
     if (this.currentPopup && !this.currentPopup.closed) {
       this.currentPopup.close()
     }
+  }
+
+  selectedAddress = (): string | null => {
+    return this.accounts.length > 0 ? this.accounts[0] : null
+  }
+
+  networkVersion = (): string | null => {
+    return this.chainId ? BigInt(this.chainId).toString() : null
   }
 
   private async getAccounts (): Promise<string[]> {
@@ -378,11 +415,8 @@ class MyCustomWalletProvider implements WalletProvider {
     }
   }
 
-  private async signMessage (params: any[]): Promise<string> {
-    // const [address, message] = params
-    // return '0xSignedMessage'
-
-    throw new Error('Unsupported method signMessage')
+  private async signMessage (params: any[]): Promise<any> {
+    return this.personalSign([params[1], params[0]])
   }
 
   private async personalSign (params: any[]): Promise<string | undefined> {
@@ -393,7 +427,11 @@ class MyCustomWalletProvider implements WalletProvider {
       account: params[1],
     })
     if (data.type === TYPE_ERROR.ERROR_TRANSACTION) {
-      throw new Error(data?.payload?.message || 'Error sign message')
+      throw createProviderRpcError(
+        data?.payload?.message || 'Error sign message',
+        data?.payload?.code || 4001,
+        data?.payload?.data,
+      )
     }
     if (data.type === typeRequest) {
       return data?.payload?.signature
@@ -407,7 +445,10 @@ class MyCustomWalletProvider implements WalletProvider {
     const typeRequest = TYPE_REQUEST.SIGN_TYPED_DATA
 
     if (!Array.isArray(params)) {
-      throw new Error('No transactions provided or invalid format.')
+      throw createProviderRpcError(
+        'No transactions provided or invalid format.',
+        4001,
+      )
     }
 
     const address = params[method === 'eth_signTypedData_v1' ? 1 : 0]
@@ -420,7 +461,11 @@ class MyCustomWalletProvider implements WalletProvider {
     })
 
     if (data.type === TYPE_ERROR.ERROR_TRANSACTION) {
-      throw new Error(data?.payload?.message || 'Error sign message')
+      throw createProviderRpcError(
+        data?.payload?.message || 'Error sign message',
+        data?.payload?.code || 4001,
+        data?.payload?.data,
+      )
     }
     if (data.type === typeRequest) {
       return data?.payload.signature
@@ -431,7 +476,10 @@ class MyCustomWalletProvider implements WalletProvider {
     const typeRequest = TYPE_REQUEST.SIGN_TRANSACTION
 
     if (!Array.isArray(params)) {
-      throw new Error('No transactions provided or invalid format.')
+      throw createProviderRpcError(
+        'No transactions provided or invalid format.',
+        4001,
+      )
     }
 
     const tx = params[0]
@@ -447,7 +495,11 @@ class MyCustomWalletProvider implements WalletProvider {
     })
 
     if (data.type === TYPE_ERROR.ERROR_TRANSACTION) {
-      throw new Error(data.payload?.message || 'Error send transaction')
+      throw createProviderRpcError(
+        data?.payload?.message || 'Error send transaction',
+        data?.payload?.code || 4001,
+        data?.payload?.data,
+      )
     }
     if (data.type === typeRequest) {
       return data?.payload?.signature
@@ -468,7 +520,7 @@ class MyCustomWalletProvider implements WalletProvider {
     const chainId = params[0].chainId
 
     if (!chainsSupported.includes(chainId)) {
-      throw new Error(`Unsupported chainId: ${chainId}`)
+      throw createProviderRpcError(`Unsupported chainId: ${chainId}`, 4001)
     }
 
     this.chainId = chainId
@@ -478,21 +530,15 @@ class MyCustomWalletProvider implements WalletProvider {
     )
 
     // Kích hoạt sự kiện chainChanged
-    this.triggerEvent('chainChanged', chainId)
+    this.emit('chainChanged', chainId)
   }
 
   private async addEthereumChain (params: any[]): Promise<void> {
-    throw new Error('Unsupported method addEthereumChain')
+    throw createProviderRpcError('Unsupported method addEthereumChain', 4200)
   }
 
   private async estimateGas (params: any[]): Promise<string> {
     return '0x0'
-  }
-
-  private async getGasPrice (): Promise<string> {
-    const provider = await this.createProviderWeb3()
-    const gasPrice = await provider.getGasPrice()
-    return gasPrice
   }
 
   private async createProviderWeb3 (url?: string | undefined): Promise<any> {
@@ -501,7 +547,14 @@ class MyCustomWalletProvider implements WalletProvider {
       this.rpcUrl?.[Number(this.chainId)] ||
       RPC_DEFAULT[Number(this.chainId) as keyof typeof RPC_DEFAULT]
     const provider = new ethers.providers.JsonRpcProvider(rpc)
+    this.signer = provider.getSigner()
     return provider
+  }
+
+  private async getGasPrice (): Promise<string> {
+    const provider = await this.createProviderWeb3()
+    const gasPrice = await provider.getGasPrice()
+    return gasPrice
   }
 
   private async getBlockNumber (): Promise<string> {
@@ -510,31 +563,38 @@ class MyCustomWalletProvider implements WalletProvider {
     return blockNumber
   }
 
-  private async getBalance (params: any[]): Promise<string> {
+  private async getBalance (
+    params: any[],
+  ): Promise<string | ethers.BigNumber | bigint> {
     const [address, blockNumber] = params
     const provider = await this.createProviderWeb3()
     const balance = await provider.getBalance(address, blockNumber)
-    return balance
+    return BigInt(balance.toString())
   }
 
   private async getTransactionByHash (params: any[]): Promise<any> {
     try {
       const [transactionHash] = params
       if (!transactionHash) {
-        throw new Error('Transaction hash is required.')
+        throw createProviderRpcError('Transaction hash is required.', 4001)
       }
 
       const provider = await this.createProviderWeb3()
       const transaction = await provider.getTransaction(transactionHash)
 
       if (!transaction) {
-        throw new Error(`Transaction not found for hash: ${transactionHash}`)
+        throw createProviderRpcError(
+          `Transaction not found for hash: ${transactionHash}`, 4001,
+        )
       }
 
       return transaction
     } catch (error) {
-      console.error('Error in getTransactionByHash:', error)
-      throw error
+      throw createProviderRpcError(
+        'Error in getTransactionByHash:',
+        4001,
+        error,
+      )
     }
   }
 
@@ -542,22 +602,26 @@ class MyCustomWalletProvider implements WalletProvider {
     try {
       const [transactionHash] = params
       if (!transactionHash) {
-        throw new Error('Transaction hash is required.')
+        throw createProviderRpcError('Transaction hash is required.', 4001)
       }
 
       const provider = await this.createProviderWeb3()
       const receipt = await provider.getTransactionReceipt(transactionHash)
 
       if (!receipt) {
-        throw new Error(
+        throw createProviderRpcError(
           `Transaction receipt not found for hash: ${transactionHash}`,
+          4001,
         )
       }
 
       return receipt
     } catch (error) {
-      console.error('Error in getTransactionReceipt:', error)
-      throw error
+      throw createProviderRpcError(
+        'Error in getTransactionReceipt:',
+        4001,
+        error,
+      )
     }
   }
 
@@ -565,7 +629,10 @@ class MyCustomWalletProvider implements WalletProvider {
     try {
       // Kiểm tra đầu vào hợp lệ
       if (!address || typeof address !== 'string') {
-        throw new Error('A valid address is required to get the code.')
+        throw createProviderRpcError(
+          'A valid address is required to get the code.',
+          4001,
+        )
       }
 
       const provider = await this.createProviderWeb3()
@@ -576,8 +643,7 @@ class MyCustomWalletProvider implements WalletProvider {
       // Trả về bytecode (hex string)
       return code
     } catch (error) {
-      console.error('Error in getCode:', error)
-      throw error
+      throw createProviderRpcError('Error in getCode', 4001, error)
     }
   }
 
@@ -587,22 +653,17 @@ class MyCustomWalletProvider implements WalletProvider {
   ): Promise<number> {
     try {
       if (!address || typeof address !== 'string') {
-        throw new Error(
+        throw createProviderRpcError(
           'A valid address is required to get the transaction count.',
+          4001,
         )
       }
 
       const provider = await this.createProviderWeb3()
-
-      const transactionCount = await provider.getTransactionCount(
-        address,
-        blockTag,
-      )
-
-      return transactionCount
+      const count = await provider.getTransactionCount(address, blockTag)
+      return count
     } catch (error) {
-      console.error('Error in getTransactionCount:', error)
-      throw error
+      throw createProviderRpcError('Error in getTransactionCount', 4001, error)
     }
   }
 
@@ -614,8 +675,7 @@ class MyCustomWalletProvider implements WalletProvider {
 
       return network
     } catch (error) {
-      console.error('Error in getNetwork:', error)
-      throw error
+      throw createProviderRpcError('Error in getNetwork', 4001, error)
     }
   }
 
@@ -645,7 +705,10 @@ class MyCustomWalletProvider implements WalletProvider {
   private async ecRecover (params: any[]): Promise<string> {
     const [message, signature] = params
     if (!message || !signature) {
-      throw new Error('Message and signature are required for ecRecover.')
+      throw createProviderRpcError(
+        'Message and signature are required for ecRecover.',
+        4001,
+      )
     }
 
     const address = ethers.utils.verifyMessage(message, signature)
@@ -655,8 +718,9 @@ class MyCustomWalletProvider implements WalletProvider {
   private async personalEcRecover (params: any[]): Promise<string> {
     const [message, signature] = params
     if (!message || !signature) {
-      throw new Error(
+      throw createProviderRpcError(
         'Message and signature are required for personalEcRecover.',
+        4001,
       )
     }
 
@@ -670,7 +734,10 @@ class MyCustomWalletProvider implements WalletProvider {
       const requestedPermissions = params[0]?.permissions || []
 
       if (!Array.isArray(requestedPermissions)) {
-        throw new Error('Invalid permissions format.')
+        throw createProviderRpcError(
+          'Invalid permissions format. Expected an array.',
+          4001,
+        )
       }
 
       // user approval
@@ -693,25 +760,45 @@ class MyCustomWalletProvider implements WalletProvider {
         permissions: this.permissions,
       }
     } catch (error) {
-      console.error('Error in grantPermissions:', error)
-      throw error
+      throw createProviderRpcError('Error in grantPermissions', 4001, error)
     }
   }
 
-  // Quản lý sự kiện
-  on (event: string, handler: (...args: any[]) => void): void {
-    window.addEventListener(event, (e: Event) =>
-      handler((e as CustomEvent).detail),
-    )
+  private async proxyRequest (method: string, params: any[]): Promise<any> {
+    try {
+      const provider = await this.createProviderWeb3()
+
+      const client = createPublicClient({
+        chain: convertChainIdToChainView(this.chainId),
+        transport: http(provider.connection.url),
+      })
+      const res = await client.request({
+        method: method as keyof (typeof client)['request'],
+        params: params as any,
+      })
+
+      return res
+    } catch (error) {
+      throw createProviderRpcError(
+        `Error in proxyRequest: method ${method}`,
+        4001,
+        error,
+      )
+    }
   }
 
-  off (event: string, handler: (...args: any[]) => void): void {
-    window.removeEventListener(event, handler)
+  on = <T extends string | symbol>(
+    event: T,
+    listener: (...args: any[]) => void,
+  ): this => {
+    return super.on(event, listener)
   }
 
-  private triggerEvent (event: string, detail: any): void {
-    const customEvent = new CustomEvent(event, { detail })
-    window.dispatchEvent(customEvent)
+  removeListener = <T extends string | symbol>(
+    event: T,
+    listener?: (...args: any[]) => void,
+  ): this => {
+    return super.removeListener(event, listener)
   }
 }
 
@@ -721,4 +808,4 @@ const isWeb3Injected = () => {
   )
 }
 
-export { MyCustomWalletProvider, isWeb3Injected }
+export { MyPasskeyWalletProvider, isWeb3Injected }

@@ -3,9 +3,12 @@ export interface WalletProvider {
   icon: string; // URL đến biểu tượng nhà cung cấp
   uuid: string; // UUID duy nhất
   version: string; // Phiên bản nhà cung cấp
+  signer: any;
+  isMetaMask?: boolean; // Có phải là MetaMask không
   request: (args: { method: string; params?: any[] }) => Promise<any>;
-  on: (event: string, handler: (...args: any[]) => void) => void;
-  off: (event: string, handler: (...args: any[]) => void) => void;
+  on?: (event: string, handler: (...args: any[]) => void) => void;
+  removeListener?(event: string, listener: (...args: any[]) => void): void;
+  emit?: (event: string, ...args: any[]) => void;
 }
 
 export interface RequestArguments {
@@ -19,6 +22,8 @@ interface EthereumWindow extends Window {
     [key: string]: any; // Các thuộc tính bổ sung
   };
 }
+
+export type EventHandler = (...args: any[]) => void;
 
 export type I_TYPE_URL =
   | 'SEND_TRANSACTION'

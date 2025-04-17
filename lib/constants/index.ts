@@ -12,16 +12,10 @@ const rdnsSdkDeCard = 'app.keyring.smart'
 
 export const GROUP_SLUG: SlugGroup = 'keyringpasskeywallet'
 // export const GROUP_SLUG: SlugGroup = 'egglepasskeywallet'
-export const SDK_VERSION = '2.5.9'
+export const SDK_VERSION = '2.5.13'
 
 export const infoGroup: { [key in SlugGroup]: EIP6963ProviderInfo } = {
   egglegamewallet: {
-    uuid: uuidSdk,
-    name: 'Eggle Gamewallet',
-    icon: 'https://ipfs.pantograph.app/ipfs/QmUn7MnyA9HWfHNRG7oLTweNG93ztaErFdcg36Y2uxENUu?filename=noti.png',
-    rdns: rdnsSdk,
-  },
-  'egglegamewallet-test': {
     uuid: uuidSdk,
     name: 'Eggle Gamewallet',
     icon: 'https://ipfs.pantograph.app/ipfs/QmUn7MnyA9HWfHNRG7oLTweNG93ztaErFdcg36Y2uxENUu?filename=noti.png',
@@ -34,33 +28,13 @@ export const infoGroup: { [key in SlugGroup]: EIP6963ProviderInfo } = {
     rdns: rdnsSdkDeCard,
     isDecard: true,
   },
-  'egglegamewallet-decard-test': {
-    uuid: uuidSdkDeCard,
-    name: 'DECARD EGGLE GAME WALLET',
-    icon: 'https://ipfs.pantograph.app/ipfs/QmUn7MnyA9HWfHNRG7oLTweNG93ztaErFdcg36Y2uxENUu?filename=noti.png',
-    rdns: rdnsSdkDeCard,
-    isDecard: true,
-  },
   egglepasskeywallet: {
     uuid: uuidSdk,
     name: 'EGGLE GAME WALLET',
     icon: 'https://ipfs.pantograph.app/ipfs/QmUn7MnyA9HWfHNRG7oLTweNG93ztaErFdcg36Y2uxENUu?filename=noti.png',
     rdns: rdnsSdk,
   },
-  'egglepasskeywallet-test': {
-    uuid: uuidSdk,
-    name: 'EGGLE GAME WALLET',
-    icon: 'https://ipfs.pantograph.app/ipfs/QmUn7MnyA9HWfHNRG7oLTweNG93ztaErFdcg36Y2uxENUu?filename=noti.png',
-    rdns: rdnsSdk,
-  },
   'egglepasskeywallet-decard': {
-    uuid: uuidSdkDeCard,
-    name: 'DECARD EGGLE GAME WALLET',
-    icon: 'https://ipfs.pantograph.app/ipfs/QmUn7MnyA9HWfHNRG7oLTweNG93ztaErFdcg36Y2uxENUu?filename=noti.png',
-    rdns: rdnsSdkDeCard,
-    isDecard: true,
-  },
-  'egglepasskeywallet-decard-test': {
     uuid: uuidSdkDeCard,
     name: 'DECARD EGGLE GAME WALLET',
     icon: 'https://ipfs.pantograph.app/ipfs/QmUn7MnyA9HWfHNRG7oLTweNG93ztaErFdcg36Y2uxENUu?filename=noti.png',
@@ -128,7 +102,7 @@ export const chainsSupported = [
   '0x89',
   '0xa4b1',
   '0x2105',
-]
+] as const
 
 // export const URL_PASSKEY = 'https://smart.keyring.app'
 // export const URL_PASSKEY = 'https://pass.w3w.app'

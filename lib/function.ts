@@ -1,5 +1,21 @@
-import { GROUP_SLUG, infoGroup, SDK_VERSION } from 'lib/constants'
-import { MyCustomWalletProvider } from 'lib/web3'
+import {
+  chainsSupported,
+  GROUP_SLUG,
+  infoGroup,
+  RPC_DEFAULT,
+  SDK_VERSION,
+} from 'lib/constants'
+import { MyPasskeyWalletProvider } from 'lib/web3'
+import { createWalletClient, custom } from 'viem'
+import {
+  arbitrum,
+  base,
+  bsc,
+  Chain,
+  mainnet,
+  optimism,
+  polygon,
+} from 'viem/chains'
 
 declare global {
   interface Window {
@@ -19,11 +35,17 @@ interface ProviderMessage {
   readonly data: unknown;
 }
 
+export interface ProviderClientConfig {
+  chainId: (typeof chainsSupported)[number];
+  rpcUrl?: typeof RPC_DEFAULT;
+}
+
 export function onPageLoad (config: any) {
   if (typeof window === 'undefined') {
     return
   }
-  const provider = new MyCustomWalletProvider({ config })
+  const provider = new MyPasskeyWalletProvider({ config })
+
   if (!window.ethereum) {
     window.ethereum = provider
   }
@@ -42,6 +64,14 @@ export function onPageLoad (config: any) {
   })
 
   announceProvider()
+}
+
+export const createWalletPasskeyClient = (config?: ProviderClientConfig) => {
+  const client = createWalletClient({
+    chain: convertChainIdToChainView(config?.chainId!),
+    transport: custom(new MyPasskeyWalletProvider({ config })),
+  })
+  return client
 }
 
 export function encodeBase64<T> (data: T): T | string {
@@ -70,8 +100,22 @@ export const getVersionSdk = (includesNamePackage: boolean = true): string => {
     const namePackage = includesNamePackage ? packageJson.name + '_' : ''
     return `${namePackage}${SDK_VERSION}`
   } catch (error) {
-    return `${GROUP_SLUG}_${SDK_VERSION || '2.0.0'}`
+    const namePackage = includesNamePackage ? GROUP_SLUG + '_' : ''
+    return `${namePackage}${SDK_VERSION || '2.0.0'}`
   }
+}
+export const convertChainIdToChainView = (
+  chainId: (typeof chainsSupported)[number],
+): Chain => {
+  const dataChain: Record<(typeof chainsSupported)[number], Chain> = {
+    '0x1': mainnet,
+    '0xa': optimism,
+    '0x38': bsc,
+    '0x89': polygon,
+    '0xa4b1': arbitrum,
+    '0x2105': base,
+  }
+  return dataChain[chainId] || mainnet
 }
 
 export const sleep = (milliseconds: number | undefined) => {

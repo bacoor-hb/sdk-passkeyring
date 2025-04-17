@@ -14,10 +14,11 @@ export default defineConfig(configEnv => ({
         filePath: filePath.replace('/lib', ''),
         content,
       }),
+      insertTypesEntry: true, // auto tạo "types" field trong package.json nếu dùng
     }),
   ],
   build: {
-    target: 'esnext',
+    target: 'es2022',
     lib: {
       entry: resolve('lib', 'main.tsx'),
       name: 'ReactFeatureFlag',
@@ -25,7 +26,7 @@ export default defineConfig(configEnv => ({
       formats: ['es', 'cjs'],
     },
     rollupOptions: {
-      external: ['react'],
+      external: ['react', 'viem'],
       output: {
         globals: {
           react: 'React',
@@ -43,6 +44,9 @@ export default defineConfig(configEnv => ({
     self: 'globalThis', // Provide a fallback for `self`
   },
   esbuild: {
-    // jsxInject: 'import React from \'react\'',
+    target: 'es2022', // hoặc 'es2020' là đủ
+  },
+  optimizeDeps: {
+    include: ['viem'], // Đảm bảo Vite pre-bundle viem
   },
 }))
