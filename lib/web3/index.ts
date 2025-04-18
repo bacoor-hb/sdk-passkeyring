@@ -1,4 +1,4 @@
-import { createPublicClient, http, maxUint144, maxUint256, parseEther } from 'viem'
+import { createPublicClient, http, maxUint256 } from 'viem'
 import { ethers } from 'ethers'
 import {
   chainsSupported,
@@ -77,7 +77,8 @@ class MyPasskeyWalletProvider extends EventEmitter implements WalletProvider {
           this.emit('chainChanged', this.chainId)
         }
       }
-      const formatNameGroup = GROUP_SLUG.charAt(0).toUpperCase() + GROUP_SLUG.slice(1)
+      let formatNameGroup = GROUP_SLUG.charAt(0).toUpperCase() + GROUP_SLUG.slice(1)
+      formatNameGroup = formatNameGroup.replace(/-/g, '')
       ;(this as any)[`is${formatNameGroup}`] = true
     } catch (error) {
       console.log('🚀 ~ init ~ error:', error)
