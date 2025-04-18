@@ -1,20 +1,17 @@
 'use client'
-import React, { ReactNode, useEffect } from 'react'
+import React, { useEffect } from 'react'
 
 import '../../styles/index.css'
 import AccountProvider from 'lib/Components/AccountProvider'
 import { getVersionSdk, onPageLoad } from 'lib/function'
 import { TYPE_CLOSE_POPUP_GROUP_SLUG } from 'lib/constants'
-
-interface PasskeyProviderProps {
-  children: ReactNode;
-  config?: any;
-}
+import { PasskeyProviderProps } from 'lib/Components/PasskeyProvider/types'
 
 const PasskeyProvider = ({ children, config = {} }: PasskeyProviderProps) => {
   useEffect(() => {
     onPageLoad(config)
   }, [config])
+
   useEffect(() => {
     try {
       const version = getVersionSdk()

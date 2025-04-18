@@ -4,19 +4,15 @@ import ReactDOM from 'react-dom'
 import reactToWebComponent from 'react-to-webcomponent'
 import PasskeyProvider from 'lib/Components/PasskeyProvider'
 import { GROUP_SLUG, infoGroup } from 'lib/constants'
+import { PasskeyProviderProps } from 'lib/Components/PasskeyProvider/types'
 
-interface PasskeyProviderProps {
-  children: ReactNode;
-  config?: any;
-}
-
-const PasskeyProviderJS = ({ children, config = {} }: PasskeyProviderProps) => {
+const PasskeyProviderJS = ({ children, ...props }: PasskeyProviderProps) => {
   useEffect(() => {
     import('@webcomponents/custom-elements')
   }, [])
 
   return (
-    <PasskeyProvider>
+    <PasskeyProvider {...props}>
       {children}
     </PasskeyProvider>
   )

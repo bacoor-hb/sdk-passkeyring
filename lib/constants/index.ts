@@ -127,12 +127,12 @@ const getURLPasskey = () => {
 export const URL_PASSKEY = getURLPasskey()
 
 export const RPC_DEFAULT = {
-  1: 'https://cloudflare-eth.com',
+  1: 'https://ethereum-rpc.publicnode.com',
   137: 'https://polygon-bor-rpc.publicnode.com',
-  56: 'https://binance.llamarpc.com',
-  42161: 'https://arb1.arbitrum.io/rpc',
-  8453: 'https://mainnet.base.org',
-  10: 'https://mainnet.optimism.io',
+  56: 'https://bsc-rpc.publicnode.com',
+  42161: 'https://arbitrum-one-rpc.publicnode.com',
+  8453: 'https://base-rpc.publicnode.com',
+  10: 'https://optimism-rpc.publicnode.com',
 }
 
 export const infoWallet = {
