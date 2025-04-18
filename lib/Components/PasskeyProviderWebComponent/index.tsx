@@ -20,13 +20,7 @@ const PasskeyProviderJS = ({ children, ...props }: PasskeyProviderProps) => {
 
 export const createPasskeyProvider = (config: ProviderConfig) => {
   if (typeof window !== 'undefined' && typeof customElements !== 'undefined') {
-    const PasskeyProviderToWebComponent = reactToWebComponent(PasskeyProvider, React, ReactDOM,
-      {
-        props: {
-          config: 'json',
-        },
-      },
-    )
+    const PasskeyProviderToWebComponent = reactToWebComponent(PasskeyProvider, React, ReactDOM)
     let elementHTML: any
     if (infoGroup?.[GROUP_SLUG]?.isDecard) {
       customElements.define('passkey-decard-provider', PasskeyProviderToWebComponent)
