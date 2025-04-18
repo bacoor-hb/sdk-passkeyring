@@ -8,6 +8,7 @@ import { TYPE_CLOSE_POPUP_GROUP_SLUG } from 'lib/constants'
 import { PasskeyProviderProps } from 'lib/Components/PasskeyProvider/types'
 
 const PasskeyProvider = ({ children, config = {} }: PasskeyProviderProps) => {
+  console.log('🚀 ~ PasskeyProvider ~ config:', config)
   useEffect(() => {
     onPageLoad(config)
   }, [config])
