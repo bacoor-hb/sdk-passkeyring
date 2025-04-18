@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom'
 import reactToWebComponent from 'react-to-webcomponent'
 import PasskeyProvider from 'lib/Components/PasskeyProvider'
 import { GROUP_SLUG, infoGroup } from 'lib/constants'
-import { PasskeyProviderProps } from 'lib/Components/PasskeyProvider/types'
+import { PasskeyProviderProps, ProviderConfig } from 'lib/Components/PasskeyProvider/types'
 
 const PasskeyProviderJS = ({ children, ...props }: PasskeyProviderProps) => {
   useEffect(() => {
@@ -18,13 +18,27 @@ const PasskeyProviderJS = ({ children, ...props }: PasskeyProviderProps) => {
   )
 }
 
-if (typeof window !== 'undefined' && typeof customElements !== 'undefined') {
-  const PasskeyProviderToWebComponent = reactToWebComponent(PasskeyProvider, React, ReactDOM)
-
-  if (infoGroup?.[GROUP_SLUG]?.isDecard) {
-    customElements.define('passkey-decard-provider', PasskeyProviderToWebComponent)
-  } else {
-    customElements.define('passkey-provider', PasskeyProviderToWebComponent)
+export const createPasskeyProvider = (config: ProviderConfig) => {
+  if (typeof window !== 'undefined' && typeof customElements !== 'undefined') {
+    const PasskeyProviderToWebComponent = reactToWebComponent(PasskeyProvider, React, ReactDOM,
+      {
+        props: {
+          config: 'json',
+        },
+      },
+    )
+    let elementHTML: any
+    if (infoGroup?.[GROUP_SLUG]?.isDecard) {
+      customElements.define('passkey-decard-provider', PasskeyProviderToWebComponent)
+      elementHTML = document.createElement('passkey-decard-provider')
+    } else {
+      customElements.define('passkey-provider', PasskeyProviderToWebComponent)
+      elementHTML = document.createElement('passkey-provider')
+    }
+    if (elementHTML) {
+      elementHTML.config = config
+      document.body.append(elementHTML)
+    }
   }
 }
 
