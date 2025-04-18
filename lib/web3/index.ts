@@ -542,18 +542,15 @@ class MyPasskeyWalletProvider extends EventEmitter implements WalletProvider {
     try {
       const publicClient = await this.createPublicClientViem()
       const rawTransaction = params[0]
-      const account = rawTransaction.from
+      const account = rawTransaction?.from || this.accounts[0]
 
       const data = await publicClient.estimateGas({
         account,
-        data: rawTransaction.data,
-        to: rawTransaction.to,
-        value: rawTransaction.value,
+        ...rawTransaction,
         stateOverride: [
           {
             address: account,
             balance: maxUint256,
-
           },
         ],
       })
