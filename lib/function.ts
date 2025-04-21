@@ -79,7 +79,11 @@ export const createWalletPasskeyClient = (config?: ProviderClientConfig) => {
 
 export function encodeBase64 (data: any): string {
   try {
-    return Buffer.from(JSON.stringify(data)).toString('base64')
+    if (data) {
+      return Buffer.from(JSON.stringify(data)).toString('base64')
+    } else {
+      return ''
+    }
   } catch (error) {
     console.error('encodeBase64 error:', { error, data })
     return ''
