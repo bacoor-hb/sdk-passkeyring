@@ -30,7 +30,9 @@ export const createPasskeyProvider = (config: ProviderConfig) => {
       elementHTML = document.createElement('passkey-provider')
     }
     if (elementHTML) {
-      elementHTML.config = config
+      if (config) {
+        elementHTML.config = config
+      }
       document.body.append(elementHTML)
     }
   }
