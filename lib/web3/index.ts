@@ -12,16 +12,17 @@ import {
 } from 'lib/constants'
 import {
   convertChainIdToChainView,
-  decodeBase64,
   encodeBase64,
   getVersionSdk,
   isObject,
-  sleep,
 } from 'lib/function'
 import {
-  EventHandler,
+  Caveat,
   I_TYPE_URL,
+  Permission,
+  PermissionRequest,
   RequestArguments,
+  RequestedPermission,
   TYPE_ERROR,
   TYPE_REQUEST,
   WalletProvider,
@@ -42,7 +43,7 @@ class MyPasskeyWalletProvider extends EventEmitter implements WalletProvider {
   signer: any
   isMetaMask?: boolean
   private rpcUrl: { [key: number]: string }
-  private permissions: Record<string, boolean> = {}
+  private permissions: Permission[] = []
   private accounts: string[] = []
   private chainId: (typeof chainsSupported)[number] = '0x1' // Ethereum Mainnet
   private currentPopup: Window | null = null // Track the currently opened popup
@@ -63,6 +64,7 @@ class MyPasskeyWalletProvider extends EventEmitter implements WalletProvider {
   private async init () {
     try {
       if (this.accounts.length === 0) {
+        // get account storage
         const accountPasskey = localStorage.getItem(
           STORAGE_KEY.ACCOUNT_PASSKEY,
         )
@@ -75,6 +77,15 @@ class MyPasskeyWalletProvider extends EventEmitter implements WalletProvider {
           this.emit('connect', { chainId: this.chainId })
           this.emit('accountsChanged', this.accounts)
           this.emit('chainChanged', this.chainId)
+        }
+
+        // get Permissions storage
+        const permissionsStorage = localStorage.getItem(
+          STORAGE_KEY.PERMISSIONS_PASSKEY,
+        )
+        if (permissionsStorage) {
+          const permissionsParse = JSON.parse(permissionsStorage)
+          this.permissions = permissionsParse
         }
       }
       let formatNameGroup = GROUP_SLUG.charAt(0).toUpperCase() + GROUP_SLUG.slice(1)
@@ -90,7 +101,9 @@ class MyPasskeyWalletProvider extends EventEmitter implements WalletProvider {
     console.log('🚀 ~ MyPasskeyWalletProvider ~ request ~ params', params)
     switch (method) {
       case 'wallet_requestPermissions':
-        return this.requestPermissions(params)
+        return this.requestPermissions(params as unknown as PermissionRequest)
+      case 'wallet_getPermissions':
+        return this.getPermissions()
       case 'eth_requestAccounts':
         return this.enable()
       case 'eth_accounts':
@@ -150,55 +163,59 @@ class MyPasskeyWalletProvider extends EventEmitter implements WalletProvider {
         return this.ecRecover(params)
       case 'personal_ecRecover':
         return this.personalEcRecover(params)
-      case 'wallet_grantPermissions':
-        return this.grantPermissions(params)
       default:
         return this.proxyRequest(method, params)
     }
   }
 
-  private async requestPermissions (params: any[]): Promise<any> {
-    // Define supported permissions
-    const supportedPermissions = ['eth_accounts', 'eth_chainId']
+  private getInvoker (): string {
+    return window.location.origin
+  }
 
-    // Validate requested permissions
-    const requestedPermissions =
-      params[0]?.permissions ||
-      (params?.length > 0 && params?.map((obj) => Object.keys(obj)[0])) ||
-      []
-    const invalidPermissions = requestedPermissions.filter(
-      (perm: string) => !supportedPermissions.includes(perm),
-    )
+  async requestPermissions (request: PermissionRequest): Promise<RequestedPermission[]> {
+    // Here, you should show a popup/UX to ask user to approve permissions
+    const userApproved = true // Simulate user approval (replace with actual UX)
 
-    if (invalidPermissions.length > 0) {
-      throw new Error(
-        `Unsupported permissions requested: ${invalidPermissions.join(', ')}`,
+    if (!userApproved) {
+      throw createProviderRpcError(
+        'User rejected the request.',
+        4001,
       )
     }
 
-    // Simulate user approval (replace with actual UI prompt for production)
-    const grantedPermissions = requestedPermissions.reduce(
-      (acc: Record<string, boolean>, perm: string) => {
-        acc[perm] = true
-        return acc
-      },
-      {},
-    )
+    const invoker = this.getInvoker()
+    const newPermissions: Permission[] = []
 
-    // Persist granted permissions
-    this.permissions = { ...this.permissions, ...grantedPermissions }
+    for (const [method, caveatsObject] of Object.entries(request)) {
+      const caveats: Caveat[] = []
+
+      for (const [type, value] of Object.entries(caveatsObject)) {
+        caveats.push({ type, value })
+      }
+
+      newPermissions.push({
+        invoker,
+        parentCapability: method,
+        caveats,
+      })
+    }
+
+    // Merge or replace existing permissions
+    this.permissions = [...this.permissions.filter((p: { parentCapability: string }) => !newPermissions.some(np => np.parentCapability === p.parentCapability)), ...newPermissions]
+
     localStorage.setItem(
       STORAGE_KEY.PERMISSIONS_PASSKEY,
       JSON.stringify(this.permissions),
     )
 
-    return {
-      permissions: this.permissions,
-    }
+    return newPermissions.map(p => ({
+      parentCapability: p.parentCapability,
+      date: Date.now(),
+    }))
   }
 
   // Add a method to retrieve current permissions
-  private getPermissions (): Record<string, boolean> {
+  private getPermissions (): Permission[] {
     return this.permissions
   }
 

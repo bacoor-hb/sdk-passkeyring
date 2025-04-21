@@ -62,3 +62,25 @@ export const TYPE_ERROR: Record<
 > = {
   ERROR_TRANSACTION: 'ERROR_TRANSACTION',
 }
+
+export interface Caveat {
+  type: string;
+  value: any;
+}
+
+export interface Permission {
+  invoker: string;
+  parentCapability: string;
+  caveats: Caveat[];
+}
+
+export interface PermissionRequest {
+  [methodName: string]: {
+    [caveatName: string]: any;
+  };
+}
+
+export interface RequestedPermission {
+  parentCapability: string;
+  date?: number;
+}
