@@ -68,7 +68,7 @@ export function onPageLoad (config: any) {
 
 export const createWalletPasskeyClient = (config?: ProviderClientConfig) => {
   const client = createWalletClient({
-    chain: convertChainIdToChainView(config?.chainId!),
+    chain: convertChainIdToChainView(config?.chainId || '0x1'),
     transport: custom(new MyPasskeyWalletProvider({ config })),
   })
   return client
