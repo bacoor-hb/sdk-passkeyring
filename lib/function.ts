@@ -16,6 +16,9 @@ import {
   optimism,
   polygon,
 } from 'viem/chains'
+import { Buffer as Buffer2 } from 'buffer'
+
+window.Buffer = window.Buffer || Buffer2
 
 declare global {
   interface Window {
@@ -74,11 +77,13 @@ export const createWalletPasskeyClient = (config?: ProviderClientConfig) => {
   return client
 }
 
-export function encodeBase64<T> (data: T): T | string {
+export function encodeBase64 (data: any): string {
   try {
+    // window.Buffer = Buffer2
     return Buffer.from(JSON.stringify(data)).toString('base64')
   } catch (error) {
-    return data
+    console.error('encodeBase64 error:', { error, data })
+    return ''
   }
 }
 export function decodeBase64 (encodedData?: any): string | undefined {
