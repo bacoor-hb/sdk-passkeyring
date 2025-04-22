@@ -54,6 +54,43 @@ import EventEmitter from 'eventemitter3'
  *   }
  * });
  * ```
+ * The request method is intended as a transport- and protocol-agnostic wrapper function for Remote Procedure Calls (RPCs). [EIP-1193](https://eips.ethereum.org/EIPS/eip-1193)
+ *
+ * Example method: `connect` to connect the wallet.
+ * ```ts
+ *  try {
+ *   const accounts = await provider.request({ method: 'eth_requestAccounts' })
+ *   console.log("🧩 eth_requestAccounts result:", accounts)
+ * } catch (err) {
+ *   console.log("⚠️ eth_requestAccounts error:", err)
+ * }
+ * ```
+ * Some events you can listen to:
+ * ```ts
+ * provider.on('connect', (info) => {
+ *  console.log("📶 Event: connect", info)
+ *})
+ *
+ * ```
+ * ```ts
+ * provider.on('accountsChanged', (accounts) => {
+ *  console.log("👤 Event: accountsChanged", accounts)
+ * })
+ *
+ * ```
+ * ```ts
+ * provider.on('chainChanged', (chainId) => {
+ *  console.log("🔗 Event: chainChanged", chainId)
+ * })
+ *
+ * ```
+ *```ts
+ * provider.on('disconnect', (error) => {
+ *  console.log("❌ Event: disconnect", error)
+ * })
+ *
+ * ```
+ *
  */
 export class MyPasskeyWalletProvider extends EventEmitter implements WalletProvider {
   name: string
