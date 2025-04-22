@@ -7,8 +7,24 @@ import { getVersionSdk, onPageLoad } from 'lib/function'
 import { TYPE_CLOSE_POPUP_GROUP_SLUG } from 'lib/constants'
 import { PasskeyProviderProps } from 'lib/Components/PasskeyProvider/types'
 
+/**
+ * PasskeyProvider component is a React component that initializes the Passkey wallet provider
+ *
+ * Example usage:
+ * ```tsx
+ * <PasskeyProvider config={...}>
+ *   <YourApp />
+ * </PasskeyProvider>
+ * ```
+ *
+ * @param {React.ReactNode} children - The child components to render within the provider.
+ * @param {Object} [config] - Optional configuration object for the Passkey provider.
+ * @returns {JSX.Element} The rendered PasskeyProvider component.
+ * @throws {Error} Throws an error if the SDK version cannot be retrieved.
+ *
+ *
+ */
 const PasskeyProvider = ({ children, config = {} }: PasskeyProviderProps) => {
-  console.log('🚀 ~ PasskeyProvider ~ config:', config)
   useEffect(() => {
     onPageLoad(config)
   }, [config])
