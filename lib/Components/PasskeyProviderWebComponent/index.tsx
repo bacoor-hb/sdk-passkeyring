@@ -42,9 +42,9 @@ if (checkVersion('2.6.0') === false) {
 }
 
 /**
- * Dynamically creates and registers a web component for the `PasskeyProvider` component.
- * If the group is identified as Decard, it registers the component as `passkey-decard-provider`,
- * otherwise as `passkey-provider`. The web component is appended to the document body.
+ * Creates and registers a web component for the `PasskeyProvider` component.
+ * It registers the component as `passkey-provider`,
+ * The web component is appended to the document body.
  *
  * @param config - Optional configuration object of type `ProviderConfig` to be passed to the web component.
  */
@@ -71,6 +71,8 @@ export const createPasskeyProvider = (config?: ProviderConfig) => {
 /**
  * Creates and registers a web component specifically for Decard groups.
  * If the group is not identified as Decard, an error is logged to the console.
+ * If the group is identified as Decard, it registers the component as `passkey-decard-provider`,
+ * The web component is appended to the document body.
  *
  * @param config - Optional configuration object of type `ProviderConfig` to be passed to the web component.
  */
