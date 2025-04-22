@@ -151,3 +151,22 @@ export const getURLPasskey = () => {
     return 'https://smart.keyring.app'
   }
 }
+
+export function checkVersion (verToCheck: string, verCurrent?: string): boolean {
+  try {
+    if (!verToCheck) return false
+    const toNumberArray = (ver: string) => ver.split('.').map(Number)
+
+    const current = toNumberArray(verCurrent || SDK_VERSION)
+    const target = toNumberArray(verToCheck)
+
+    for (let i = 0; i < 3; i++) {
+      if ((current[i] ?? 0) < (target[i] ?? 0)) return false
+      if ((current[i] ?? 0) > (target[i] ?? 0)) return true
+    }
+
+    return true // bằng nhau thì vẫn true
+  } catch (error) {
+    return false
+  }
+}
