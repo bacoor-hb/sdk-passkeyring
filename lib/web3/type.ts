@@ -1,11 +1,10 @@
-
 export interface WalletProvider {
-  name: string; // Tên nhà cung cấp
-  icon: string; // URL đến biểu tượng nhà cung cấp
-  uuid: string; // UUID duy nhất
-  version: string; // Phiên bản nhà cung cấp
+  name: string; // Provider name
+  icon: string; // URL to the provider's icon
+  uuid: string; // Unique UUID
+  version: string; // Provider version
   signer: any;
-  isMetaMask?: boolean; // Có phải là MetaMask không
+  isMetaMask?: boolean; // Is it MetaMask
   request: (args: { method: string; params?: any[] }) => Promise<any>;
   on?: (event: string, handler: (...args: any[]) => void) => void;
   removeListener?(event: string, listener: (...args: any[]) => void): void;
@@ -20,7 +19,7 @@ export interface RequestArguments {
 interface EthereumWindow extends Window {
   ethereum?: {
     providers?: WalletProvider[];
-    [key: string]: any; // Các thuộc tính bổ sung
+    [key: string]: any; // Additional properties
   };
 }
 
