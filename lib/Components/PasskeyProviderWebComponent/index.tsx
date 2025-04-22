@@ -1,13 +1,14 @@
 // import React, { useEffect, ReactNode } from 'react'
 // import ReactDOM from 'react-dom'
+// import type { JSX } from 'react'
 // // @ts-ignore
 // import reactToWebComponent from 'react-to-webcomponent'
-// import PasskeyProvider from 'lib/Components/PasskeyProvider'
-// import { GROUP_SLUG, infoGroup } from 'lib/constants'
-// import { PasskeyProviderProps } from 'lib/Components/PasskeyProvider/types'
-// import { ProviderConfig } from 'lib/web3/type'
+// import PasskeyProvider from '../PasskeyProvider'
+// import { GROUP_SLUG, infoGroup } from '../../constants'
+// import { PasskeyProviderProps } from '../PasskeyProvider/types'
+// import { ProviderConfig } from '../../main'
 
-// const PasskeyProviderJS = ({ children, ...props }: PasskeyProviderProps) => {
+// const PasskeyProviderJS = ({ children, ...props }: PasskeyProviderProps): JSX.Element => {
 //   useEffect(() => {
 //     import('@webcomponents/custom-elements')
 //   }, [])
@@ -43,14 +44,15 @@
 
 import React, { useEffect, ReactNode } from 'react'
 import ReactDOM from 'react-dom'
+import type { JSX } from 'react'
 // @ts-ignore
 import reactToWebComponent from 'react-to-webcomponent'
-import PasskeyProvider from 'lib/Components/PasskeyProvider'
-import { GROUP_SLUG, infoGroup } from 'lib/constants'
-import { PasskeyProviderProps } from 'lib/Components/PasskeyProvider/types'
-import { ProviderConfig } from 'lib/web3/type'
+import PasskeyProvider from '../PasskeyProvider'
+import { GROUP_SLUG, infoGroup } from '../../constants'
+import { PasskeyProviderProps } from '../PasskeyProvider/types'
+import { ProviderConfig } from '../../main'
 
-const PasskeyProviderJS = ({ children, ...props }: PasskeyProviderProps) => {
+const PasskeyProviderJS = ({ children, ...props }: PasskeyProviderProps): JSX.Element => {
   useEffect(() => {
     import('@webcomponents/custom-elements')
   }, [])

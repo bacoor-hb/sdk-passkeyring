@@ -1,11 +1,12 @@
 'use client'
 import React, { useEffect } from 'react'
+import type { JSX } from 'react'
 
 import '../../styles/index.css'
-import AccountProvider from 'lib/Components/AccountProvider'
-import { getVersionSdk, onPageLoad } from 'lib/function'
-import { TYPE_CLOSE_POPUP_GROUP_SLUG } from 'lib/constants'
-import { PasskeyProviderProps } from 'lib/Components/PasskeyProvider/types'
+import AccountProvider from '../AccountProvider'
+import { getVersionSdk, onPageLoad } from '../../function'
+import { TYPE_CLOSE_POPUP_GROUP_SLUG } from '../../constants'
+import { PasskeyProviderProps } from './types'
 
 /**
  * PasskeyProvider component is a React component that initializes the Passkey wallet provider
@@ -24,7 +25,7 @@ import { PasskeyProviderProps } from 'lib/Components/PasskeyProvider/types'
  *
  *
  */
-const PasskeyProvider = ({ children, config = {} }: PasskeyProviderProps) => {
+const PasskeyProvider = ({ children, config = {} }: PasskeyProviderProps): JSX.Element => {
   useEffect(() => {
     onPageLoad(config)
   }, [config])
