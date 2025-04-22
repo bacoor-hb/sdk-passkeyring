@@ -1,3 +1,5 @@
+import { RPC_DEFAULT } from 'lib/constants'
+
 export interface WalletProvider {
   name: string; // Tên nhà cung cấp
   icon: string; // URL đến biểu tượng nhà cung cấp
@@ -87,4 +89,12 @@ export interface RequestedPermission {
 
 export interface ProviderConnectInfo {
   readonly chainId: string;
+}
+
+export interface ProviderConfig {
+  rpcUrl?: typeof RPC_DEFAULT;
+}
+
+export interface MyPasskeyWalletProviderProps {
+  config?: ProviderConfig;
 }

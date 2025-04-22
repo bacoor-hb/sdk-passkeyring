@@ -4,7 +4,8 @@
 // import reactToWebComponent from 'react-to-webcomponent'
 // import PasskeyProvider from 'lib/Components/PasskeyProvider'
 // import { GROUP_SLUG, infoGroup } from 'lib/constants'
-// import { PasskeyProviderProps, ProviderConfig } from 'lib/Components/PasskeyProvider/types'
+// import { PasskeyProviderProps } from 'lib/Components/PasskeyProvider/types'
+// import { ProviderConfig } from 'lib/web3/type'
 
 // const PasskeyProviderJS = ({ children, ...props }: PasskeyProviderProps) => {
 //   useEffect(() => {
@@ -18,7 +19,7 @@
 //   )
 // }
 
-// export const createPasskeyProvider = (config: ProviderConfig) => {
+// export const createPasskeyProvider = (config?: ProviderConfig) => {
 //   if (typeof window !== 'undefined' && typeof customElements !== 'undefined') {
 //     const PasskeyProviderToWebComponent = reactToWebComponent(PasskeyProvider, React, ReactDOM)
 //     let elementHTML: any
@@ -46,7 +47,8 @@ import ReactDOM from 'react-dom'
 import reactToWebComponent from 'react-to-webcomponent'
 import PasskeyProvider from 'lib/Components/PasskeyProvider'
 import { GROUP_SLUG, infoGroup } from 'lib/constants'
-import { PasskeyProviderProps, ProviderConfig } from 'lib/Components/PasskeyProvider/types'
+import { PasskeyProviderProps } from 'lib/Components/PasskeyProvider/types'
+import { ProviderConfig } from 'lib/web3/type'
 
 const PasskeyProviderJS = ({ children, ...props }: PasskeyProviderProps) => {
   useEffect(() => {
@@ -70,7 +72,7 @@ if (typeof window !== 'undefined' && typeof customElements !== 'undefined') {
   }
 }
 
-export const createPasskeyProvider = (config: ProviderConfig) => {
+export const createPasskeyProvider = (config?: ProviderConfig) => {
   if (typeof window !== 'undefined' && typeof customElements !== 'undefined') {
     const PasskeyProviderToWebComponent = reactToWebComponent(PasskeyProvider, React, ReactDOM)
     let elementHTML: any
@@ -87,6 +89,14 @@ export const createPasskeyProvider = (config: ProviderConfig) => {
       }
       document.body.append(elementHTML)
     }
+  }
+}
+
+export const createPasskeyDecardProvider = (config?: ProviderConfig) => {
+  if (infoGroup?.[GROUP_SLUG]?.isDecard) {
+    createPasskeyProvider(config)
+  } else {
+    console.error('This is not a Decard group')
   }
 }
 

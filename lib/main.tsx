@@ -1,5 +1,5 @@
 export { default as PasskeyProvider } from 'lib/Components/PasskeyProvider'
-export { default as PasskeyProviderJS, createPasskeyProvider } from 'lib/Components/PasskeyProviderWebComponent'
+export { default as PasskeyProviderJS, createPasskeyProvider, createPasskeyDecardProvider } from 'lib/Components/PasskeyProviderWebComponent'
 export { infoWallet, chainsSupported } from './constants'
 export { createWalletPasskeyClient, isWeb3Injected } from './function'
 export { TYPE_REQUEST, TYPE_ERROR } from './web3/type'

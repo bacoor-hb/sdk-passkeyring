@@ -1,4 +1,4 @@
-import { ProviderConnectInfo } from './type'
+import { MyPasskeyWalletProviderProps, ProviderConnectInfo } from './type'
 import { createPublicClient, http, maxUint256 } from 'viem'
 import { ethers } from 'ethers'
 import {
@@ -31,10 +31,6 @@ import {
 import { isMobile } from 'react-device-detect'
 import { createProviderRpcError } from 'lib/web3/errors'
 import EventEmitter from 'eventemitter3'
-
-export interface MyPasskeyWalletProviderProps {
-  config?: any;
-}
 
 export class MyPasskeyWalletProvider extends EventEmitter implements WalletProvider {
   name: string

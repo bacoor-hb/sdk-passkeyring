@@ -1,9 +1,5 @@
-import { RPC_DEFAULT } from 'lib/constants'
+import { ProviderConfig } from 'lib/web3/type'
 import { ReactNode } from 'react'
-
-export interface ProviderConfig {
-  rpcUrl?: typeof RPC_DEFAULT;
-}
 
 export interface PasskeyProviderProps {
   children: ReactNode;
