@@ -94,8 +94,16 @@ export type RpcUrlMap = {
   [key in number]: string
 }
 
+export type Metadata = {
+  name: string;
+  description: string;
+  url: string;
+  icons: string[];
+};
+
 export interface ProviderConfig {
   rpcUrl?: RpcUrlMap ;
+  metadata?: Metadata;
 }
 
 export interface MyPasskeyWalletProviderProps {

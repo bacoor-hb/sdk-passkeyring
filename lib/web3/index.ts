@@ -30,6 +30,7 @@ import {
   MyPasskeyWalletProviderProps,
   ProviderConnectInfo,
   RpcUrlMap,
+  Metadata,
 } from './type'
 import { isMobile } from 'react-device-detect'
 import { createProviderRpcError } from './errors'
@@ -103,6 +104,7 @@ export class MyPasskeyWalletProvider extends EventEmitter implements WalletProvi
   signer: any
   isMetaMask?: boolean
   private rpcUrl: RpcUrlMap
+  private metadata?: Metadata // Add metadata property
   private permissions: Permission[] = []
   private accounts: string[] = []
   private chainId: (typeof chainsSupported)[number] = '0x1' // Ethereum Mainnet
@@ -113,6 +115,10 @@ export class MyPasskeyWalletProvider extends EventEmitter implements WalletProvi
     this.rpcUrl = isObject(props?.config?.rpcUrl, true)
       ? { ...RPC_DEFAULT, ...props?.config?.rpcUrl }
       : RPC_DEFAULT
+    if (isObject(props?.config?.metadata, true)) {
+      this.metadata = props?.config?.metadata
+    }
+
     this.name = infoGroup[GROUP_SLUG].name
     this.icon = infoGroup[GROUP_SLUG].icon
     this.uuid = infoGroup[GROUP_SLUG].uuid
@@ -335,6 +341,7 @@ export class MyPasskeyWalletProvider extends EventEmitter implements WalletProvi
           infoPageConnected,
           id: Date.now(),
           type_request: type,
+          metadata: this.metadata || {},
         }
       }
 

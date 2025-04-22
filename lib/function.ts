@@ -1,4 +1,4 @@
-import { RpcUrlMap } from './web3/type'
+import { Metadata, ProviderConfig, RpcUrlMap } from './web3/type'
 import { MyPasskeyWalletProvider } from './web3'
 
 import { createWalletClient, custom } from 'viem'
@@ -39,9 +39,10 @@ interface ProviderMessage {
 export interface ProviderClientConfig {
   chainId: (typeof chainsSupported)[number];
   rpcUrl?: RpcUrlMap;
+  metadata?: Metadata
 }
 
-export function onPageLoad (config: any) {
+export function onPageLoad (config: ProviderConfig) {
   if (typeof window === 'undefined') {
     return
   }
