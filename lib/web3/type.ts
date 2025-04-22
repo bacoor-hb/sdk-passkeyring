@@ -84,3 +84,7 @@ export interface RequestedPermission {
   parentCapability: string;
   date?: number;
 }
+
+export interface ProviderConnectInfo {
+  readonly chainId: string;
+}

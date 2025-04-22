@@ -1,3 +1,4 @@
+import { ProviderConnectInfo } from './type'
 import { createPublicClient, http, maxUint256 } from 'viem'
 import { ethers } from 'ethers'
 import {
@@ -74,9 +75,12 @@ class MyPasskeyWalletProvider extends EventEmitter implements WalletProvider {
           this.chainId = accountPasskeyParse.chainId || this.chainId
           this.version = getVersionSdk(false)
           await this.createProviderWeb3()
-          this.emit('connect', { chainId: this.chainId })
+
+          const providerInfo: ProviderConnectInfo = { chainId: this.chainId }
+
           this.emit('accountsChanged', this.accounts)
           this.emit('chainChanged', this.chainId)
+          this.emit('connect', providerInfo)
         }
 
         // get Permissions storage
@@ -371,8 +375,12 @@ class MyPasskeyWalletProvider extends EventEmitter implements WalletProvider {
 
       await this.createProviderWeb3()
 
-      this.emit('connect', { chainId: this.chainId })
+      const providerInfo: ProviderConnectInfo = { chainId: this.chainId }
+
       this.emit('accountsChanged', this.accounts)
+      this.emit('chainChanged', this.chainId)
+      this.emit('connect', providerInfo)
+
       return this.accounts
     } catch (error) {
       console.error('Error during enable:', error)
@@ -385,6 +393,10 @@ class MyPasskeyWalletProvider extends EventEmitter implements WalletProvider {
     localStorage.removeItem(STORAGE_KEY.ACCOUNT_PASSKEY)
     localStorage.removeItem(STORAGE_KEY.PERMISSIONS_PASSKEY)
 
+    if (this.currentPopup && !this.currentPopup.closed) {
+      this.currentPopup.close()
+    }
+
     const message = createProviderRpcError(
       'The Provider is disconnected',
       4900,
@@ -392,10 +404,6 @@ class MyPasskeyWalletProvider extends EventEmitter implements WalletProvider {
 
     this.emit('accountsChanged', [])
     this.emit('disconnect', message)
-
-    if (this.currentPopup && !this.currentPopup.closed) {
-      this.currentPopup.close()
-    }
   }
 
   selectedAddress = (): string | null => {
@@ -537,18 +545,23 @@ class MyPasskeyWalletProvider extends EventEmitter implements WalletProvider {
   private async switchEthereumChain (params: any[]): Promise<void> {
     const chainId = params[0].chainId
 
-    if (!chainsSupported.includes(chainId)) {
-      throw createProviderRpcError(`Unsupported chainId: ${chainId}`, 4001)
+    const chainIdHex = (typeof chainId === 'string' && chainId.startsWith('0x')
+      ? chainId
+      : `0x${parseInt(chainId).toString(16)}`) as (typeof chainsSupported)[number]
+
+    if (!chainsSupported.includes(chainIdHex)) {
+      throw createProviderRpcError(`Unsupported chainId: ${chainIdHex}`, 4001)
     }
 
-    this.chainId = chainId
+    this.chainId = chainIdHex
+
     localStorage.setItem(
       STORAGE_KEY.ACCOUNT_PASSKEY,
-      JSON.stringify({ address: this.accounts[0], chainId }),
+      JSON.stringify({ address: this.accounts[0], chainId: chainIdHex }),
     )
 
     // Kích hoạt sự kiện chainChanged
-    this.emit('chainChanged', chainId)
+    this.emit('chainChanged', chainIdHex)
   }
 
   private async addEthereumChain (params: any[]): Promise<void> {
