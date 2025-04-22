@@ -4,6 +4,7 @@ import {
   infoGroup,
   RPC_DEFAULT,
   SDK_VERSION,
+  STORAGE_KEY,
 } from 'lib/constants'
 import { MyPasskeyWalletProvider } from 'lib/web3'
 import { createWalletClient, custom } from 'viem'
@@ -17,6 +18,7 @@ import {
   polygon,
 } from 'viem/chains'
 import { Buffer as Buffer2 } from 'buffer'
+import { RpcUrlMap } from 'lib/web3/type'
 
 if (typeof window !== 'undefined') {
   window.Buffer = window.Buffer || Buffer2
@@ -42,7 +44,7 @@ interface ProviderMessage {
 
 export interface ProviderClientConfig {
   chainId: (typeof chainsSupported)[number];
-  rpcUrl?: typeof RPC_DEFAULT;
+  rpcUrl?: RpcUrlMap;
 }
 
 export function onPageLoad (config: any) {
@@ -136,4 +138,21 @@ export const isWeb3Injected = () => {
   return (
     typeof window !== 'undefined' && typeof window?.ethereum !== 'undefined'
   )
+}
+
+export const getURLPasskey = () => {
+  try {
+    const modeEnv = localStorage.getItem(STORAGE_KEY.MODE_ENV_PASSKEY)
+    if (modeEnv) {
+      if (modeEnv === 'development') {
+        return 'https://pass.w3w.app'
+      } else {
+        return modeEnv
+      }
+    } else {
+      return 'https://smart.keyring.app'
+    }
+  } catch (error) {
+    return 'https://smart.keyring.app'
+  }
 }

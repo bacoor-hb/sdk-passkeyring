@@ -91,8 +91,12 @@ export interface ProviderConnectInfo {
   readonly chainId: string;
 }
 
+export type RpcUrlMap = {
+  [key in number]: string
+}
+
 export interface ProviderConfig {
-  rpcUrl?: typeof RPC_DEFAULT;
+  rpcUrl?: RpcUrlMap ;
 }
 
 export interface MyPasskeyWalletProviderProps {

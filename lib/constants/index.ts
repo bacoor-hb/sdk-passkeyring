@@ -1,5 +1,5 @@
 import { SlugGroup } from 'lib/constants/type'
-import { EIP6963ProviderInfo } from 'lib/function'
+import { EIP6963ProviderInfo, getURLPasskey } from 'lib/function'
 
 // Docs    ->   https://eips.ethereum.org/EIPS/eip-6963
 // Generate uuidV4  ->   https://www.uuidgenerator.net/version4
@@ -104,29 +104,16 @@ export const chainsSupported = [
   '0x2105',
 ] as const
 
+export const chainsSupportedByInteger = chainsSupported.map((chain) => {
+  return parseInt(chain, 16)
+})
+
 // export const URL_PASSKEY = 'https://smart.keyring.app'
 // export const URL_PASSKEY = 'https://pass.w3w.app'
 
-const getURLPasskey = () => {
-  try {
-    const modeEnv = localStorage.getItem(STORAGE_KEY.MODE_ENV_PASSKEY)
-    if (modeEnv) {
-      if (modeEnv === 'development') {
-        return 'https://pass.w3w.app'
-      } else {
-        return modeEnv
-      }
-    } else {
-      return 'https://smart.keyring.app'
-    }
-  } catch (error) {
-    return 'https://smart.keyring.app'
-  }
-}
-
 export const URL_PASSKEY = getURLPasskey()
 
-export const RPC_DEFAULT = {
+export const RPC_DEFAULT: Record<typeof chainsSupportedByInteger[number], string> = {
   1: 'https://ethereum-rpc.publicnode.com',
   137: 'https://polygon-bor-rpc.publicnode.com',
   56: 'https://bsc-rpc.publicnode.com',

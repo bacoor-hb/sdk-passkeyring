@@ -1,4 +1,4 @@
-import { MyPasskeyWalletProviderProps, ProviderConnectInfo } from './type'
+import { MyPasskeyWalletProviderProps, ProviderConnectInfo, RpcUrlMap } from './type'
 import { createPublicClient, http, maxUint256 } from 'viem'
 import { ethers } from 'ethers'
 import {
@@ -39,7 +39,7 @@ export class MyPasskeyWalletProvider extends EventEmitter implements WalletProvi
   version: string
   signer: any
   isMetaMask?: boolean
-  private rpcUrl: { [key: number]: string }
+  private rpcUrl: RpcUrlMap
   private permissions: Permission[] = []
   private accounts: string[] = []
   private chainId: (typeof chainsSupported)[number] = '0x1' // Ethereum Mainnet
@@ -595,7 +595,7 @@ export class MyPasskeyWalletProvider extends EventEmitter implements WalletProvi
     const rpc =
       url ||
       this.rpcUrl?.[Number(this.chainId)] ||
-      RPC_DEFAULT[Number(this.chainId) as keyof typeof RPC_DEFAULT]
+      RPC_DEFAULT[Number(this.chainId)]
     const provider = new ethers.providers.JsonRpcProvider(rpc)
     this.signer = provider.getSigner()
     return provider
