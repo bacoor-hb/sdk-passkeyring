@@ -32,11 +32,11 @@ import { isMobile } from 'react-device-detect'
 import { createProviderRpcError } from 'lib/web3/errors'
 import EventEmitter from 'eventemitter3'
 
-interface MyPasskeyWalletProviderProps {
+export interface MyPasskeyWalletProviderProps {
   config?: any;
 }
 
-class MyPasskeyWalletProvider extends EventEmitter implements WalletProvider {
+export class MyPasskeyWalletProvider extends EventEmitter implements WalletProvider {
   name: string
   icon: string
   uuid: string
@@ -865,11 +865,3 @@ class MyPasskeyWalletProvider extends EventEmitter implements WalletProvider {
     return super.removeListener(event, listener)
   }
 }
-
-const isWeb3Injected = () => {
-  return (
-    typeof window !== 'undefined' && typeof window?.ethereum !== 'undefined'
-  )
-}
-
-export { MyPasskeyWalletProvider, isWeb3Injected }

@@ -9,7 +9,7 @@ export default defineConfig(configEnv => ({
     react(),
     tsConfigPaths(),
     dts({
-      include: ['lib/main.tsx'],
+      include: ['lib'],
       beforeWriteFile: (filePath, content) => ({
         filePath: filePath.replace('/lib', ''),
         content,
@@ -21,7 +21,7 @@ export default defineConfig(configEnv => ({
     target: 'es2022',
     lib: {
       entry: resolve('lib', 'main.tsx'),
-      name: 'ReactFeatureFlag',
+      name: 'MyPasskeyWalletSDK',
       fileName: (format) => `main.${format}.js`,
       formats: ['es', 'cjs'],
     },

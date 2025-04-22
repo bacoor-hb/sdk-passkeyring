@@ -131,3 +131,9 @@ export const convertChainIdToChainView = (
 export const sleep = (milliseconds: number | undefined) => {
   return new Promise((resolve) => setTimeout(resolve, milliseconds || 0))
 }
+
+export const isWeb3Injected = () => {
+  return (
+    typeof window !== 'undefined' && typeof window?.ethereum !== 'undefined'
+  )
+}
