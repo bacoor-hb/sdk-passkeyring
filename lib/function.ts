@@ -1,12 +1,6 @@
-import {
-  chainsSupported,
-  GROUP_SLUG,
-  infoGroup,
-  RPC_DEFAULT,
-  SDK_VERSION,
-  STORAGE_KEY,
-} from 'lib/constants'
-import { MyPasskeyWalletProvider } from 'lib/web3'
+import { RpcUrlMap } from './web3/type'
+import { MyPasskeyWalletProvider } from './web3'
+
 import { createWalletClient, custom } from 'viem'
 import {
   arbitrum,
@@ -18,7 +12,7 @@ import {
   polygon,
 } from 'viem/chains'
 import { Buffer as Buffer2 } from 'buffer'
-import { RpcUrlMap } from 'lib/web3/type'
+import { chainsSupported, GROUP_SLUG, infoGroup, SDK_VERSION, STORAGE_KEY } from './constants'
 
 if (typeof window !== 'undefined') {
   window.Buffer = window.Buffer || Buffer2

@@ -1,6 +1,5 @@
-import { SlugGroup } from 'lib/constants/type'
-import { EIP6963ProviderInfo, getURLPasskey } from 'lib/function'
-
+import { SlugGroup } from './type'
+import { EIP6963ProviderInfo, getURLPasskey } from '../function'
 // Docs    ->   https://eips.ethereum.org/EIPS/eip-6963
 // Generate uuidV4  ->   https://www.uuidgenerator.net/version4
 

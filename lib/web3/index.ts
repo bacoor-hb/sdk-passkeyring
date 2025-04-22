@@ -1,4 +1,4 @@
-import { MyPasskeyWalletProviderProps, ProviderConnectInfo, RpcUrlMap } from './type'
+
 import { createPublicClient, http, maxUint256 } from 'viem'
 import { ethers } from 'ethers'
 import {
@@ -10,13 +10,13 @@ import {
   STORAGE_KEY,
   TYPE_CLOSE_POPUP_GROUP_SLUG,
   URL_PASSKEY,
-} from 'lib/constants'
+} from '../constants'
 import {
   convertChainIdToChainView,
   encodeBase64,
   getVersionSdk,
   isObject,
-} from 'lib/function'
+} from '../function'
 import {
   Caveat,
   I_TYPE_URL,
@@ -27,9 +27,12 @@ import {
   TYPE_ERROR,
   TYPE_REQUEST,
   WalletProvider,
-} from 'lib/web3/type'
+  MyPasskeyWalletProviderProps,
+  ProviderConnectInfo,
+  RpcUrlMap,
+} from './type'
 import { isMobile } from 'react-device-detect'
-import { createProviderRpcError } from 'lib/web3/errors'
+import { createProviderRpcError } from './errors'
 import EventEmitter from 'eventemitter3'
 
 /**

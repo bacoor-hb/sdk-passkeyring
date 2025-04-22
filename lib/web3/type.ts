@@ -1,4 +1,3 @@
-import { RPC_DEFAULT } from './constants'
 
 export interface WalletProvider {
   name: string; // Tên nhà cung cấp

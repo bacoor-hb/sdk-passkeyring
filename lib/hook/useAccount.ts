@@ -1,5 +1,5 @@
 import { Account } from './../types/index'
-import { AccountContext } from 'lib/Components/AccountProvider'
+import { AccountContext } from '../Components/AccountProvider'
 import React, { useContext } from 'react'
 
 export const useAccount = () => {
