@@ -18,7 +18,9 @@ import {
 } from 'viem/chains'
 import { Buffer as Buffer2 } from 'buffer'
 
-window.Buffer = window.Buffer || Buffer2
+if (typeof window !== 'undefined') {
+  window.Buffer = window.Buffer || Buffer2
+}
 
 declare global {
   interface Window {
