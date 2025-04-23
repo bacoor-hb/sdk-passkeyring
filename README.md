@@ -78,7 +78,7 @@ export const appKit = createAppKit({
 ```
 
 ## Trigger the modal
-> For version < 2.6.0 you need add `<passkey-provider />` to your html file,for version ≥ 2.6.0 then you does not need anything else, remove it if you added it
+> For version < 2.6.0 you need add `<passkey-provider />` to your html file, for version ≥ 2.6.0 then you does not need anything else, remove it if you added it
 
 > Full html file at this example at [/index.html](index.html)
 
