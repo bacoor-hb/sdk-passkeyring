@@ -36,7 +36,7 @@ For version ≥2.6.0
 ...
 import { createAppKit } from '@reown/appkit'
 // This import is required to inject global html tag into the app
-import { createPasskeyProvider } from "sdk-v2-meteornrun-decard";
+import { createPasskeyDecardProvider } from "sdk-v2-meteornrun-decard";
 ...
 
 export const appKit = createAppKit({
@@ -46,9 +46,9 @@ export const appKit = createAppKit({
 })
 
 
-createPasskeyProvider()
+createPasskeyDecardProvider()
 //You can also custom config, example rpcUrl:
-// createPasskeyProvider({
+// createPasskeyDecardProvider({
 //     rpcUrl: {
 //       1: 'https://ethereum-rpc.publicnode.com',
 //       137: 'https://polygon-bor-rpc.publicnode.com',
