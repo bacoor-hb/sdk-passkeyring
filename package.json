@@ -1,6 +1,6 @@
 {
   "name": "sdk-v2-keyringpasskeywallet",
-  "version": "2.5.13",
+  "version": "2.6.0",
   "description": "sdk passkeyring to connect smart account",
   "license": "MIT",
   "main": "./dist/main.cjs.js",
@@ -44,6 +44,7 @@
   },
   "devDependencies": {
     "@types/node": "^22.14.1",
+    "@types/react": "^19.1.2",
     "@types/react-dom": "17.0.13",
     "@vitejs/plugin-react": "1.2.0",
     "babel-eslint": "10.1.0",
@@ -67,6 +68,7 @@
     "@webcomponents/custom-elements": "^1.6.0",
     "autoprefixer": "^10.4.20",
     "bignumber.js": "^9.1.2",
+    "buffer": "^6.0.3",
     "ethers": "5.7.2",
     "eventemitter3": "^5.0.1",
     "postcss": "^8.4.47",

@@ -1,20 +1,33 @@
 'use client'
-import React, { ReactNode, useEffect } from 'react'
+import React, { useEffect } from 'react'
+import type { JSX } from 'react'
 
 import '../../styles/index.css'
-import AccountProvider from 'lib/Components/AccountProvider'
-import { getVersionSdk, onPageLoad } from 'lib/function'
-import { TYPE_CLOSE_POPUP_GROUP_SLUG } from 'lib/constants'
+import AccountProvider from '../AccountProvider'
+import { getVersionSdk, onPageLoad } from '../../function'
+import { TYPE_CLOSE_POPUP_GROUP_SLUG } from '../../constants'
+import { PasskeyProviderProps } from './types'
 
-interface PasskeyProviderProps {
-  children: ReactNode;
-  config?: any;
-}
-
-const PasskeyProvider = ({ children, config = {} }: PasskeyProviderProps) => {
+/**
+ * PasskeyProvider is a React component that wraps its children
+ * and initializes various side effects related to the SDK and browser events.
+ *
+ * @param {PasskeyProviderProps} props - The props for the PasskeyProvider component.
+ * @param {React.ReactNode} props.children - The child components to be rendered within the provider.
+ * @param {object} [props.config={}] - Optional configuration object passed to the `onPageLoad` function.
+ *
+ * @remarks
+ * - On mount, it triggers the `onPageLoad` function with the provided `config`.
+ * - It attempts to retrieve and log the SDK version using `getVersionSdk`.
+ * - It sets up a `beforeunload` event listener to send a message when the page is about to unload.
+ *
+ * @returns {JSX.Element} A React element wrapping the children
+ */
+const PasskeyProvider = ({ children, config = {} }: PasskeyProviderProps): JSX.Element => {
   useEffect(() => {
     onPageLoad(config)
   }, [config])
+
   useEffect(() => {
     try {
       const version = getVersionSdk()

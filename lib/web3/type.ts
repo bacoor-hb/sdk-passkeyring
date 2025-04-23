@@ -1,10 +1,10 @@
 export interface WalletProvider {
-  name: string; // Tên nhà cung cấp
-  icon: string; // URL đến biểu tượng nhà cung cấp
-  uuid: string; // UUID duy nhất
-  version: string; // Phiên bản nhà cung cấp
+  name: string; // Provider name
+  icon: string; // URL to the provider's icon
+  uuid: string; // Unique UUID
+  version: string; // Provider version
   signer: any;
-  isMetaMask?: boolean; // Có phải là MetaMask không
+  isMetaMask?: boolean; // Is it MetaMask
   request: (args: { method: string; params?: any[] }) => Promise<any>;
   on?: (event: string, handler: (...args: any[]) => void) => void;
   removeListener?(event: string, listener: (...args: any[]) => void): void;
@@ -19,7 +19,7 @@ export interface RequestArguments {
 interface EthereumWindow extends Window {
   ethereum?: {
     providers?: WalletProvider[];
-    [key: string]: any; // Các thuộc tính bổ sung
+    [key: string]: any; // Additional properties
   };
 }
 
@@ -61,4 +61,50 @@ export const TYPE_ERROR: Record<
   I_TYPE_ERROR
 > = {
   ERROR_TRANSACTION: 'ERROR_TRANSACTION',
+}
+
+export interface Caveat {
+  type: string;
+  value: any;
+}
+
+export interface Permission {
+  invoker: string;
+  parentCapability: string;
+  caveats: Caveat[];
+}
+
+export interface PermissionRequest {
+  [methodName: string]: {
+    [caveatName: string]: any;
+  };
+}
+
+export interface RequestedPermission {
+  parentCapability: string;
+  date?: number;
+}
+
+export interface ProviderConnectInfo {
+  readonly chainId: string;
+}
+
+export type RpcUrlMap = {
+  [key in number]: string
+}
+
+export type Metadata = {
+  name: string;
+  description: string;
+  url: string;
+  icons: string[];
+};
+
+export interface ProviderConfig {
+  rpcUrl?: RpcUrlMap ;
+  metadata?: Metadata;
+}
+
+export interface MyPasskeyWalletProviderProps {
+  config?: ProviderConfig;
 }

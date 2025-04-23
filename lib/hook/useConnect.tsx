@@ -1,9 +1,9 @@
-import { AccountContext } from 'lib/Components/AccountProvider'
-import { GROUP_SLUG, STORAGE_KEY, URL_PASSKEY } from 'lib/constants'
-import { Account } from 'lib/types'
+import { AccountContext } from '../Components/AccountProvider'
+import { GROUP_SLUG, STORAGE_KEY, URL_PASSKEY } from '../constants'
+import { Account } from '../types'
 import { useContext, useEffect, useRef, useState } from 'react'
 import { isMobile } from 'react-device-detect'
-import { useConnectWindow } from 'lib/context/ConnectWindowContext'
+import { useConnectWindow } from '../context/ConnectWindowContext'
 
 type TypeConnect = string | undefined
 

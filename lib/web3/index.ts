@@ -1,4 +1,5 @@
-import { createPublicClient, http } from 'viem'
+
+import { createPublicClient, http, maxUint256 } from 'viem'
 import { ethers } from 'ethers'
 import {
   chainsSupported,
@@ -9,40 +10,102 @@ import {
   STORAGE_KEY,
   TYPE_CLOSE_POPUP_GROUP_SLUG,
   URL_PASSKEY,
-} from 'lib/constants'
+} from '../constants'
 import {
   convertChainIdToChainView,
-  decodeBase64,
   encodeBase64,
   getVersionSdk,
   isObject,
-  sleep,
-} from 'lib/function'
+} from '../function'
 import {
-  EventHandler,
+  Caveat,
   I_TYPE_URL,
+  Permission,
+  PermissionRequest,
   RequestArguments,
+  RequestedPermission,
   TYPE_ERROR,
   TYPE_REQUEST,
   WalletProvider,
-} from 'lib/web3/type'
+  MyPasskeyWalletProviderProps,
+  ProviderConnectInfo,
+  RpcUrlMap,
+  Metadata,
+} from './type'
 import { isMobile } from 'react-device-detect'
-import { createProviderRpcError } from 'lib/web3/errors'
+import { createProviderRpcError } from './errors'
 import EventEmitter from 'eventemitter3'
 
-interface MyPasskeyWalletProviderProps {
-  config?: any;
-}
-
-class MyPasskeyWalletProvider extends EventEmitter implements WalletProvider {
+/**
+ * Passkey-based Ethereum wallet provider.
+ *
+ * Example usage:
+ * ```ts
+ * const provider = new MyPasskeyWalletProvider();
+ * ```
+ * or with custom RPC URLs:
+ * ```ts
+ * const provider = new MyPasskeyWalletProvider({
+ *   config: {
+ *     rpcUrl: {
+ *      1: 'https://ethereum-rpc.publicnode.com',
+ *      137: 'https://polygon-bor-rpc.publicnode.com',
+ *      56: 'https://bsc-rpc.publicnode.com',
+ *      42161: 'https://arbitrum-one-rpc.publicnode.com',
+ *      8453: 'https://base-rpc.publicnode.com',
+ *      10: 'https://optimism-rpc.publicnode.com',
+ *     }
+ *   }
+ * });
+ * ```
+ * The request method is intended as a transport- and protocol-agnostic wrapper function for Remote Procedure Calls (RPCs). [EIP-1193](https://eips.ethereum.org/EIPS/eip-1193)
+ *
+ * Example method: `connect` to connect the wallet.
+ * ```ts
+ *  try {
+ *   const accounts = await provider.request({ method: 'eth_requestAccounts' })
+ *   console.log("🧩 eth_requestAccounts result:", accounts)
+ * } catch (err) {
+ *   console.log("⚠️ eth_requestAccounts error:", err)
+ * }
+ * ```
+ * Some events you can listen to:
+ * ```ts
+ * provider.on('connect', (info) => {
+ *  console.log("📶 Event: connect", info)
+ *})
+ *
+ * ```
+ * ```ts
+ * provider.on('accountsChanged', (accounts) => {
+ *  console.log("👤 Event: accountsChanged", accounts)
+ * })
+ *
+ * ```
+ * ```ts
+ * provider.on('chainChanged', (chainId) => {
+ *  console.log("🔗 Event: chainChanged", chainId)
+ * })
+ *
+ * ```
+ *```ts
+ * provider.on('disconnect', (error) => {
+ *  console.log("❌ Event: disconnect", error)
+ * })
+ *
+ * ```
+ *
+ */
+export class MyPasskeyWalletProvider extends EventEmitter implements WalletProvider {
   name: string
   icon: string
   uuid: string
   version: string
   signer: any
   isMetaMask?: boolean
-  private rpcUrl: { [key: number]: string }
-  private permissions: Record<string, boolean> = {}
+  private rpcUrl: RpcUrlMap
+  private metadata?: Metadata // Add metadata property
+  private permissions: Permission[] = []
   private accounts: string[] = []
   private chainId: (typeof chainsSupported)[number] = '0x1' // Ethereum Mainnet
   private currentPopup: Window | null = null // Track the currently opened popup
@@ -52,6 +115,10 @@ class MyPasskeyWalletProvider extends EventEmitter implements WalletProvider {
     this.rpcUrl = isObject(props?.config?.rpcUrl, true)
       ? { ...RPC_DEFAULT, ...props?.config?.rpcUrl }
       : RPC_DEFAULT
+    if (isObject(props?.config?.metadata, true)) {
+      this.metadata = props?.config?.metadata
+    }
+
     this.name = infoGroup[GROUP_SLUG].name
     this.icon = infoGroup[GROUP_SLUG].icon
     this.uuid = infoGroup[GROUP_SLUG].uuid
@@ -63,6 +130,7 @@ class MyPasskeyWalletProvider extends EventEmitter implements WalletProvider {
   private async init () {
     try {
       if (this.accounts.length === 0) {
+        // get account storage
         const accountPasskey = localStorage.getItem(
           STORAGE_KEY.ACCOUNT_PASSKEY,
         )
@@ -72,12 +140,25 @@ class MyPasskeyWalletProvider extends EventEmitter implements WalletProvider {
           this.chainId = accountPasskeyParse.chainId || this.chainId
           this.version = getVersionSdk(false)
           await this.createProviderWeb3()
-          this.emit('connect', { chainId: this.chainId })
+
+          const providerInfo: ProviderConnectInfo = { chainId: this.chainId }
+
           this.emit('accountsChanged', this.accounts)
           this.emit('chainChanged', this.chainId)
+          this.emit('connect', providerInfo)
+        }
+
+        // get Permissions storage
+        const permissionsStorage = localStorage.getItem(
+          STORAGE_KEY.PERMISSIONS_PASSKEY,
+        )
+        if (permissionsStorage) {
+          const permissionsParse = JSON.parse(permissionsStorage)
+          this.permissions = permissionsParse
         }
       }
-      const formatNameGroup = GROUP_SLUG.charAt(0).toUpperCase() + GROUP_SLUG.slice(1)
+      let formatNameGroup = GROUP_SLUG.charAt(0).toUpperCase() + GROUP_SLUG.slice(1)
+      formatNameGroup = formatNameGroup.replace(/-/g, '')
       ;(this as any)[`is${formatNameGroup}`] = true
     } catch (error) {
       console.log('🚀 ~ init ~ error:', error)
@@ -89,7 +170,9 @@ class MyPasskeyWalletProvider extends EventEmitter implements WalletProvider {
     console.log('🚀 ~ MyPasskeyWalletProvider ~ request ~ params', params)
     switch (method) {
       case 'wallet_requestPermissions':
-        return this.requestPermissions(params)
+        return this.requestPermissions(params as unknown as PermissionRequest)
+      case 'wallet_getPermissions':
+        return this.getPermissions()
       case 'eth_requestAccounts':
         return this.enable()
       case 'eth_accounts':
@@ -149,55 +232,59 @@ class MyPasskeyWalletProvider extends EventEmitter implements WalletProvider {
         return this.ecRecover(params)
       case 'personal_ecRecover':
         return this.personalEcRecover(params)
-      case 'wallet_grantPermissions':
-        return this.grantPermissions(params)
       default:
         return this.proxyRequest(method, params)
     }
   }
 
-  private async requestPermissions (params: any[]): Promise<any> {
-    // Define supported permissions
-    const supportedPermissions = ['eth_accounts', 'eth_chainId']
+  private getInvoker (): string {
+    return window.location.origin
+  }
 
-    // Validate requested permissions
-    const requestedPermissions =
-      params[0]?.permissions ||
-      (params?.length > 0 && params?.map((obj) => Object.keys(obj)[0])) ||
-      []
-    const invalidPermissions = requestedPermissions.filter(
-      (perm: string) => !supportedPermissions.includes(perm),
-    )
+  async requestPermissions (request: PermissionRequest): Promise<RequestedPermission[]> {
+    // Here, you should show a popup/UX to ask user to approve permissions
+    const userApproved = true // Simulate user approval (replace with actual UX)
 
-    if (invalidPermissions.length > 0) {
-      throw new Error(
-        `Unsupported permissions requested: ${invalidPermissions.join(', ')}`,
+    if (!userApproved) {
+      throw createProviderRpcError(
+        'User rejected the request.',
+        4001,
       )
     }
 
-    // Simulate user approval (replace with actual UI prompt for production)
-    const grantedPermissions = requestedPermissions.reduce(
-      (acc: Record<string, boolean>, perm: string) => {
-        acc[perm] = true
-        return acc
-      },
-      {},
-    )
+    const invoker = this.getInvoker()
+    const newPermissions: Permission[] = []
 
-    // Persist granted permissions
-    this.permissions = { ...this.permissions, ...grantedPermissions }
+    for (const [method, caveatsObject] of Object.entries(request)) {
+      const caveats: Caveat[] = []
+
+      for (const [type, value] of Object.entries(caveatsObject)) {
+        caveats.push({ type, value })
+      }
+
+      newPermissions.push({
+        invoker,
+        parentCapability: method,
+        caveats,
+      })
+    }
+
+    // Merge or replace existing permissions
+    this.permissions = [...this.permissions.filter((p: { parentCapability: string }) => !newPermissions.some(np => np.parentCapability === p.parentCapability)), ...newPermissions]
+
     localStorage.setItem(
       STORAGE_KEY.PERMISSIONS_PASSKEY,
       JSON.stringify(this.permissions),
     )
 
-    return {
-      permissions: this.permissions,
-    }
+    return newPermissions.map(p => ({
+      parentCapability: p.parentCapability,
+      date: Date.now(),
+    }))
   }
 
   // Add a method to retrieve current permissions
-  private getPermissions (): Record<string, boolean> {
+  private getPermissions (): Permission[] {
     return this.permissions
   }
 
@@ -254,6 +341,7 @@ class MyPasskeyWalletProvider extends EventEmitter implements WalletProvider {
           infoPageConnected,
           id: Date.now(),
           type_request: type,
+          metadata: this.metadata || {},
         }
       }
 
@@ -353,8 +441,12 @@ class MyPasskeyWalletProvider extends EventEmitter implements WalletProvider {
 
       await this.createProviderWeb3()
 
-      this.emit('connect', { chainId: this.chainId })
+      const providerInfo: ProviderConnectInfo = { chainId: this.chainId }
+
       this.emit('accountsChanged', this.accounts)
+      this.emit('chainChanged', this.chainId)
+      this.emit('connect', providerInfo)
+
       return this.accounts
     } catch (error) {
       console.error('Error during enable:', error)
@@ -367,6 +459,10 @@ class MyPasskeyWalletProvider extends EventEmitter implements WalletProvider {
     localStorage.removeItem(STORAGE_KEY.ACCOUNT_PASSKEY)
     localStorage.removeItem(STORAGE_KEY.PERMISSIONS_PASSKEY)
 
+    if (this.currentPopup && !this.currentPopup.closed) {
+      this.currentPopup.close()
+    }
+
     const message = createProviderRpcError(
       'The Provider is disconnected',
       4900,
@@ -374,10 +470,6 @@ class MyPasskeyWalletProvider extends EventEmitter implements WalletProvider {
 
     this.emit('accountsChanged', [])
     this.emit('disconnect', message)
-
-    if (this.currentPopup && !this.currentPopup.closed) {
-      this.currentPopup.close()
-    }
   }
 
   selectedAddress = (): string | null => {
@@ -519,33 +611,61 @@ class MyPasskeyWalletProvider extends EventEmitter implements WalletProvider {
   private async switchEthereumChain (params: any[]): Promise<void> {
     const chainId = params[0].chainId
 
-    if (!chainsSupported.includes(chainId)) {
-      throw createProviderRpcError(`Unsupported chainId: ${chainId}`, 4001)
+    const chainIdHex = (typeof chainId === 'string' && chainId.startsWith('0x')
+      ? chainId
+      : `0x${parseInt(chainId).toString(16)}`) as (typeof chainsSupported)[number]
+
+    if (!chainsSupported.includes(chainIdHex)) {
+      throw createProviderRpcError(`Unsupported chainId: ${chainIdHex}`, 4001)
     }
 
-    this.chainId = chainId
+    this.chainId = chainIdHex
+
     localStorage.setItem(
       STORAGE_KEY.ACCOUNT_PASSKEY,
-      JSON.stringify({ address: this.accounts[0], chainId }),
+      JSON.stringify({ address: this.accounts[0], chainId: chainIdHex }),
     )
 
     // Kích hoạt sự kiện chainChanged
-    this.emit('chainChanged', chainId)
+    this.emit('chainChanged', chainIdHex)
   }
 
   private async addEthereumChain (params: any[]): Promise<void> {
     throw createProviderRpcError('Unsupported method addEthereumChain', 4200)
   }
 
-  private async estimateGas (params: any[]): Promise<string> {
-    return '0x0'
+  private async estimateGas (params: any[]): Promise<any> {
+    try {
+      const publicClient = await this.createPublicClientViem()
+      const rawTransaction = params[0]
+      const account = rawTransaction?.from || this.accounts[0]
+
+      const data = await publicClient.estimateGas({
+        account,
+        ...rawTransaction,
+        stateOverride: [
+          {
+            address: account,
+            balance: maxUint256,
+          },
+        ],
+      })
+
+      return data
+    } catch (error) {
+      throw createProviderRpcError(
+        'Error in estimateGas',
+        4001,
+        error,
+      )
+    }
   }
 
   private async createProviderWeb3 (url?: string | undefined): Promise<any> {
     const rpc =
       url ||
       this.rpcUrl?.[Number(this.chainId)] ||
-      RPC_DEFAULT[Number(this.chainId) as keyof typeof RPC_DEFAULT]
+      RPC_DEFAULT[Number(this.chainId)]
     const provider = new ethers.providers.JsonRpcProvider(rpc)
     this.signer = provider.getSigner()
     return provider
@@ -764,6 +884,15 @@ class MyPasskeyWalletProvider extends EventEmitter implements WalletProvider {
     }
   }
 
+  private async createPublicClientViem () {
+    const provider = await this.createProviderWeb3()
+    const client = createPublicClient({
+      chain: convertChainIdToChainView(this.chainId),
+      transport: http(provider.connection.url),
+    })
+    return client
+  }
+
   private async proxyRequest (method: string, params: any[]): Promise<any> {
     try {
       const provider = await this.createProviderWeb3()
@@ -779,6 +908,7 @@ class MyPasskeyWalletProvider extends EventEmitter implements WalletProvider {
 
       return res
     } catch (error) {
+      console.log('🚀 ~ MyPasskeyWalletProvider ~ proxyRequest ~ error:', error)
       throw createProviderRpcError(
         `Error in proxyRequest: method ${method}`,
         4001,
@@ -801,11 +931,3 @@ class MyPasskeyWalletProvider extends EventEmitter implements WalletProvider {
     return super.removeListener(event, listener)
   }
 }
-
-const isWeb3Injected = () => {
-  return (
-    typeof window !== 'undefined' && typeof window?.ethereum !== 'undefined'
-  )
-}
-
-export { MyPasskeyWalletProvider, isWeb3Injected }
