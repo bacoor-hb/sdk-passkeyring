@@ -48,7 +48,7 @@ export const infoGroup: { [key in SlugGroup]: EIP6963ProviderInfo } = {
     uuid: 'ff2bd4ef-d062-4a53-a9e7-7f74e85389f5',
     name: 'Eggle Gamewallet DeCard',
     icon: 'https://ipfs.pantograph.app/ipfs/QmUn7MnyA9HWfHNRG7oLTweNG93ztaErFdcg36Y2uxENUu?filename=noti.png',
-    rdns: 'co.bacoor.egglegamewalletDecard',
+    rdns: 'co.bacoor.egglegamewallet-decard',
     isDecard: true,
   },
   egglepasskeywallet: {
@@ -61,7 +61,7 @@ export const infoGroup: { [key in SlugGroup]: EIP6963ProviderInfo } = {
     uuid: '192ea6c6-d30a-4f3f-ab8f-aedb1dc5a7fd',
     name: 'DECARD EGGLE GAME WALLET',
     icon: 'https://ipfs.pantograph.app/ipfs/QmUn7MnyA9HWfHNRG7oLTweNG93ztaErFdcg36Y2uxENUu?filename=noti.png',
-    rdns: 'co.bacoor.egglepasskeywalletDecard',
+    rdns: 'co.bacoor.egglepasskeywallet-decard',
     isDecard: true,
   },
   passkeywallet: {
@@ -88,7 +88,7 @@ export const infoGroup: { [key in SlugGroup]: EIP6963ProviderInfo } = {
     uuid: '79169e71-a1c3-4ba1-a32c-4f9206485af9',
     name: 'Meteorn Wallet DeCard',
     icon: 'https://ipfs.pantograph.app/ipfs/Qmao1Uf2m1bRGHLy66AnLJuWtBWjFLhDpbBWBYGrUtB1qV?filename=notiDataIcon_Meteorn.png',
-    rdns: 'co.bacoor.meteornrunDecard',
+    rdns: 'co.bacoor.meteornrun-decard',
     isDecard: true,
   },
   meteornrun: {
@@ -107,7 +107,7 @@ export const infoGroup: { [key in SlugGroup]: EIP6963ProviderInfo } = {
     uuid: 'dbb743b3-14dd-4dd8-b34b-f405d2c03249',
     name: 'CyberStep Wallet DeCard',
     icon: 'https://ipfs.pantograph.app/ipfs/QmQArGRp6XiP9nnqNruti6vw3gQuHyDMsbSEeRhvkfBDrK?filename=notiDataIcon_cyberstep.png',
-    rdns: 'co.bacoor.cyberstepwalletDecard',
+    rdns: 'co.bacoor.cyberstepwallet-decard',
     isDecard: true,
   },
 }
