@@ -17,7 +17,7 @@ yarn add @reown/appkit @reown/appkit-adapter-wagmi wagmi viem
 yarn add sdk-v2-meteornrun@^2.5
 ```
 
-**Pleae note that sdk-v2-meteornrun supports the following chains**
+**Please note that sdk-v2-meteornrun supports the following chains**
 ```
 Ethereum:         '0x1'
 OP Mainnet:       '0xa'
@@ -50,7 +50,7 @@ export const appKit = createAppKit({
 > Full html file at this example at [/index.html](index.html)
 
 
-> Load your javacript config file `main.js` here
+> Load your javascript config file `main.js` here
 > Full code for `main.js` file at this example at [/src/main.js](/src/main.js)
 ```html
 <!doctype html>
