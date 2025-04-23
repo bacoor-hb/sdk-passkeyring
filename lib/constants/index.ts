@@ -29,7 +29,7 @@ const rdnsSdkDeCard = 'app.keyring.smart'
  * Represents the slug identifier for a specific group.
  * This constant is used to uniquely identify the group within the system.
  */
-export const GROUP_SLUG: SlugGroup = 'passkeywallet'
+export const GROUP_SLUG: SlugGroup = 'cyberstepwallet'
 
 /**
  * Represents the current version of the SDK.
