@@ -1,9 +1,9 @@
-# sdk-v2-meteornrun
+# sdk-v2-egglegamewallet
 
-## This docs is for `React.js` and `Next.js`, if you are using Javacript, please refer to  [sdk-v2-meteornrun for JavaScript](https://github.com/bacoor-hb/sdk-passkeyring/tree/javascript-integration/sdk-v2-meteornrun)
+## This docs is for `React.js` and `Next.js`, if you are using Javacript, please refer to  [sdk-v2-egglegamewallet for JavaScript](https://github.com/bacoor-hb/sdk-passkeyring/tree/javascript-integration/sdk-v2-egglegamewallet)
 
 ## Introduction:
-> The `sdk-v2-meteornrun` SDK is built on `React.js`, provides a straightforward way to connect wallets using passkeys, allowing interaction with smart accounts. It is pre-configured with AppKit (web3modal), making it easy to integrate into your projects.
+> The `sdk-v2-egglegamewallet` SDK is built on `React.js`, provides a straightforward way to connect wallets using passkeys, allowing interaction with smart accounts. It is pre-configured with AppKit (web3modal), making it easy to integrate into your projects.
 
 
 ## Prerequisites:
@@ -35,12 +35,12 @@ const modal = createAppKit({
 
 Install the SDK using npm:
 ```bash
-npm install --save sdk-v2-meteornrun
+npm install --save sdk-v2-egglegamewallet
 ```
 or using yarn:
 
 ```bash
-yarn add sdk-v2-meteornrun
+yarn add sdk-v2-egglegamewallet
 ```
 
 
@@ -50,7 +50,7 @@ yarn add sdk-v2-meteornrun
 // MUST HAVE - Use this in the first file to run (index.js)
 
 import React from "react";
-import { PasskeyProvider } from "sdk-v2-meteornrun";
+import { PasskeyProvider } from "sdk-v2-egglegamewallet";
 
 const App = ({ children }) => {
   return <PasskeyProvider>{children}</PasskeyProvider>;
@@ -102,7 +102,7 @@ PasskeyProvider is a wrapper that supports using wallets.
 
 ```jsx
 
-import { PasskeyProvider } from "sdk-v2-meteornrun";
+import { PasskeyProvider } from "sdk-v2-egglegamewallet";
 
   //Example
   <PasskeyProvider
@@ -128,7 +128,7 @@ Information about the wallet.
 
 
 ```jsx
-import { infoWallet } from "sdk-v2-meteornrun";
+import { infoWallet } from "sdk-v2-egglegamewallet";
 
   //example
   <div>
@@ -152,7 +152,7 @@ Function to check if the browser supports Web3 provider injection.
 
 
 ```jsx
-import { isWeb3Injected } from "sdk-v2-meteornrun";
+import { isWeb3Injected } from "sdk-v2-egglegamewallet";
 
   //Example
   <div>
@@ -191,7 +191,7 @@ Or
 ```jsx
 // Step 1: Create a button to connect
 import React from "react";
-import { infoWallet } from "sdk-v2-meteornrun";
+import { infoWallet } from "sdk-v2-egglegamewallet";
 import { useConnect, useConnectors, useSwitchChain } from "wagmi";
 
 const ButtonConnectWallet = () => {
@@ -241,7 +241,7 @@ export default ButtonConnectWallet;
 // Step 2: Use the connect button
 
 import React from "react";
-import { isWeb3Injected } from "sdk-v2-meteornrun";
+import { isWeb3Injected } from "sdk-v2-egglegamewallet";
 import ButtonConnectWallet from "./ButtonConnectWallet";// step 1
 
 const YourComponent = () => {
