@@ -7,7 +7,7 @@ import { EIP6963ProviderInfo, getURLPasskey } from '../function'
  * Represents the slug identifier for a specific group.
  * This constant is used to uniquely identify the group within the system.
  */
-export const GROUP_SLUG: SlugGroup = 'cyberstepwallet'
+export const GROUP_SLUG: SlugGroup = 'cyberstepwallet-decard'
 
 /**
  * Represents the current version of the SDK.
