@@ -87,20 +87,7 @@ export const appKit = createAppKit({
 > Load your javascript config file `main.js` here
 > Full code for `main.js` file at this example at [/src/main.js](/src/main.js)
 
-For version < 2.6.0
-```html
-<!doctype html>
-<html lang="en">
-  ...
-  <body>
-      ...
-        <appkit-button />
-        <passkey-decard-provider />//add this line
-      ...
-      <script type="module" src="/src/main.js"></script>
-  </body>
-</html>
-```
+
 For version ≥ 2.6.0
 
 ```html
@@ -117,6 +104,20 @@ For version ≥ 2.6.0
 </html>
 ```
 
+For version < 2.6.0
+```html
+<!doctype html>
+<html lang="en">
+  ...
+  <body>
+      ...
+        <appkit-button />
+        <passkey-decard-provider />//add this line
+      ...
+      <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
+```
 ## Blockchain Interaction
 > You can use `provider.request()` method to call Ethereum JSON-RPC API
 > For example you can call `eth_getBalance` like below
