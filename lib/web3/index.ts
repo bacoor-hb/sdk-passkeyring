@@ -378,7 +378,7 @@ export class MyPasskeyWalletProvider extends EventEmitter implements WalletProvi
       )
 
       if (!popup) {
-        reject(new Error('Pop-up window failed to open'))
+        reject(createProviderRpcError('Pop-up window failed to open', 4001))
         return
       }
 
@@ -400,7 +400,7 @@ export class MyPasskeyWalletProvider extends EventEmitter implements WalletProvi
       const interval = setInterval(() => {
         if (popup.closed) {
           clearInterval(interval)
-          reject(new Error('Popup closed before completing authentication'))
+          reject(createProviderRpcError('User rejected the request', 4001))
         }
       }, 1000)
 
@@ -450,7 +450,7 @@ export class MyPasskeyWalletProvider extends EventEmitter implements WalletProvi
       return this.accounts
     } catch (error) {
       console.error('Error during enable:', error)
-      throw error
+      throw createProviderRpcError('An error occurred while enabling the provider', 4001)
     }
   }
 
@@ -500,7 +500,11 @@ export class MyPasskeyWalletProvider extends EventEmitter implements WalletProvi
     const { data } = await this.openPopup(typeRequest, { transaction: tx })
 
     if (data.type === TYPE_ERROR.ERROR_TRANSACTION) {
-      throw new Error(data.payload?.message || 'Error send transaction')
+      throw createProviderRpcError(
+        data?.payload?.message || 'Error send transaction',
+        data?.payload?.code || 4001,
+        data?.payload?.data,
+      )
     }
     if (data.type === typeRequest) {
       return data?.payload?.hash
@@ -600,12 +604,12 @@ export class MyPasskeyWalletProvider extends EventEmitter implements WalletProvi
 
   private async subscribe (params: any[]): Promise<string> {
     // return 'subscriptionId'
-    throw new Error('Unsupported method subscribe')
+    throw createProviderRpcError('Unsupported method subscribe', 4200)
   }
 
   private async unsubscribe (params: any[]): Promise<boolean> {
     // return true
-    throw new Error('Unsupported method unsubscribe')
+    throw createProviderRpcError('Unsupported method unsubscribe', 4200)
   }
 
   private async switchEthereumChain (params: any[]): Promise<void> {

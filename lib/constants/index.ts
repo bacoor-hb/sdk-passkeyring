@@ -4,28 +4,6 @@ import { EIP6963ProviderInfo, getURLPasskey } from '../function'
 // Generate uuidV4  ->   https://www.uuidgenerator.net/version4
 
 /**
- * A unique identifier for the SDK, represented as a UUID string.
- * This constant is used to uniquely identify the SDK instance or version.
- */
-const uuidSdk = 'f5316409-9ad8-451c-8aba-90835c0a726d'
-/**
- * A reverse domain name string used as a unique identifier for the SDK.
- * This follows the reverse domain name system (RDNS) convention.
- */
-const rdnsSdk = 'co.bacoor.keyring'
-
-/**
- * A unique identifier for the SDK DE Card.
- * This UUID is used to distinguish the SDK DE Card in the system.
- */
-const uuidSdkDeCard = '026dbbaa-7d0c-4391-8213-2a28575f7e2a'
-/**
- * A reverse domain name system (RDNS) identifier used for the SDK's smart keyring application.
- * This constant follows the RDNS naming convention to ensure uniqueness and proper namespace organization.
- */
-const rdnsSdkDeCard = 'app.keyring.smart'
-
-/**
  * Represents the slug identifier for a specific group.
  * This constant is used to uniquely identify the group within the system.
  */
@@ -35,7 +13,7 @@ export const GROUP_SLUG: SlugGroup = 'keyringpasskeywallet'
  * Represents the current version of the SDK.
  * This constant is used to track the version of the SDK being used.
  */
-export const SDK_VERSION = '2.6.0'
+export const SDK_VERSION = '2.6.2'
 
 /**
  * A constant object that maps `SlugGroup` keys to their corresponding `EIP6963ProviderInfo` details.
@@ -61,75 +39,75 @@ export const SDK_VERSION = '2.6.0'
  */
 export const infoGroup: { [key in SlugGroup]: EIP6963ProviderInfo } = {
   egglegamewallet: {
-    uuid: uuidSdk,
+    uuid: 'f5316409-9ad8-451c-8aba-90835c0a726d',
     name: 'Eggle Gamewallet',
     icon: 'https://ipfs.pantograph.app/ipfs/QmUn7MnyA9HWfHNRG7oLTweNG93ztaErFdcg36Y2uxENUu?filename=noti.png',
-    rdns: rdnsSdk,
+    rdns: 'co.bacoor.egglegamewallet',
   },
   'egglegamewallet-decard': {
-    uuid: uuidSdkDeCard,
+    uuid: 'ff2bd4ef-d062-4a53-a9e7-7f74e85389f5',
     name: 'Eggle Gamewallet DeCard',
     icon: 'https://ipfs.pantograph.app/ipfs/QmUn7MnyA9HWfHNRG7oLTweNG93ztaErFdcg36Y2uxENUu?filename=noti.png',
-    rdns: rdnsSdkDeCard,
+    rdns: 'co.bacoor.egglegamewallet-decard',
     isDecard: true,
   },
   egglepasskeywallet: {
-    uuid: uuidSdk,
+    uuid: '70cae094-5cff-4438-b143-46f6119366c2',
     name: 'EGGLE GAME WALLET',
     icon: 'https://ipfs.pantograph.app/ipfs/QmUn7MnyA9HWfHNRG7oLTweNG93ztaErFdcg36Y2uxENUu?filename=noti.png',
-    rdns: rdnsSdk,
+    rdns: 'co.bacoor.egglepasskeywallet',
   },
   'egglepasskeywallet-decard': {
-    uuid: uuidSdkDeCard,
+    uuid: '192ea6c6-d30a-4f3f-ab8f-aedb1dc5a7fd',
     name: 'DECARD EGGLE GAME WALLET',
     icon: 'https://ipfs.pantograph.app/ipfs/QmUn7MnyA9HWfHNRG7oLTweNG93ztaErFdcg36Y2uxENUu?filename=noti.png',
-    rdns: rdnsSdkDeCard,
+    rdns: 'co.bacoor.egglepasskeywallet-decard',
     isDecard: true,
   },
   passkeywallet: {
-    uuid: uuidSdk,
+    uuid: 'e9bdd6be-fbe7-4b90-983c-6ad707027d4a',
     name: 'KEYRING SMART',
     icon: 'https://ipfs.pantograph.app/ipfs/QmWdV4p9FvAUKEnGHefwsYxUrtY8qyEX61xbHdGXworS8k?filename=icon%20NOTI.png',
-    rdns: rdnsSdk,
+    rdns: 'co.bacoor.passkeywallet',
   },
   keyringsmart: {
-    uuid: uuidSdkDeCard,
+    uuid: '234826c9-7cdb-4633-9ad9-b7fcf36eaefc',
     name: 'KEYRING SMART DECARD',
     icon: 'https://ipfs.pantograph.app/ipfs/QmWdV4p9FvAUKEnGHefwsYxUrtY8qyEX61xbHdGXworS8k?filename=icon%20NOTI.png',
-    rdns: rdnsSdkDeCard,
+    rdns: 'co.bacoor.keyringsmart',
     isDecard: true,
   },
   keyringpasskeywallet: {
-    uuid: uuidSdk,
+    uuid: '44340e62-7f30-4b4c-ac42-9d8185fcb43b',
     name: 'KEYRING SMART',
     icon: 'https://ipfs.pantograph.app/ipfs/QmWdV4p9FvAUKEnGHefwsYxUrtY8qyEX61xbHdGXworS8k?filename=icon%20NOTI.png',
-    rdns: rdnsSdk,
+    rdns: 'co.bacoor.keyringpasskeywallet',
   },
 
   'meteornrun-decard': {
-    uuid: uuidSdkDeCard,
+    uuid: '79169e71-a1c3-4ba1-a32c-4f9206485af9',
     name: 'Meteorn Wallet DeCard',
     icon: 'https://ipfs.pantograph.app/ipfs/Qmao1Uf2m1bRGHLy66AnLJuWtBWjFLhDpbBWBYGrUtB1qV?filename=notiDataIcon_Meteorn.png',
-    rdns: rdnsSdkDeCard,
+    rdns: 'co.bacoor.meteornrun-decard',
     isDecard: true,
   },
   meteornrun: {
-    uuid: uuidSdk,
+    uuid: 'f2e5ef21-57e8-42e7-896c-78cf08e0038d',
     name: 'Meteorn Wallet',
     icon: 'https://ipfs.pantograph.app/ipfs/Qmao1Uf2m1bRGHLy66AnLJuWtBWjFLhDpbBWBYGrUtB1qV?filename=notiDataIcon_Meteorn.png',
-    rdns: rdnsSdk,
+    rdns: 'co.bacoor.meteornrun',
   },
   cyberstepwallet: {
-    uuid: uuidSdk,
+    uuid: 'bb39fdd2-392c-44d2-8793-0194e0f5a1b1',
     name: 'CyberStep Wallet',
     icon: 'https://ipfs.pantograph.app/ipfs/QmQArGRp6XiP9nnqNruti6vw3gQuHyDMsbSEeRhvkfBDrK?filename=notiDataIcon_cyberstep.png',
-    rdns: rdnsSdk,
+    rdns: 'co.bacoor.cyberstepwallet',
   },
   'cyberstepwallet-decard': {
-    uuid: uuidSdkDeCard,
+    uuid: 'dbb743b3-14dd-4dd8-b34b-f405d2c03249',
     name: 'CyberStep Wallet DeCard',
     icon: 'https://ipfs.pantograph.app/ipfs/QmQArGRp6XiP9nnqNruti6vw3gQuHyDMsbSEeRhvkfBDrK?filename=notiDataIcon_cyberstep.png',
-    rdns: rdnsSdkDeCard,
+    rdns: 'co.bacoor.cyberstepwallet-decard',
     isDecard: true,
   },
 }
