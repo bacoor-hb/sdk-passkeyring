@@ -7,13 +7,13 @@ import { EIP6963ProviderInfo, getURLPasskey } from '../function'
  * Represents the slug identifier for a specific group.
  * This constant is used to uniquely identify the group within the system.
  */
-export const GROUP_SLUG: SlugGroup = 'keyringpasskeywallet'
+export const GROUP_SLUG: SlugGroup = 'meteornrun'
 
 /**
  * Represents the current version of the SDK.
  * This constant is used to track the version of the SDK being used.
  */
-export const SDK_VERSION = '2.6.2'
+export const SDK_VERSION = '2.6.3'
 
 /**
  * A constant object that maps `SlugGroup` keys to their corresponding `EIP6963ProviderInfo` details.
@@ -86,15 +86,15 @@ export const infoGroup: { [key in SlugGroup]: EIP6963ProviderInfo } = {
 
   'meteornrun-decard': {
     uuid: '79169e71-a1c3-4ba1-a32c-4f9206485af9',
-    name: 'Meteorn Wallet DeCard',
-    icon: 'https://ipfs.pantograph.app/ipfs/Qmao1Uf2m1bRGHLy66AnLJuWtBWjFLhDpbBWBYGrUtB1qV?filename=notiDataIcon_Meteorn.png',
+    name: 'CosmoBridge DeCard',
+    icon: 'https://ipfs.pantograph.app/ipfs/QmYBQoHthPHV2ZyWT4mbPjHhkx8FKwMYdY5njEvzPeTyGr?filename=white_notiDataIcon_Cosmo%20Bridge.png',
     rdns: 'co.bacoor.meteornrun-decard',
     isDecard: true,
   },
   meteornrun: {
     uuid: 'f2e5ef21-57e8-42e7-896c-78cf08e0038d',
-    name: 'Meteorn Wallet',
-    icon: 'https://ipfs.pantograph.app/ipfs/Qmao1Uf2m1bRGHLy66AnLJuWtBWjFLhDpbBWBYGrUtB1qV?filename=notiDataIcon_Meteorn.png',
+    name: 'CosmoBridge',
+    icon: 'https://ipfs.pantograph.app/ipfs/QmYBQoHthPHV2ZyWT4mbPjHhkx8FKwMYdY5njEvzPeTyGr?filename=white_notiDataIcon_Cosmo%20Bridge.png',
     rdns: 'co.bacoor.meteornrun',
   },
   cyberstepwallet: {

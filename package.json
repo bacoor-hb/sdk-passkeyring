@@ -1,6 +1,6 @@
 {
-  "name": "sdk-v2-keyringpasskeywallet",
-  "version": "2.6.2",
+  "name": "sdk-v2-meteornrun",
+  "version": "2.6.3",
   "description": "sdk passkeyring to connect smart account",
   "license": "MIT",
   "main": "./dist/main.cjs.js",
