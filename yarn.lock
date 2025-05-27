@@ -3547,10 +3547,10 @@ scrypt-js@3.0.1:
   resolved "https://registry.yarnpkg.com/scrypt-js/-/scrypt-js-3.0.1.tgz#d314a57c2aef69d1ad98a138a21fe9eafa9ee312"
   integrity sha512-cdwTTnqPu0Hyvf5in5asVdZocVDTNRmR7XEcJuIzMjJeSHybHl7vpB66AzwTaIg6CLSbtjcxc8fqcySfnTkccA==
 
-sdk-v2-meteornrun-decard@^2.6.0:
-  version "2.6.0"
-  resolved "https://registry.yarnpkg.com/sdk-v2-meteornrun-decard/-/sdk-v2-meteornrun-decard-2.6.0.tgz#d01475f4aa10e92d151d50c2ab2f3054f3c174c1"
-  integrity sha512-JqtKKgfQi9EZRFW8tXrP17FSuDbBlbzhJXsjZfgDdeZ0q+Y18k9pMXAcA8EKgcUW5hi8AVQ2c/rg+0fEMbTBfA==
+sdk-v2-meteornrun-decard@^2.6.3:
+  version "2.6.3"
+  resolved "https://registry.yarnpkg.com/sdk-v2-meteornrun-decard/-/sdk-v2-meteornrun-decard-2.6.3.tgz#4f7c5425fdbf53eec635cb42679deac04feb4479"
+  integrity sha512-IC0GFKmMJny/w3CX3XOMimHoR02lAykfw6BzkRVnPCj5H0lZTn+5X9fmWKeZdswnSIpTpTZYTq3QKfViOVGuMw==
   dependencies:
     "@webcomponents/custom-elements" "^1.6.0"
     autoprefixer "^10.4.20"
