@@ -35,7 +35,6 @@ For version ≥2.6.0
 ```javascript
 ...
 import { createAppKit } from '@reown/appkit'
-// This import is required to inject global html tag into the app
 import { createPasskeyProvider } from "sdk-v2-meteornrun";
 ...
 
@@ -45,20 +44,58 @@ export const appKit = createAppKit({
   enableInjected: true
 })
 
-
 createPasskeyProvider()
-//You can also custom config, example rpcUrl:
-// createPasskeyProvider({
-//     rpcUrl: {
-//       1: 'https://ethereum-rpc.publicnode.com',
-//       137: 'https://polygon-bor-rpc.publicnode.com',
-//       56: 'https://bsc-rpc.publicnode.com',
-//       42161: 'https://arbitrum-one-rpc.publicnode.com',
-//       8453: 'https://base-rpc.publicnode.com',
-//       10: 'https://optimism-rpc.publicnode.com',
-//     }
-// })
+```
+You can also custom config
 
+Example rpcUrl:
+
+```javascript
+createPasskeyProvider({
+    rpcUrl: {
+      1: 'https://eth.llamarpc.com',
+      137: 'https://polygon-bor-rpc.publicnode.com',
+      56: 'https://bsc-rpc.publicnode.com',
+      42161: 'https://arbitrum-one-rpc.publicnode.com',
+      8453: 'https://base-rpc.publicnode.com',
+      10: 'https://optimism-rpc.publicnode.com',
+    }
+})
+```
+
+⚠️ Important Note
+If you want to use custom rpcUrl features, make sure your RPC endpoint supports stateOverride.
+
+✅ How to Test stateOverride Support
+
+You can check if your RPC supports stateOverride using the following curl command:
+```cmd
+curl -X POST https://your-rpc-url \
+  -H "Content-Type: application/json" \
+  -d '{
+    "jsonrpc": "2.0",
+    "id": 7,
+    "method": "eth_estimateGas",
+    "params": [
+        {
+            "data": "0x",
+            "from": "0x109105af554c00c2c419686c9e969e1fb2b6beba",
+            "to": "0x109105af554c00c2c419686c9e969e1fb2b6bebc",
+            "value": "0x56bc75e2d63100000"
+        },
+        "latest",
+        {
+            "0x109105af554c00c2c419686c9e969e1fb2b6beba": {
+                "balance": "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+            }
+        }
+    ]
+}'
+
+```
+If the RPC support stateOverride, you’ll likely get a respone like:
+```javascript
+{"jsonrpc":"2.0","id":7,"result":"0x6625"}
 ```
 
 For version <2.6.0
