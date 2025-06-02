@@ -207,6 +207,8 @@ export class MyPasskeyWalletProvider extends EventEmitter implements WalletProvi
         return this.addEthereumChain(params)
       case 'eth_estimateGas':
         return this.estimateGas(params)
+      case 'eth_call':
+        return this.ethCall(params)
       // case 'eth_gasPrice':
       //   return this.getGasPrice()
       // case 'eth_blockNumber':
@@ -638,12 +640,36 @@ export class MyPasskeyWalletProvider extends EventEmitter implements WalletProvi
     throw createProviderRpcError('Unsupported method addEthereumChain', 4200)
   }
 
+  private async ethCall (params: any[]): Promise<any> {
+    try {
+      const publicClient = await this.createPublicClientViem()
+      const rawTransaction = params[0]
+      const account = rawTransaction?.from || this.accounts[0]
+      const data = await publicClient.call({
+        account,
+        ...rawTransaction,
+        stateOverride: [
+          {
+            address: account,
+            balance: maxUint256,
+          },
+        ],
+      })
+      return data
+    } catch (error) {
+      throw createProviderRpcError(
+        'Error in eth_call: ' + error,
+        4001,
+        error,
+      )
+    }
+  }
+
   private async estimateGas (params: any[]): Promise<any> {
     try {
       const publicClient = await this.createPublicClientViem()
       const rawTransaction = params[0]
       const account = rawTransaction?.from || this.accounts[0]
-
       const data = await publicClient.estimateGas({
         account,
         ...rawTransaction,
@@ -658,7 +684,7 @@ export class MyPasskeyWalletProvider extends EventEmitter implements WalletProvi
       return data
     } catch (error) {
       throw createProviderRpcError(
-        'Error in estimateGas',
+        'Error in estimateGas: ' + error,
         4001,
         error,
       )
@@ -715,7 +741,7 @@ export class MyPasskeyWalletProvider extends EventEmitter implements WalletProvi
       return transaction
     } catch (error) {
       throw createProviderRpcError(
-        'Error in getTransactionByHash:',
+        'Error in getTransactionByHash: ' + error,
         4001,
         error,
       )
@@ -742,7 +768,7 @@ export class MyPasskeyWalletProvider extends EventEmitter implements WalletProvi
       return receipt
     } catch (error) {
       throw createProviderRpcError(
-        'Error in getTransactionReceipt:',
+        'Error in getTransactionReceipt: ' + error,
         4001,
         error,
       )
@@ -799,7 +825,7 @@ export class MyPasskeyWalletProvider extends EventEmitter implements WalletProvi
 
       return network
     } catch (error) {
-      throw createProviderRpcError('Error in getNetwork', 4001, error)
+      throw createProviderRpcError('Error in getNetwork: ' + error, 4001, error)
     }
   }
 
@@ -884,7 +910,7 @@ export class MyPasskeyWalletProvider extends EventEmitter implements WalletProvi
         permissions: this.permissions,
       }
     } catch (error) {
-      throw createProviderRpcError('Error in grantPermissions', 4001, error)
+      throw createProviderRpcError('Error in grantPermissions: ' + error, 4001, error)
     }
   }
 

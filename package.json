@@ -9,7 +9,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "build-watch": "tsc && vite build --watch",
+    "build:dev": "tsc && vite build --watch",
     "build-publish": "node build.js",
     "build-publish-all": "node multi-build.js",
     "preview": "vite preview",
