@@ -644,10 +644,12 @@ export class MyPasskeyWalletProvider extends EventEmitter implements WalletProvi
     try {
       const publicClient = await this.createPublicClientViem()
       const rawTransaction = params[0]
+      const blockTag = params[1] || 'latest'
       const account = rawTransaction?.from || this.accounts[0]
       const data = await publicClient.call({
         account,
         ...rawTransaction,
+        blockTag,
         stateOverride: [
           {
             address: account,
@@ -669,9 +671,11 @@ export class MyPasskeyWalletProvider extends EventEmitter implements WalletProvi
     try {
       const publicClient = await this.createPublicClientViem()
       const rawTransaction = params[0]
+      const blockTag = params[1] || 'latest'
       const account = rawTransaction?.from || this.accounts[0]
       const data = await publicClient.estimateGas({
         account,
+        blockTag,
         ...rawTransaction,
         stateOverride: [
           {
