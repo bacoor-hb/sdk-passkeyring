@@ -7,13 +7,13 @@ import { EIP6963ProviderInfo, getURLPasskey } from '../function'
  * Represents the slug identifier for a specific group.
  * This constant is used to uniquely identify the group within the system.
  */
-export const GROUP_SLUG: SlugGroup = 'meteornrun-decard'
+export const GROUP_SLUG: SlugGroup = 'egglegamewallet'
 
 /**
  * Represents the current version of the SDK.
  * This constant is used to track the version of the SDK being used.
  */
-export const SDK_VERSION = '2.6.3'
+export const SDK_VERSION = '2.6.4'
 
 /**
  * A constant object that maps `SlugGroup` keys to their corresponding `EIP6963ProviderInfo` details.

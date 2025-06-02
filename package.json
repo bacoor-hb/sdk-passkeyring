@@ -1,6 +1,6 @@
 {
-  "name": "sdk-v2-meteornrun-decard",
-  "version": "2.6.3",
+  "name": "sdk-v2-egglegamewallet",
+  "version": "2.6.4",
   "description": "sdk passkeyring to connect smart account",
   "license": "MIT",
   "main": "./dist/main.cjs.js",
