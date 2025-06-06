@@ -36,6 +36,7 @@ export type I_TYPE_URL =
   | 'SIGN_TYPED_DATA'
   | 'SIGN_TRANSACTION'
   | 'LOGIN'
+  | 'DISCONNECT'
   | undefined;
 
 export const TYPE_REQUEST: Record<
@@ -52,6 +53,7 @@ export const TYPE_REQUEST: Record<
   SIGN_TYPED_DATA: 'SIGN_TYPED_DATA',
   SIGN_TRANSACTION: 'SIGN_TRANSACTION',
   LOGIN: 'LOGIN',
+  DISCONNECT: 'DISCONNECT',
 }
 
 export type I_TYPE_ERROR = 'ERROR_TRANSACTION' | undefined;

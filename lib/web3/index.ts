@@ -387,12 +387,21 @@ export class MyPasskeyWalletProvider extends EventEmitter implements WalletProvi
       this.currentPopup = popup
 
       const handleMessage = (event: MessageEvent) => {
+
+        //event close popup
         if (
           event?.data?.type === TYPE_CLOSE_POPUP_GROUP_SLUG &&
           popup &&
           !popup.closed
         ) {
           popup.close()
+        }
+
+        //event disconnect
+        if (event?.data?.type === TYPE_REQUEST.DISCONNECT && event?.data.groupSlug === GROUP_SLUG && event?.data.address?.toLowerCase() === this.accounts[0]?.toLowerCase()) {
+          this.disconnect()
+          popup.close()
+          return
         }
       }
 
