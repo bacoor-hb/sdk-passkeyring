@@ -8,6 +8,7 @@
 
 ## Prerequisites:
 ### Before installing the SDK, ensure you have set up AppKit (web3modal).
+#### ⚠ SDK working stably with AppKit version <= 1.6.8, newer AppKit versions may cause issues.
 #### ⚠ If you have already set it up, skip this step.
 
 📚 [AppKit Documentation](https://docs.reown.com/appkit/overview)
@@ -63,7 +64,7 @@ export default App;
 If you have completed the above steps
 but your wallet is not listed in the AppKit (web3modal) modal
 
-=> Please update AppKit( web3modal) to the [latest version.](https://docs.reown.com/appkit/overview)
+=> Please update AppKit( web3modal) to the newer version, but make sure version <= 1.6.8
 
 ## #Supported chains
 ```
@@ -183,7 +184,7 @@ Or
 #Target:
 
 - Connect wallet to browsers that do not support injected providers.
-- If you are using Provider AppKit: Resolve the issue of using an older version without updating to the latest version.
+- If you are using Provider AppKit: Resolve the issue of using an older version without updating to the newer version (<= 1.6.8).
 - If you are using Provider wagmi: You only need a simple setup with wagmi.
 => Then follow these steps to create a custom connect button.
 ```
